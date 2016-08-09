@@ -1,0 +1,16 @@
+DROP TABLE visits;
+DROP TABLE images;
+DROP TABLE members;
+DROP TABLE locations;
+DROP TABLE addresses;
+DROP TABLE plans;
+DROP TABLE gym_features;
+DROP TABLE features;
+DROP TABLE gym_holidays;
+DROP TABLE hours;
+DROP TABLE gyms;
+DROP TABLE holidays;
+DROP TABLE user_roles;
+DROP TABLE roles;
+DROP TABLE users;
+DROP TABLE statuses;

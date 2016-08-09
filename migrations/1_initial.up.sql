@@ -1,5 +1,3 @@
--- +migrate Up
-
 CREATE TABLE users (
  user_id       SERIAL       PRIMARY KEY
 ,email         VARCHAR(200) NOT NULL
@@ -52,13 +50,3 @@ CREATE TABLE visits (
 ,member_id   INTEGER REFERENCES members
 ,location_id INTEGER REFERENCES locations
 );
-
--- +migrate Down
-
-DROP TABLE users;
-DROP TABLE addresses;
-DROP TABLE plans;
-DROP TABLE members;
-DROP TABLE gyms;
-DROP TABLE locations;
-DROP TABLE visits;

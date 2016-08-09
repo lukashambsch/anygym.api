@@ -42,14 +42,14 @@ CREATE TABLE gyms (
 );
 
 CREATE TABLE locations (
- location_id         SERIAL PRIMARY KEY,
-,address_id          INTEGER REFERENCES addresses,
+ location_id         SERIAL      PRIMARY KEY,
+,address_id          INTEGER     REFERENCES addresses,
 ,locationsation_name VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE visits (
- visit_id SERIAL     PRIMARY KEY
-,member_id INTEGER   REFERENCES members
+ visit_id    SERIAL  PRIMARY KEY
+,member_id   INTEGER REFERENCES members
 ,location_id INTEGER REFERENCES locations
 );
 

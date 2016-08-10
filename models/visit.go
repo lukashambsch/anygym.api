@@ -9,3 +9,5 @@ type Visit struct {
 	StatusId   int64     `json:"status_id"`
 	CreatedOn  time.Time `json:"created_on"`
 }
+
+type Visits []Visit

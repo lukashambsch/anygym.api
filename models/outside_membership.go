@@ -6,3 +6,5 @@ type OutsideMembership struct {
 	LocationId          int64 `json:"location_id"`
 	GymId               int64 `json:"gym_id"`
 }
+
+type OutsideMemberships []OutsideMembership

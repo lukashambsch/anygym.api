@@ -5,3 +5,5 @@ type Plan struct {
 	PlanName string  `json:"plan_name"`
 	Price    float64 `json:"price"`
 }
+
+type Plans []Plan

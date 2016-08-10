@@ -9,3 +9,5 @@ type BusinessHour struct {
 	OpenTime       time.Time `json:"open_time"`
 	CloseTime      time.Time `json:close_time"`
 }
+
+type BusinessHours []BusinessHour

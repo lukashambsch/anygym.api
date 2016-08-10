@@ -10,3 +10,5 @@ type SupportRequest struct {
 	CreatedOn        time.Time `json:"created_on"`
 	ResolvedOn       time.Time `json:"resolved_on"`
 }
+
+type SupportRequests []SupportRequest

@@ -9,3 +9,5 @@ type Location struct {
 	InNetwork        bool    `json:"in_network"`
 	MonthlyMemberFee float64 `json:"monthly_member_fee"`
 }
+
+type Locations []Location

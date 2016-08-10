@@ -137,10 +137,10 @@ CREATE TABLE support_sources (
 );
 
 CREATE TABLE support_requests (
- support_request_id SERIAL  PRIMARY KEY
-,user_id            INTEGER REFERENCES users
-,support_source_id  INTEGER REFERENCES support_sources
-,content            TEXT    NOT NULL
+ support_request_id SERIAL    PRIMARY KEY
+,user_id            INTEGER   REFERENCES users
+,support_source_id  INTEGER   REFERENCES support_sources
+,content            TEXT      NOT NULL
 ,created_on         TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ,resolved_on        TIMESTAMP
 );

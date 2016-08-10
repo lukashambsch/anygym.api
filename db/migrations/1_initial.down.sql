@@ -1,5 +1,6 @@
 DROP TABLE visits;
 DROP TABLE images;
+DROP TABLE outside_memberships;
 DROP TABLE members;
 DROP TABLE locations;
 DROP TABLE addresses;
@@ -12,5 +13,7 @@ DROP TABLE gyms;
 DROP TABLE holidays;
 DROP TABLE user_roles;
 DROP TABLE roles;
+DROP TABLE support_requests;
+DROP TABLE support_sources;
 DROP TABLE users;
 DROP TABLE statuses;

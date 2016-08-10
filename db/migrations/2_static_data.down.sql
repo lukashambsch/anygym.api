@@ -5,3 +5,4 @@ DELETE FROM features;
 DELETE FROM user_roles;
 DELETE FROM roles;
 DELETE FROM users;
+DELETE FROM support_sources;

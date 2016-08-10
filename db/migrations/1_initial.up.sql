@@ -113,3 +113,24 @@ CREATE TABLE visits (
 ,created_on  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ,status_id   INTEGER   REFERENCES statuses
 );
+
+-- Table to hold required info for outside memberships.
+-- Additional necessary fields will be added later.
+CREATE TABLE outside_memberships (
+ outside_membership_id SERIAL  PRIMARY KEY
+,member_id             INTEGER NOT NULL REFERENCES members
+,location_id           INTEGER NOT NULL REFERENCES locations
+,gym_id                INTEGER NOT NULL REFERENCES gyms
+);
+
+CREATE TABLE support_sources (
+ support_source_id   SERIAL      PRIMARY KEY
+,support_source_name VARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE support_requests (
+ support_request_id SERIAL  PRIMARY KEY
+,user_id            INTEGER REFERENCES users
+,support_source_id  INTEGER REFERENCES support_sources
+,content            TEXT    NOT NULL
+);

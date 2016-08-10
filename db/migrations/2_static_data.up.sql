@@ -61,3 +61,11 @@ INSERT INTO user_roles (user_id, role_id) VALUES
     (SELECT user_id FROM users WHERE email = 'lukas.hambsch@gmail.com'),
     (SELECT role_id FROM roles WHERE role_name = 'admin')
   );
+
+INSERT INTO support_sources (support_source_name) VALUES
+  ('website'),
+  ('mobile app - logged in'),
+  ('mobile app - logged out'),
+  ('web app - members'),
+  ('web app - gyms'),
+  ('email');

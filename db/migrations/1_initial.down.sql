@@ -8,7 +8,7 @@ DROP TABLE plans;
 DROP TABLE gym_features;
 DROP TABLE features;
 DROP TABLE gym_holidays;
-DROP TABLE hours;
+DROP TABLE business_hours;
 DROP TABLE gyms;
 DROP TABLE holidays;
 DROP TABLE user_roles;

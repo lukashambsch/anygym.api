@@ -15,5 +15,6 @@ DROP TABLE user_roles;
 DROP TABLE roles;
 DROP TABLE support_requests;
 DROP TABLE support_sources;
+DROP TABLE devices;
 DROP TABLE users;
 DROP TABLE statuses;

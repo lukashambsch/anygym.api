@@ -47,6 +47,12 @@ CREATE TABLE members (
 ,last_name  VARCHAR(35)  NOT NULL
 );
 
+CREATE TABLE devices (
+ device_id    SERIAL      PRIMARY KEY
+,user_id      INTEGER     NOT NULL REFERENCES users
+,device_token VARCHAR(64) NOT NULL
+);
+
 CREATE TABLE gyms (
  gym_id   SERIAL       PRIMARY KEY
 ,user_id  INTEGER      REFERENCES users

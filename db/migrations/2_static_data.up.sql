@@ -48,10 +48,12 @@ INSERT INTO features (feature_name, feature_description) VALUES
   ('Group Cycling (Spin)', 'Group cycling or spin classes are provided.');
 
 INSERT INTO users (email) VALUES
-  ('lukas.hambsch@gmail.com');
+  ('lukas.hambsch@gmail.com'),
+  ('bugentry@hotmail.com');
 
 INSERT INTO roles (role_name) VALUES
   ('admin'),
+  ('employee'),
   ('gym'),
   ('location'),
   ('member');
@@ -60,6 +62,10 @@ INSERT INTO user_roles (user_id, role_id) VALUES
   (
     (SELECT user_id FROM users WHERE email = 'lukas.hambsch@gmail.com'),
     (SELECT role_id FROM roles WHERE role_name = 'admin')
+  ),
+  (
+    (SELECT user_id FROM users WHERE email = 'bugentry@hotmail.com'),
+    (SELECT role_id FROM roles WHERE role_name = 'employee')
   );
 
 INSERT INTO support_sources (support_source_name) VALUES

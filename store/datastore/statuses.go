@@ -11,7 +11,7 @@ func GetStatusList() ([]models.Status, error) {
 		status   models.Status
 	)
 
-	db := store.Open()
+	db := store.DB
 
 	rows, err := db.Query("SELECT * FROM statuses;")
 	if err != nil {

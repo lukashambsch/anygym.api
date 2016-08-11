@@ -6,17 +6,28 @@ import (
 	"os"
 )
 
-func Open() *sql.DB {
+var DB *sql.DB
+
+func init() {
+	var err error
+
+	DB, err = Open()
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func Open() (*sql.DB, error) {
 	db, err := sql.Open("postgres", os.Getenv("GO_DB_URL"))
 
 	if err != nil {
-		log.Fatal(err)
+		return db, err
 	}
 
 	err = db.Ping()
 	if err != nil {
-		log.Fatal(err)
+		return db, err
 	}
 
-	return db
+	return db, nil
 }

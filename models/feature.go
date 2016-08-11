@@ -5,5 +5,3 @@ type Feature struct {
 	FeatureName        string `json:"feature_name"`
 	FeatureDescription string `json:"feature_description"`
 }
-
-type Features []Feature

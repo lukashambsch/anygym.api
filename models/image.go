@@ -6,5 +6,3 @@ type Image struct {
 	UserId    int64  `json:"user_id"`
 	ImagePath string `json:"image_path"`
 }
-
-type Images []Image

@@ -6,5 +6,3 @@ type Gym struct {
 	GymName          int64   `json:"gym_name"`
 	MonthlyMemberFee float64 `json:"monthly_member_fee"`
 }
-
-type Gyms []Gym

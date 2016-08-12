@@ -3,6 +3,7 @@ package handlers
 import (
 	"database/sql"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 
@@ -13,7 +14,15 @@ import (
 const StatusId = "status_id"
 
 func GetStatus(c *gin.Context) {
-	status, err := datastore.GetStatus(c.Param(StatusId))
+	statusId, err := strconv.ParseInt(c.Param(StatusId), 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid status_id",
+		})
+		return
+	}
+
+	status, err := datastore.GetStatus(statusId)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			c.JSON(http.StatusNotFound, gin.H{
@@ -68,8 +77,16 @@ func PostStatus(c *gin.Context) {
 }
 
 func PutStatus(c *gin.Context) {
+	statusId, err := strconv.ParseInt(c.Param(StatusId), 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid status_id",
+		})
+		return
+	}
+
 	in := &models.Status{}
-	err := c.BindJSON(in)
+	err = c.BindJSON(in)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),
@@ -81,7 +98,7 @@ func PutStatus(c *gin.Context) {
 		StatusName: in.StatusName,
 	}
 
-	updated, err := datastore.UpdateStatus(c.Param(StatusId), status)
+	updated, err := datastore.UpdateStatus(statusId, status)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": err.Error(),
@@ -93,7 +110,15 @@ func PutStatus(c *gin.Context) {
 }
 
 func DeleteStatus(c *gin.Context) {
-	err := datastore.DeleteStatus(c.Param(StatusId))
+	statusId, err := strconv.ParseInt(c.Param(StatusId), 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid status_id",
+		})
+		return
+	}
+
+	err = datastore.DeleteStatus(statusId)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": err.Error(),

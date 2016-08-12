@@ -30,7 +30,22 @@ func GetStatusList() ([]models.Status, error) {
 	return statuses, nil
 }
 
-func GetStatus(statusId string) (models.Status, error) {
+func GetStatusCount() (int, error) {
+	var count int
+
+	db := store.DB
+
+	row := db.QueryRow(getStatusCountQuery)
+	err := row.Scan(&count)
+
+	if err != nil {
+		return count, err
+	}
+
+	return count, nil
+}
+
+func GetStatus(statusId int64) (models.Status, error) {
 	var status models.Status
 
 	db := store.DB
@@ -66,7 +81,7 @@ func CreateStatus(status models.Status) (models.Status, error) {
 	return status, nil
 }
 
-func UpdateStatus(statusId string, status models.Status) (models.Status, error) {
+func UpdateStatus(statusId int64, status models.Status) (models.Status, error) {
 	db := store.DB
 	t, err := db.Begin()
 
@@ -87,7 +102,7 @@ func UpdateStatus(statusId string, status models.Status) (models.Status, error) 
 	return status, nil
 }
 
-func DeleteStatus(statusId string) error {
+func DeleteStatus(statusId int64) error {
 	db := store.DB
 
 	stmt, err := db.Prepare(deleteStatusQuery)
@@ -131,4 +146,9 @@ const deleteStatusQuery = `
 DELETE
 FROM statuses
 WHERE status_id = $1
+`
+
+const getStatusCountQuery = `
+SELECT count(*)
+FROM statuses
 `

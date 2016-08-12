@@ -1,8 +1,6 @@
 package datastore
 
 import (
-	"database/sql"
-
 	"github.com/lukashambsch/gym-all-over/models"
 	"github.com/lukashambsch/gym-all-over/store"
 )
@@ -32,7 +30,7 @@ func GetStatusList() ([]models.Status, error) {
 	return statuses, nil
 }
 
-func GetStatus(statusId string) (*models.Status, error) {
+func GetStatus(statusId string) (models.Status, error) {
 	var status models.Status
 
 	db := store.DB
@@ -41,13 +39,10 @@ func GetStatus(statusId string) (*models.Status, error) {
 	err := row.Scan(&status.StatusId, &status.StatusName)
 
 	if err != nil {
-		if err == sql.ErrNoRows {
-			return nil, nil
-		}
-		return &status, err
+		return status, err
 	}
 
-	return &status, nil
+	return status, nil
 }
 
 func CreateStatus(status models.Status) (models.Status, error) {
@@ -92,6 +87,22 @@ func UpdateStatus(statusId string, status models.Status) (models.Status, error) 
 	return status, nil
 }
 
+func DeleteStatus(statusId string) error {
+	db := store.DB
+
+	stmt, err := db.Prepare(deleteStatusQuery)
+	if err != nil {
+		return err
+	}
+
+	_, err = stmt.Exec(statusId)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 const getStatusListQuery = `
 SELECT *
 FROM statuses
@@ -114,4 +125,10 @@ UPDATE statuses
 SET status_name = $1
 WHERE status_id = $2
 RETURNING status_id, status_name
+`
+
+const deleteStatusQuery = `
+DELETE
+FROM statuses
+WHERE status_id = $1
 `

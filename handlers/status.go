@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"database/sql"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -14,10 +15,17 @@ const StatusId = "status_id"
 func GetStatus(c *gin.Context) {
 	status, err := datastore.GetStatus(c.Param(StatusId))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"status":  "fail",
-			"message": err.Error(),
-		})
+		if err == sql.ErrNoRows {
+			c.JSON(http.StatusNotFound, gin.H{
+				"status":  "fail",
+				"message": err.Error(),
+			})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"status":  "fail",
+				"message": err.Error(),
+			})
+		}
 		return
 	}
 
@@ -100,5 +108,21 @@ func PutStatus(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"status": "success",
 		"data":   updated,
+	})
+}
+
+func DeleteStatus(c *gin.Context) {
+	err := datastore.DeleteStatus(c.Param(StatusId))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"status":  "fail",
+			"message": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status": "success",
+		"data":   nil,
 	})
 }

@@ -15,6 +15,7 @@ func Load() *gin.Engine {
 	r.GET("/statuses/:status_id", handlers.GetStatus)
 	r.POST("/statuses", handlers.PostStatus)
 	r.PUT("/statuses/:status_id", handlers.PutStatus)
+	r.DELETE("/statuses/:status_id", handlers.DeleteStatus)
 
 	return r
 }

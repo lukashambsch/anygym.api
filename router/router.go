@@ -2,7 +2,6 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
-	_ "github.com/lib/pq"
 
 	"github.com/lukashambsch/gym-all-over/handlers"
 )

@@ -17,38 +17,29 @@ func GetStatus(c *gin.Context) {
 	if err != nil {
 		if err == sql.ErrNoRows {
 			c.JSON(http.StatusNotFound, gin.H{
-				"status":  "fail",
-				"message": err.Error(),
+				"message": "Not Found",
 			})
 		} else {
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"status":  "fail",
 				"message": err.Error(),
 			})
 		}
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"status": "success",
-		"data":   status,
-	})
+	c.JSON(http.StatusOK, status)
 }
 
 func GetStatuses(c *gin.Context) {
 	statuses, err := datastore.GetStatusList()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"status":  "fail",
 			"message": "Error getting status list.",
 		})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"status": "success",
-		"data":   statuses,
-	})
+	c.JSON(http.StatusOK, statuses)
 }
 
 func PostStatus(c *gin.Context) {
@@ -56,7 +47,6 @@ func PostStatus(c *gin.Context) {
 	err := c.BindJSON(in)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"status":  "fail",
 			"message": err.Error(),
 		})
 		return
@@ -69,16 +59,12 @@ func PostStatus(c *gin.Context) {
 	created, err := datastore.CreateStatus(status)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"status":  "fail",
 			"message": err.Error(),
 		})
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{
-		"status": "success",
-		"data":   created,
-	})
+	c.JSON(http.StatusCreated, created)
 }
 
 func PutStatus(c *gin.Context) {
@@ -86,7 +72,6 @@ func PutStatus(c *gin.Context) {
 	err := c.BindJSON(in)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"status":  "fail",
 			"message": err.Error(),
 		})
 		return
@@ -99,30 +84,22 @@ func PutStatus(c *gin.Context) {
 	updated, err := datastore.UpdateStatus(c.Param(StatusId), status)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"status":  "fail",
 			"message": err.Error(),
 		})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"status": "success",
-		"data":   updated,
-	})
+	c.JSON(http.StatusOK, updated)
 }
 
 func DeleteStatus(c *gin.Context) {
 	err := datastore.DeleteStatus(c.Param(StatusId))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"status":  "fail",
 			"message": err.Error(),
 		})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"status": "success",
-		"data":   nil,
-	})
+	c.JSON(http.StatusOK, nil)
 }

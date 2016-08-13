@@ -20,7 +20,7 @@ func init() {
 }
 
 func Open() (*sql.DB, error) {
-	db, err := sql.Open("postgres", os.Getenv("GO_DB_URL"))
+	db, err := sql.Open("postgres", os.Getenv("DATABASE_CONFIG"))
 
 	if err != nil {
 		return db, err

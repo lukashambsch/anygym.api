@@ -24,7 +24,7 @@ var _ = Describe("Status db interactions", func() {
 	})
 
 	Describe("GetStatus", func() {
-		var status models.Status
+		var status *models.Status
 
 		Context("Successful call", func() {
 			var statusId int64 = 1
@@ -40,7 +40,7 @@ var _ = Describe("Status db interactions", func() {
 	})
 
 	Describe("GetStatusCount", func() {
-		var count int
+		var count *int
 
 		Context("Successful call", func() {
 			BeforeEach(func() {
@@ -48,35 +48,61 @@ var _ = Describe("Status db interactions", func() {
 			})
 
 			It("should return the correct count", func() {
-				Expect(count).To(Equal(4))
+				Expect(*count).To(Equal(4))
 			})
 		})
 	})
 
 	Describe("CreateStatus", func() {
+		var (
+			statusName string = "New Status"
+			status     models.Status
+			created    *models.Status
+		)
+
+		BeforeEach(func() {
+			status = models.Status{StatusName: statusName}
+			created, _ = datastore.CreateStatus(status)
+		})
+
 		Context("Successful call", func() {
 			It("should return the created status", func() {
-				status := models.Status{StatusName: "New Status"}
-				createdStatus, _ := datastore.CreateStatus(status)
-				Expect(createdStatus.StatusName).To(Equal("New Status"))
+				Expect(created.StatusName).To(Equal(statusName))
 			})
 
 			It("should add a status to the db", func() {
-				status := models.Status{StatusName: "New Status Two"}
-				createdStatus, _ := datastore.CreateStatus(status)
-				newStatus, _ := datastore.GetStatus(createdStatus.StatusId)
-				Expect(newStatus.StatusName).To(Equal(createdStatus.StatusName))
+				newStatus, _ := datastore.GetStatus(created.StatusId)
+				Expect(newStatus.StatusName).To(Equal(statusName))
 			})
+		})
+
+		AfterEach(func() {
+			datastore.DeleteStatus(created.StatusId)
 		})
 	})
 
 	Describe("UpdateStatus", func() {
+		var (
+			statusName string = "Updated"
+			status     models.Status
+			created    *models.Status
+			updated    *models.Status
+		)
+
+		BeforeEach(func() {
+			status = models.Status{StatusName: statusName}
+			created, _ = datastore.CreateStatus(models.Status{StatusName: "Created"})
+			updated, _ = datastore.UpdateStatus(created.StatusId, status)
+		})
+
 		Context("Successful call", func() {
 			It("should return the updated status", func() {
-				status := models.Status{StatusName: "Updated"}
-				updated, _ := datastore.UpdateStatus(status.StatusId, status)
-				Expect(updated.StatusName).To(Equal("Updated"))
+				Expect(updated.StatusName).To(Equal(statusName))
 			})
+		})
+
+		AfterEach(func() {
+			datastore.DeleteStatus(updated.StatusId)
 		})
 	})
 

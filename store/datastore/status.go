@@ -11,18 +11,16 @@ func GetStatusList() ([]models.Status, error) {
 		status   models.Status
 	)
 
-	db := store.DB
-
-	rows, err := db.Query(getStatusListQuery)
+	rows, err := store.DB.Query(getStatusListQuery)
 	if err != nil {
-		return statuses, err
+		return nil, err
 	}
 
 	for rows.Next() {
 		err = rows.Scan(&status.StatusId, &status.StatusName)
 		statuses = append(statuses, status)
 		if err != nil {
-			return statuses, err
+			return nil, err
 		}
 	}
 	defer rows.Close()
@@ -30,82 +28,67 @@ func GetStatusList() ([]models.Status, error) {
 	return statuses, nil
 }
 
-func GetStatusCount() (int, error) {
+func GetStatusCount() (*int, error) {
 	var count int
 
-	db := store.DB
-
-	row := db.QueryRow(getStatusCountQuery)
+	row := store.DB.QueryRow(getStatusCountQuery)
 	err := row.Scan(&count)
 
 	if err != nil {
-		return count, err
+		return nil, err
 	}
 
-	return count, nil
+	return &count, nil
 }
 
-func GetStatus(statusId int64) (models.Status, error) {
+func GetStatus(statusId int64) (*models.Status, error) {
 	var status models.Status
 
-	db := store.DB
-
-	row := db.QueryRow(getStatusQuery, statusId)
+	row := store.DB.QueryRow(getStatusQuery, statusId)
 	err := row.Scan(&status.StatusId, &status.StatusName)
 
 	if err != nil {
-		return status, err
+		return nil, err
 	}
 
-	return status, nil
+	return &status, nil
 }
 
-func CreateStatus(status models.Status) (models.Status, error) {
-	db := store.DB
-	t, err := db.Begin()
+func CreateStatus(status models.Status) (*models.Status, error) {
+	var created models.Status
 
+	row := store.DB.QueryRow(createStatusQuery, status.StatusName)
+	err := row.Scan(&created.StatusId, &created.StatusName)
 	if err != nil {
-		return status, err
+		return nil, err
 	}
 
-	row := t.QueryRow(createStatusQuery, status.StatusName)
-	err = row.Scan(&status.StatusId, &status.StatusName)
-
-	if err != nil {
-		t.Rollback()
-		return status, err
-	}
-
-	t.Commit()
-
-	return status, nil
+	return &created, nil
 }
 
-func UpdateStatus(statusId int64, status models.Status) (models.Status, error) {
-	db := store.DB
-	t, err := db.Begin()
+func UpdateStatus(statusId int64, status models.Status) (*models.Status, error) {
+	var updated models.Status
+	t, err := store.DB.Begin()
 
 	if err != nil {
-		return status, err
+		return nil, err
 	}
 
 	row := t.QueryRow(updateStatusQuery, status.StatusName, statusId)
-	err = row.Scan(&status.StatusId, &status.StatusName)
+	err = row.Scan(&updated.StatusId, &updated.StatusName)
 
 	if err != nil {
 		t.Rollback()
-		return status, err
+		return nil, err
 	}
 
 	t.Commit()
 
-	return status, nil
+	return &updated, nil
 }
 
 func DeleteStatus(statusId int64) error {
-	db := store.DB
-
-	stmt, err := db.Prepare(deleteStatusQuery)
+	stmt, err := store.DB.Prepare(deleteStatusQuery)
 	if err != nil {
 		return err
 	}

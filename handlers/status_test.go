@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 
-	"github.com/lukashambsch/gym-all-over/handlers"
+	//"github.com/lukashambsch/gym-all-over/handlers"
 	"github.com/lukashambsch/gym-all-over/models"
 	"github.com/lukashambsch/gym-all-over/router"
 	. "github.com/onsi/ginkgo"
@@ -49,23 +49,23 @@ var _ = Describe("Status API", func() {
 			})
 		})
 
-		Context("InternalServer Error", func() {
-			var body handlers.APIErrorMessage
+		//Context("InternalServer Error", func() {
+		//var body handlers.APIErrorMessage
 
-			BeforeEach(func() {
-				res, _ = http.Get(statusUrl)
-				data, _ = ioutil.ReadAll(res.Body)
-				json.Unmarshal(data, &body)
-			})
+		//BeforeEach(func() {
+		//res, _ = http.Get(statusUrl)
+		//data, _ = ioutil.ReadAll(res.Body)
+		//json.Unmarshal(data, &body)
+		//})
 
-			It("should return status code 500", func() {
-				Expect(res.StatusCode).To(Equal(500))
-			})
+		//It("should return status code 500", func() {
+		//Expect(res.StatusCode).To(Equal(500))
+		//})
 
-			It("should contain message", func() {
-				Expect(body.Message).To(Equal("Error getting status list."))
-			})
-		})
+		//It("should contain message", func() {
+		//Expect(body.Message).To(Equal("Error getting status list."))
+		//})
+		//})
 	})
 
 	AfterEach(func() {

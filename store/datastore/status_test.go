@@ -2,6 +2,7 @@ package datastore_test
 
 import (
 	"github.com/lukashambsch/gym-all-over/models"
+	"github.com/lukashambsch/gym-all-over/store"
 	"github.com/lukashambsch/gym-all-over/store/datastore"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -118,13 +119,17 @@ var _ = Describe("Status db interactions", func() {
 
 		Context("Successful call", func() {
 			It("should return nil", func() {
-				err := datastore.DeleteStatus(1)
+				err := datastore.DeleteStatus(statusId)
 				Expect(err).To(BeNil())
 			})
 		})
 
 		AfterEach(func() {
-			datastore.CreateStatus(*status)
+			store.DB.QueryRow(
+				"INSERT INTO statuses (status_id, status_name) VALUES ($1, $2)",
+				status.StatusId,
+				status.StatusName,
+			)
 		})
 	})
 })

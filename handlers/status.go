@@ -12,12 +12,13 @@ import (
 )
 
 const StatusId = "status_id"
+const InvalidStatusId = "Invalid " + StatusId
 
 func GetStatus(c *gin.Context) {
 	statusId, err := strconv.ParseInt(c.Param(StatusId), 10, 64)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "Invalid status_id",
+			"message": InvalidStatusId,
 		})
 		return
 	}
@@ -80,7 +81,7 @@ func PutStatus(c *gin.Context) {
 	statusId, err := strconv.ParseInt(c.Param(StatusId), 10, 64)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "Invalid status_id",
+			"message": InvalidStatusId,
 		})
 		return
 	}
@@ -113,7 +114,7 @@ func DeleteStatus(c *gin.Context) {
 	statusId, err := strconv.ParseInt(c.Param(StatusId), 10, 64)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "Invalid status_id",
+			"message": InvalidStatusId,
 		})
 		return
 	}

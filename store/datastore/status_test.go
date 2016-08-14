@@ -107,11 +107,24 @@ var _ = Describe("Status db interactions", func() {
 	})
 
 	Describe("DeleteStatus", func() {
+		var (
+			statusId int64 = 1
+			status   *models.Status
+		)
+
+		BeforeEach(func() {
+			status, _ = datastore.GetStatus(statusId)
+		})
+
 		Context("Successful call", func() {
 			It("should return nil", func() {
 				err := datastore.DeleteStatus(1)
 				Expect(err).To(BeNil())
 			})
+		})
+
+		AfterEach(func() {
+			datastore.CreateStatus(*status)
 		})
 	})
 })

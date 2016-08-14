@@ -6,8 +6,5 @@ go get github.com/onsi/gomega
 go get github.com/mattes/migrate
 psql -c "CREATE USER root WITH PASSWORD 'pa55word';"
 migrate -url $DATABASE_CONFIG -path ./store/migrations up
-go test ./handlers
-migrate -url $DATABASE_CONFIG -path ./store/migrations down
-migrate -url $DATABASE_CONFIG -path ./store/migrations up
-go test ./store/datastore
+go test ./... -cover
 migrate -url $DATABASE_CONFIG -path ./store/migrations down

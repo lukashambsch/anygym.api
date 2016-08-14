@@ -25,6 +25,7 @@ var _ = Describe("Status API", func() {
 		data      []byte
         contentType string = "application/json"
         client *http.Client = &http.Client{}
+        badPayload []byte = []byte(`{"status_name", "Status Name"}`)
 	)
 
 	BeforeEach(func() {
@@ -34,12 +35,9 @@ var _ = Describe("Status API", func() {
 	Describe("GetStatuses endpoint", func() {
 		var statuses []models.Status
 
-		BeforeEach(func() {
-			statusUrl = fmt.Sprintf("%s/statuses", server.URL)
-		})
-
-		Context("Successful GET", func() {
+		Describe("Successful GET", func() {
 			BeforeEach(func() {
+                statusUrl = fmt.Sprintf("%s/statuses", server.URL)
 				res, _ = http.Get(statusUrl)
 				data, _ = ioutil.ReadAll(res.Body)
 				json.Unmarshal(data, &statuses)
@@ -80,18 +78,24 @@ var _ = Describe("Status API", func() {
         Describe("Unsuccessful GET", func() {
             var errRes handlers.APIErrorMessage
 
-            BeforeEach(func() {
-                res, _ = http.Get(fmt.Sprintf("%s/statuses/asdf", server.URL))
-                data, _ = ioutil.ReadAll(res.Body)
-                json.Unmarshal(data, &errRes)
+            Context("Invalid status_id", func() {
+                It("should return status code 400 with a message", func() {
+                    res, _ = http.Get(fmt.Sprintf("%s/statuses/asdf", server.URL))
+                    data, _ = ioutil.ReadAll(res.Body)
+                    json.Unmarshal(data, &errRes)
+                    Expect(res.StatusCode).To(Equal(http.StatusBadRequest))
+                    Expect(errRes.Message).To(Equal(handlers.InvalidStatusId))
+                })
             })
 
-            It("should return status code 400", func() {
-                Expect(res.StatusCode).To(Equal(http.StatusBadRequest))
-            })
-
-            It("should contain the message in the response", func() {
-                Expect(errRes.Message).To(Equal(handlers.InvalidStatusId))
+            Context("Non existent status_id", func() {
+                It("should return status code 404 with a message", func() {
+                    res, _ = http.Get(fmt.Sprintf("%s/statuses/10", server.URL))
+                    data, _ = ioutil.ReadAll(res.Body)
+                    json.Unmarshal(data, &errRes)
+                    Expect(res.StatusCode).To(Equal(http.StatusNotFound))
+                    Expect(errRes.Message).ToNot(BeEmpty())
+                })
             })
         })
 
@@ -103,13 +107,13 @@ var _ = Describe("Status API", func() {
 			payload []byte = []byte(`{"status_name": "New Status"}`)
 		)
 
-		BeforeEach(func() {
-			res, _ = http.Post(fmt.Sprintf("%s/statuses", server.URL), contentType, bytes.NewBuffer(payload))
-			data, _ = ioutil.ReadAll(res.Body)
-			json.Unmarshal(data, &status)
-		})
+		Describe("Successful POST", func() {
+            BeforeEach(func() {
+                res, _ = http.Post(fmt.Sprintf("%s/statuses", server.URL), contentType, bytes.NewBuffer(payload))
+                data, _ = ioutil.ReadAll(res.Body)
+                json.Unmarshal(data, &status)
+            })
 
-		Context("Successful POST", func() {
 			It("should return status code 201", func() {
 				Expect(res.StatusCode).To(Equal(http.StatusCreated))
 			})
@@ -121,34 +125,63 @@ var _ = Describe("Status API", func() {
 			It("should save the status", func() {
 				Expect(status.StatusId).ToNot(Equal(0))
 			})
+
+            AfterEach(func() {
+                datastore.DeleteStatus(status.StatusId)
+            })
 		})
 
-		AfterEach(func() {
-			datastore.DeleteStatus(status.StatusId)
-		})
+        Describe("Unsuccessful POST", func() {
+            var errRes handlers.APIErrorMessage
+
+            Describe("Bad Request", func() {
+                It("should return status code 400 with a message", func() {
+                    res, _ = http.Post(
+                        fmt.Sprintf("%s/statuses", server.URL),
+                        contentType,
+                        bytes.NewBuffer(badPayload),
+                    )
+                    data, _ = ioutil.ReadAll(res.Body)
+                    json.Unmarshal(data, &errRes)
+                    Expect(res.StatusCode).To(Equal(http.StatusBadRequest))
+                    Expect(errRes.Message).ToNot(BeEmpty())
+                })
+            })
+
+            Describe("Internal Server Error", func() {
+                It("should return status code 500 with a message", func() {
+                    payload = []byte(`{"status_name": "Pending"}`)
+                    res, _ = http.Post(fmt.Sprintf("%s/statuses", server.URL), contentType, bytes.NewBuffer(payload))
+                    data, _ = ioutil.ReadAll(res.Body)
+                    json.Unmarshal(data, &errRes)
+                    Expect(res.StatusCode).To(Equal(http.StatusInternalServerError))
+                    Expect(errRes.Message).ToNot(BeEmpty())
+                })
+            })
+        })
 	})
 
-    Describe("PutStatus endpoing", func() {
+    Describe("PutStatus endpoint", func() {
         var (
             status models.Status
             payload []byte = []byte(`{"status_name": "Updated"}`)
             statusId int64 = 1
         )
 
-        BeforeEach(func() {
-            req, _ := http.NewRequest(
-                "PUT",
-                fmt.Sprintf("%s/statuses/%d", server.URL, statusId),
-                bytes.NewBuffer(payload),
-            )
-            req.Header.Set("Content-Type", contentType)
+        Describe("Successful PUT", func() {
+            BeforeEach(func() {
+                req, _ := http.NewRequest(
+                    "PUT",
+                    fmt.Sprintf("%s/statuses/%d", server.URL, statusId),
+                    bytes.NewBuffer(payload),
+                )
+                req.Header.Set("Content-Type", contentType)
 
-            res, _ = client.Do(req)
-            data, _ = ioutil.ReadAll(res.Body)
-            json.Unmarshal(data, &status)
-        })
+                res, _ = client.Do(req)
+                data, _ = ioutil.ReadAll(res.Body)
+                json.Unmarshal(data, &status)
+            })
 
-        Context("Successful PUT", func() {
             It("should return status code 200", func() {
                 Expect(res.StatusCode).To(Equal(http.StatusOK))
             })
@@ -161,28 +194,77 @@ var _ = Describe("Status API", func() {
                 updated, _ := datastore.GetStatus(statusId)
                 Expect(updated.StatusId).To(Equal(statusId))
             })
+
+            AfterEach(func() {
+                datastore.UpdateStatus(statusId, models.Status{StatusName: "Pending"})
+            })
         })
 
-        AfterEach(func() {
-            datastore.UpdateStatus(statusId, models.Status{StatusName: "Pending"})
+        Describe("Unsuccessful PUT", func() {
+            var errRes handlers.APIErrorMessage
+
+            It("should return status code 400 with a message", func() {
+                req, _ := http.NewRequest(
+                    "PUT",
+                    fmt.Sprintf("%s/statuses/%d", server.URL, statusId),
+                    bytes.NewBuffer(badPayload),
+                )
+                req.Header.Set("Content-Type", contentType)
+
+                res, _ = client.Do(req)
+                data, _ = ioutil.ReadAll(res.Body)
+                json.Unmarshal(data, &errRes)
+                Expect(res.StatusCode).To(Equal(http.StatusBadRequest))
+                Expect(errRes.Message).ToNot(BeEmpty())
+            })
+
+            It("should return status code 400 with a message", func() {
+                req, _ := http.NewRequest(
+                    "PUT",
+                    fmt.Sprintf("%s/statuses/a", server.URL),
+                    bytes.NewBuffer(payload),
+                )
+                req.Header.Set("Content-Type", contentType)
+
+                res, _ = client.Do(req)
+                data, _ = ioutil.ReadAll(res.Body)
+                json.Unmarshal(data, &errRes)
+                Expect(res.StatusCode).To(Equal(http.StatusBadRequest))
+                Expect(errRes.Message).To(Equal(handlers.InvalidStatusId))
+            })
+
+            It("should return status code 500 with a message", func() {
+                req, _ := http.NewRequest(
+                    "PUT",
+                    fmt.Sprintf("%s/statuses/5", server.URL),
+                    bytes.NewBuffer(payload),
+                )
+                req.Header.Set("Content-Type", contentType)
+
+                res, _ = client.Do(req)
+                data, _ = ioutil.ReadAll(res.Body)
+                json.Unmarshal(data, &errRes)
+                Expect(res.StatusCode).To(Equal(http.StatusInternalServerError))
+                Expect(errRes.Message).ToNot(BeEmpty())
+            })
         })
     })
 
     Describe("DeleteStatus endpoint", func() {
         var statusId int64 = 1
 
-        BeforeEach(func() {
-            req, _ := http.NewRequest(
-                "DELETE",
-                fmt.Sprintf("%s/statuses/%d", server.URL, statusId),
-                bytes.NewBuffer([]byte(``)),
-            )
-            req.Header.Set("Content-Type", contentType)
+        Describe("Successful DELETE", func() {
+            BeforeEach(func() {
+                req, _ := http.NewRequest(
+                    "DELETE",
+                    fmt.Sprintf("%s/statuses/%d", server.URL, statusId),
+                    bytes.NewBuffer([]byte(``)),
+                )
+                req.Header.Set("Content-Type", contentType)
 
-            res, _ = client.Do(req)
-        })
+                res, _ = client.Do(req)
+            })
 
-        Context("Successful DELETE", func() {
             It("should return status code 200", func() {
                 Expect(res.StatusCode).To(Equal(http.StatusOK))
             })
@@ -191,15 +273,34 @@ var _ = Describe("Status API", func() {
                 _, err := datastore.GetStatus(statusId)
                 Expect(err).ToNot(BeNil())
             })
+
+            AfterEach(func() {
+                store.DB.QueryRow(
+                    "INSERT INTO statuses (status_id, status_name) VALUES ($1, $2)",
+                    statusId,
+                    "Pending",
+                )
+            })
         })
 
-		AfterEach(func() {
-			store.DB.QueryRow(
-				"INSERT INTO statuses (status_id, status_name) VALUES ($1, $2)",
-				statusId,
-				"Pending",
-			)
-		})
+        Describe("Unsuccessful DELETE", func() {
+            var errRes handlers.APIErrorMessage
+
+            It("should return status code 400 with a message", func() {
+                req, _ := http.NewRequest(
+                    "DELETE",
+                    fmt.Sprintf("%s/statuses/a", server.URL),
+                    bytes.NewBuffer([]byte(``)),
+                )
+                req.Header.Set("Content-Type", contentType)
+
+                res, _ = client.Do(req)
+                data, _ = ioutil.ReadAll(res.Body)
+                json.Unmarshal(data, &errRes)
+                Expect(res.StatusCode).To(Equal(http.StatusBadRequest))
+                Expect(errRes.Message).To(Equal(handlers.InvalidStatusId))
+            })
+        })
     })
 
 	AfterEach(func() {

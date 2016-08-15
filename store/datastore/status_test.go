@@ -13,7 +13,7 @@ var _ = Describe("Status db interactions", func() {
 	Describe("GetStatusList", func() {
 		var statuses []models.Status
 
-		Context("Successful call", func() {
+		Describe("Successful call", func() {
 			BeforeEach(func() {
 				statuses, _ = datastore.GetStatusList()
 			})
@@ -27,15 +27,31 @@ var _ = Describe("Status db interactions", func() {
 	Describe("GetStatus", func() {
 		var status *models.Status
 
-		Context("Successful call", func() {
+		Describe("Successful call", func() {
 			var statusId int64 = 1
 
-			BeforeEach(func() {
+			It("should return the correct status", func() {
 				status, _ = datastore.GetStatus(statusId)
+				Expect(status.StatusId).To(Equal(statusId))
+			})
+		})
+
+		Describe("Unsuccessful call", func() {
+			var (
+				nonExistentId int64 = 5
+				err           error
+			)
+
+			BeforeEach(func() {
+				status, err = datastore.GetStatus(nonExistentId)
 			})
 
-			It("should return the correct status", func() {
-				Expect(status.StatusId).To(Equal(statusId))
+			It("should return an error", func() {
+				Expect(err).ToNot(BeNil())
+			})
+
+			It("should return a nil status", func() {
+				Expect(status).To(BeNil())
 			})
 		})
 	})
@@ -43,7 +59,7 @@ var _ = Describe("Status db interactions", func() {
 	Describe("GetStatusCount", func() {
 		var count *int
 
-		Context("Successful call", func() {
+		Describe("Successful call", func() {
 			BeforeEach(func() {
 				count, _ = datastore.GetStatusCount()
 			})
@@ -59,14 +75,19 @@ var _ = Describe("Status db interactions", func() {
 			statusName string = "New Status"
 			status     models.Status
 			created    *models.Status
+			err        error
 		)
 
-		BeforeEach(func() {
-			status = models.Status{StatusName: statusName}
-			created, _ = datastore.CreateStatus(status)
-		})
+		Describe("Successful call", func() {
+			BeforeEach(func() {
+				status = models.Status{StatusName: statusName}
+				created, _ = datastore.CreateStatus(status)
+			})
 
-		Context("Successful call", func() {
+			AfterEach(func() {
+				datastore.DeleteStatus(created.StatusId)
+			})
+
 			It("should return the created status", func() {
 				Expect(created.StatusName).To(Equal(statusName))
 			})
@@ -77,8 +98,19 @@ var _ = Describe("Status db interactions", func() {
 			})
 		})
 
-		AfterEach(func() {
-			datastore.DeleteStatus(created.StatusId)
+		Describe("Unsuccessful call", func() {
+			BeforeEach(func() {
+				status = models.Status{StatusName: "Pending"}
+				created, err = datastore.CreateStatus(status)
+			})
+
+			It("should return an error", func() {
+				Expect(err).ToNot(BeNil())
+			})
+
+			It("should return a nil status", func() {
+				Expect(created).To(BeNil())
+			})
 		})
 	})
 
@@ -88,22 +120,38 @@ var _ = Describe("Status db interactions", func() {
 			status     models.Status
 			created    *models.Status
 			updated    *models.Status
+			err        error
 		)
 
-		BeforeEach(func() {
-			status = models.Status{StatusName: statusName}
-			created, _ = datastore.CreateStatus(models.Status{StatusName: "Created"})
-			updated, _ = datastore.UpdateStatus(created.StatusId, status)
-		})
+		Describe("Successful call", func() {
+			BeforeEach(func() {
+				status = models.Status{StatusName: statusName}
+				created, _ = datastore.CreateStatus(models.Status{StatusName: "Created"})
+				updated, _ = datastore.UpdateStatus(created.StatusId, status)
+			})
 
-		Context("Successful call", func() {
+			AfterEach(func() {
+				datastore.DeleteStatus(updated.StatusId)
+			})
+
 			It("should return the updated status", func() {
 				Expect(updated.StatusName).To(Equal(statusName))
 			})
 		})
 
-		AfterEach(func() {
-			datastore.DeleteStatus(updated.StatusId)
+		Describe("Unsuccessful call", func() {
+			BeforeEach(func() {
+				status = models.Status{StatusName: "Pending"}
+				updated, err = datastore.UpdateStatus(2, status)
+			})
+
+			It("should return an error object", func() {
+				Expect(err).ToNot(BeNil())
+			})
+
+			It("should return a nil status", func() {
+				Expect(updated).To(BeNil())
+			})
 		})
 	})
 
@@ -113,23 +161,23 @@ var _ = Describe("Status db interactions", func() {
 			status   *models.Status
 		)
 
-		BeforeEach(func() {
-			status, _ = datastore.GetStatus(statusId)
-		})
+		Describe("Successful call", func() {
+			BeforeEach(func() {
+				status, _ = datastore.GetStatus(statusId)
+			})
 
-		Context("Successful call", func() {
+			AfterEach(func() {
+				store.DB.QueryRow(
+					"INSERT INTO statuses (status_id, status_name) VALUES ($1, $2)",
+					status.StatusId,
+					status.StatusName,
+				)
+			})
+
 			It("should return nil", func() {
 				err := datastore.DeleteStatus(statusId)
 				Expect(err).To(BeNil())
 			})
-		})
-
-		AfterEach(func() {
-			store.DB.QueryRow(
-				"INSERT INTO statuses (status_id, status_name) VALUES ($1, $2)",
-				status.StatusId,
-				status.StatusName,
-			)
 		})
 	})
 })

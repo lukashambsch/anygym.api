@@ -29,6 +29,8 @@ CREATE TABLE addresses (
 ,street_address VARCHAR(100)
 ,latitude       FLOAT
 ,longitude      FLOAT
+
+,UNIQUE(country, state_region, city, postal_area, street_address)
 );
 
 CREATE TABLE plans (

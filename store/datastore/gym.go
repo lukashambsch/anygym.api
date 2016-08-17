@@ -68,21 +68,12 @@ func CreateGym(gym models.Gym) (*models.Gym, error) {
 
 func UpdateGym(gymId int64, gym models.Gym) (*models.Gym, error) {
 	var updated models.Gym
-	t, err := store.DB.Begin()
 
+	row := store.DB.QueryRow(updateGymQuery, gym.UserId, gym.GymName, gym.MonthlyMemberFee, gymId)
+	err := row.Scan(&updated.GymId, &updated.UserId, &updated.GymName, &updated.MonthlyMemberFee)
 	if err != nil {
 		return nil, err
 	}
-
-	row := t.QueryRow(updateGymQuery, gym.UserId, gym.GymName, gym.MonthlyMemberFee, gymId)
-	err = row.Scan(&updated.GymId, &updated.UserId, &updated.GymName, &updated.MonthlyMemberFee)
-
-	if err != nil {
-		t.Rollback()
-		return nil, err
-	}
-
-	t.Commit()
 
 	return &updated, nil
 }

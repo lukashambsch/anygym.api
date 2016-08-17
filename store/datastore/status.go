@@ -68,21 +68,12 @@ func CreateStatus(status models.Status) (*models.Status, error) {
 
 func UpdateStatus(statusId int64, status models.Status) (*models.Status, error) {
 	var updated models.Status
-	t, err := store.DB.Begin()
 
+	row := store.DB.QueryRow(updateStatusQuery, status.StatusName, statusId)
+	err := row.Scan(&updated.StatusId, &updated.StatusName)
 	if err != nil {
 		return nil, err
 	}
-
-	row := t.QueryRow(updateStatusQuery, status.StatusName, statusId)
-	err = row.Scan(&updated.StatusId, &updated.StatusName)
-
-	if err != nil {
-		t.Rollback()
-		return nil, err
-	}
-
-	t.Commit()
 
 	return &updated, nil
 }

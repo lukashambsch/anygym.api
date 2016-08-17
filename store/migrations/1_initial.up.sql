@@ -35,8 +35,10 @@ CREATE TABLE addresses (
 
 CREATE TABLE plans (
  plan_id   SERIAL      PRIMARY KEY
-,plan_name VARCHAR(35) NOT NULL UNIQUE
+,plan_name VARCHAR(35) NOT NULL
 ,price     FLOAT       NOT NULL
+
+,UNIQUE(plan_name, price)
 );
 
 CREATE TABLE members (
@@ -44,9 +46,18 @@ CREATE TABLE members (
 ,user_id    INTEGER      REFERENCES users
 ,address_id INTEGER      REFERENCES addresses
 ,plan_id    INTEGER      NOT NULL REFERENCES plans
-,active     BOOLEAN
 ,first_name VARCHAR(35)  NOT NULL
 ,last_name  VARCHAR(35)  NOT NULL
+);
+
+CREATE TABLE memberships (
+ membership_id SERIAL    PRIMARY KEY
+,plan_id       INTEGER   REFERENCES plans
+,member_id     INTEGER   REFERENCES members
+,start_date    TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+,renew_date    TIMESTAMP
+,end_date      TIMESTAMP
+,active        BOOLEAN
 );
 
 CREATE TABLE devices (

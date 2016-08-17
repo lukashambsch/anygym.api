@@ -1,6 +1,7 @@
 DROP TABLE visits;
 DROP TABLE images;
 DROP TABLE outside_memberships;
+DROP TABLE memberships;
 DROP TABLE members;
 DROP TABLE locations;
 DROP TABLE addresses;

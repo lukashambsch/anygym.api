@@ -1,5 +1,6 @@
 INSERT INTO plans (plan_name, price) VALUES
-  ('All Access', 50);
+  ('All Access', 50),
+  ('All Access', 0);
 
 INSERT INTO statuses (status_name) VALUES
   ('Pending'),

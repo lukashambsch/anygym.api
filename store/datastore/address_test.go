@@ -84,14 +84,14 @@ var _ = Describe("Address db interactions", func() {
 
 	Describe("CreateAddress", func() {
 		var (
-			gymName string = "New Address"
-			address models.Address
-			created *models.Address
+			streetAddress string = "New Address"
+			address       models.Address
+			created       *models.Address
 		)
 
 		Describe("Successful call", func() {
 			BeforeEach(func() {
-				address = models.Address{StreetAddress: gymName}
+				address = models.Address{StreetAddress: streetAddress}
 				created, _ = datastore.CreateAddress(address)
 			})
 
@@ -100,31 +100,38 @@ var _ = Describe("Address db interactions", func() {
 			})
 
 			It("should return the created address", func() {
-				Expect(created.StreetAddress).To(Equal(gymName))
+				Expect(created.StreetAddress).To(Equal(streetAddress))
 			})
 
 			It("should add a address to the db", func() {
 				newAddress, _ := datastore.GetAddress(created.AddressId)
-				Expect(newAddress.StreetAddress).To(Equal(gymName))
+				Expect(newAddress.StreetAddress).To(Equal(streetAddress))
 			})
 		})
 
 		Describe("Unsuccessful call", func() {
+			It("should return an error object if address is not unique", func() {
+				street := "Test Street"
+				addr := models.Address{StreetAddress: street}
+				datastore.CreateAddress(addr)
+				_, err := datastore.CreateAddress(addr)
+				Expect(err).ToNot(BeNil())
+			})
 		})
 	})
 
 	Describe("UpdateAddress", func() {
 		var (
-			gymName string = "123 Home St."
-			address models.Address
-			created *models.Address
-			updated *models.Address
-			err     error
+			streetAddress string = "123 Home St."
+			address       models.Address
+			created       *models.Address
+			updated       *models.Address
+			err           error
 		)
 
 		Describe("Successful call", func() {
 			BeforeEach(func() {
-				address = models.Address{StreetAddress: gymName}
+				address = models.Address{StreetAddress: streetAddress}
 				created, _ = datastore.CreateAddress(models.Address{StreetAddress: "456 Test Ave."})
 				updated, _ = datastore.UpdateAddress(created.AddressId, address)
 			})
@@ -134,7 +141,7 @@ var _ = Describe("Address db interactions", func() {
 			})
 
 			It("should return the updated address", func() {
-				Expect(updated.StreetAddress).To(Equal(gymName))
+				Expect(updated.StreetAddress).To(Equal(streetAddress))
 			})
 		})
 
@@ -150,14 +157,6 @@ var _ = Describe("Address db interactions", func() {
 
 			It("should return a nil address", func() {
 				Expect(updated).To(BeNil())
-			})
-
-			It("should return an error object if address is not unique", func() {
-				street := "Test Street"
-				addr := models.Address{StreetAddress: street}
-				datastore.CreateAddress(addr)
-				_, err := datastore.CreateAddress(addr)
-				Expect(err).ToNot(BeNil())
 			})
 		})
 	})

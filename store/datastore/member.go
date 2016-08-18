@@ -21,7 +21,6 @@ func GetMemberList() ([]models.Member, error) {
 			&member.MemberId,
 			&member.UserId,
 			&member.AddressId,
-			&member.PlanId,
 			&member.FirstName,
 			&member.LastName,
 		)
@@ -56,7 +55,6 @@ func GetMember(memberId int64) (*models.Member, error) {
 		&member.MemberId,
 		&member.UserId,
 		&member.AddressId,
-		&member.PlanId,
 		&member.FirstName,
 		&member.LastName,
 	)
@@ -75,7 +73,6 @@ func CreateMember(member models.Member) (*models.Member, error) {
 		createMemberQuery,
 		member.UserId,
 		member.AddressId,
-		member.PlanId,
 		member.FirstName,
 		member.LastName,
 	)
@@ -83,7 +80,6 @@ func CreateMember(member models.Member) (*models.Member, error) {
 		&created.MemberId,
 		&created.UserId,
 		&created.AddressId,
-		&created.PlanId,
 		&created.FirstName,
 		&created.LastName,
 	)
@@ -101,7 +97,6 @@ func UpdateMember(memberId int64, member models.Member) (*models.Member, error) 
 		updateMemberQuery,
 		member.UserId,
 		member.AddressId,
-		member.PlanId,
 		member.FirstName,
 		member.LastName,
 		memberId,
@@ -110,7 +105,6 @@ func UpdateMember(memberId int64, member models.Member) (*models.Member, error) 
 		&updated.MemberId,
 		&updated.UserId,
 		&updated.AddressId,
-		&updated.PlanId,
 		&updated.FirstName,
 		&updated.LastName,
 	)
@@ -147,16 +141,16 @@ WHERE member_id = $1
 `
 
 const createMemberQuery = `
-INSERT INTO members (user_id, address_id, plan_id, first_name, last_name)
-VALUES ($1, $2, $3, $4, $5)
-RETURNING member_id, user_id, address_id, plan_id, first_name, last_name
+INSERT INTO members (user_id, address_id, first_name, last_name)
+VALUES ($1, $2, $3, $4)
+RETURNING member_id, user_id, address_id, first_name, last_name
 `
 
 const updateMemberQuery = `
 UPDATE members
-SET user_id = $1, address_id = $2, plan_id = $3, first_name = $4, last_name = $5
-WHERE member_id = $6
-RETURNING member_id, user_id, address_id, plan_id, first_name, last_name
+SET user_id = $1, address_id = $2, first_name = $3, last_name = $4
+WHERE member_id = $5
+RETURNING member_id, user_id, address_id, first_name, last_name
 `
 
 const deleteMemberQuery = `

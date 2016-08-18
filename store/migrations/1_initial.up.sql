@@ -43,17 +43,17 @@ CREATE TABLE plans (
 
 CREATE TABLE members (
  member_id  SERIAL       PRIMARY KEY
-,user_id    INTEGER      REFERENCES users
-,address_id INTEGER      REFERENCES addresses
-,plan_id    INTEGER      NOT NULL REFERENCES plans
+,user_id    INTEGER      UNIQUE REFERENCES users
+,address_id INTEGER      UNIQUE REFERENCES addresses
 ,first_name VARCHAR(35)  NOT NULL
 ,last_name  VARCHAR(35)  NOT NULL
+,CONSTRAINT valid_name CHECK(first_name <> '' OR last_name <> '')
 );
 
 CREATE TABLE memberships (
  membership_id SERIAL    PRIMARY KEY
-,plan_id       INTEGER   REFERENCES plans
-,member_id     INTEGER   REFERENCES members
+,plan_id       INTEGER   NOT NULL REFERENCES plans
+,member_id     INTEGER   NOT NULL REFERENCES members
 ,start_date    TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 ,renew_date    TIMESTAMP
 ,end_date      TIMESTAMP

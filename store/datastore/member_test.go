@@ -8,16 +8,13 @@ import (
 )
 
 var _ = Describe("Member db interactions", func() {
-	var (
-		one, two, three, four *models.Member
-		planId                int64 = 1
-	)
+	var one, two, three, four *models.Member
 
 	BeforeEach(func() {
-		one, _ = datastore.CreateMember(models.Member{FirstName: "Testing", PlanId: planId})
-		two, _ = datastore.CreateMember(models.Member{FirstName: "Testing", LastName: "Two", PlanId: planId})
-		three, _ = datastore.CreateMember(models.Member{FirstName: "Testing", LastName: "Three", PlanId: planId})
-		four, _ = datastore.CreateMember(models.Member{FirstName: "Testing", LastName: "Four", PlanId: planId})
+		one, _ = datastore.CreateMember(models.Member{FirstName: "Testing"})
+		two, _ = datastore.CreateMember(models.Member{FirstName: "Testing", LastName: "Two"})
+		three, _ = datastore.CreateMember(models.Member{FirstName: "Testing", LastName: "Three"})
+		four, _ = datastore.CreateMember(models.Member{FirstName: "Testing", LastName: "Four"})
 	})
 
 	AfterEach(func() {
@@ -94,7 +91,7 @@ var _ = Describe("Member db interactions", func() {
 
 		Describe("Successful call", func() {
 			BeforeEach(func() {
-				member = models.Member{FirstName: firstName, PlanId: planId}
+				member = models.Member{FirstName: firstName}
 				created, _ = datastore.CreateMember(member)
 			})
 
@@ -113,9 +110,8 @@ var _ = Describe("Member db interactions", func() {
 		})
 
 		Describe("Unsuccessful call", func() {
-			It("should return an error object if no plan_id", func() {
-				name := "Test Street"
-				mbr := models.Member{FirstName: name}
+			It("should return an error object if no names", func() {
+				mbr := models.Member{}
 				datastore.CreateMember(mbr)
 				_, err := datastore.CreateMember(mbr)
 				Expect(err).ToNot(BeNil())
@@ -134,7 +130,7 @@ var _ = Describe("Member db interactions", func() {
 
 		Describe("Successful call", func() {
 			BeforeEach(func() {
-				created, _ = datastore.CreateMember(models.Member{FirstName: "First Name", PlanId: planId})
+				created, _ = datastore.CreateMember(models.Member{FirstName: "First Name"})
 				created.FirstName = firstName
 				updated, _ = datastore.UpdateMember(created.MemberId, *created)
 			})

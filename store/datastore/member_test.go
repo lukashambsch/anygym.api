@@ -112,7 +112,6 @@ var _ = Describe("Member db interactions", func() {
 		Describe("Unsuccessful call", func() {
 			It("should return an error object if no names", func() {
 				mbr := models.Member{}
-				datastore.CreateMember(mbr)
 				_, err := datastore.CreateMember(mbr)
 				Expect(err).ToNot(BeNil())
 			})

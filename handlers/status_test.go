@@ -39,7 +39,7 @@ var _ = Describe("Status API", func() {
 	Describe("GetStatuses endpoint", func() {
 		var statuses []models.Status
 
-		Describe("Successful GET", func() {
+		Describe("Successful GET w/o query params", func() {
 			BeforeEach(func() {
 				statusUrl = fmt.Sprintf("%s/statuses", server.URL)
 				res, _ = http.Get(statusUrl)
@@ -53,6 +53,40 @@ var _ = Describe("Status API", func() {
 
 			It("should contain the statuses", func() {
 				Expect(len(statuses)).To(Equal(4))
+			})
+		})
+
+		Describe("Successful GET w/ query params", func() {
+			It("should return a list of matching statuses - status_name", func() {
+				res, _ = http.Get(fmt.Sprintf("%s/statuses?status_name=Denied", server.URL))
+				data, _ = ioutil.ReadAll(res.Body)
+				json.Unmarshal(data, &statuses)
+				Expect(res.StatusCode).To(Equal(http.StatusOK))
+				Expect(len(statuses)).To(Equal(2))
+			})
+
+			It("should return a matching status - status_id", func() {
+				res, _ = http.Get(fmt.Sprintf("%s/statuses?status_id=1", server.URL))
+				data, _ = ioutil.ReadAll(res.Body)
+				json.Unmarshal(data, &statuses)
+				Expect(res.StatusCode).To(Equal(http.StatusOK))
+				Expect(len(statuses)).To(Equal(1))
+			})
+
+			It("should return no statuses with an invalid field", func() {
+				res, _ = http.Get(fmt.Sprintf("%s/statuses?invalid=test", server.URL))
+				data, _ = ioutil.ReadAll(res.Body)
+				json.Unmarshal(data, &statuses)
+				Expect(res.StatusCode).To(Equal(http.StatusOK))
+				Expect(len(statuses)).To(Equal(0))
+			})
+
+			It("should return no statuses with a valid field but no matches", func() {
+				res, _ = http.Get(fmt.Sprintf("%s/statuses?status_name=Testing", server.URL))
+				data, _ = ioutil.ReadAll(res.Body)
+				json.Unmarshal(data, &statuses)
+				Expect(res.StatusCode).To(Equal(http.StatusOK))
+				Expect(len(statuses)).To(Equal(0))
 			})
 		})
 	})

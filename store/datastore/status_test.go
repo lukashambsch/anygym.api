@@ -15,7 +15,7 @@ var _ = Describe("Status db interactions", func() {
 
 		Describe("Successful call", func() {
 			BeforeEach(func() {
-				statuses, _ = datastore.GetStatusList()
+				statuses, _ = datastore.GetStatusList("")
 			})
 
 			It("should return a list of statuses", func() {

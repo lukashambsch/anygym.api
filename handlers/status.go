@@ -46,7 +46,14 @@ func GetStatus(c *gin.Context) {
 }
 
 func GetStatuses(c *gin.Context) {
-	where := BuildWhere(statusFields, c.Request.URL.Query())
+	where, err := BuildWhere(statusFields, c.Request.URL.Query())
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+
 	statuses, err := datastore.GetStatusList(where)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{

@@ -5,15 +5,17 @@ import (
 	"net/url"
 )
 
+const invalidField = "Invalid field in query params."
+
 // fields represents {field: type} mappings for db fields
-func BuildWhere(fields map[string]string, params url.Values) string {
+func BuildWhere(fields map[string]string, params url.Values) (string, error) {
 	var (
 		where string = "WHERE"
 		count int    = len(params)
 		i     int    = 1
 	)
 	if count == 0 {
-		return ""
+		return "", nil
 	}
 
 	for k, v := range params {
@@ -28,13 +30,15 @@ func BuildWhere(fields map[string]string, params url.Values) string {
 			if i < count {
 				where += " AND"
 			}
+		} else {
+			return "", fmt.Errorf(invalidField)
 		}
 		i += 1
 	}
 
 	if where == "WHERE" {
-		return "LIMIT 0"
+		return "LIMIT 0", nil
 	}
 
-	return where
+	return where, nil
 }

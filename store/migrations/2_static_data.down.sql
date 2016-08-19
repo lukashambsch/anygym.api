@@ -1,3 +1,4 @@
+DELETE FROM memberships;
 DELETE FROM members;
 DELETE FROM plans;
 DELETE FROM statuses;

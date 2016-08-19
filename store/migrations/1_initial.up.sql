@@ -43,7 +43,7 @@ CREATE TABLE plans (
 
 CREATE TABLE members (
  member_id  SERIAL       PRIMARY KEY
-,user_id    INTEGER      UNIQUE REFERENCES users
+,user_id    INTEGER      NOT NULL UNIQUE REFERENCES users
 ,address_id INTEGER      UNIQUE REFERENCES addresses
 ,first_name VARCHAR(35)  NOT NULL
 ,last_name  VARCHAR(35)  NOT NULL

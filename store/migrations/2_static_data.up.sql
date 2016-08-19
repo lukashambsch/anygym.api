@@ -76,3 +76,27 @@ INSERT INTO support_sources (support_source_name) VALUES
   ('web app - members'),
   ('web app - gyms'),
   ('email');
+
+INSERT INTO members (user_id, first_name, last_name) VALUES
+  (
+    (SELECT user_id FROM users WHERE email = 'lukas.hambsch@gmail.com'),
+    'Lukas',
+    'Hambsch'
+  ),
+  (
+    (SELECT user_id FROM users WHERE email = 'bugentry@hotmail.com'),
+    'McKenzie',
+    'Hambsch'
+  );
+
+INSERT INTO memberships (plan_id, member_id, active) VALUES
+  (
+    (SELECT plan_id FROM plans WHERE plan_name = 'All Access' AND price = 0),
+    (SELECT member_id FROM members WHERE first_name = 'Lukas'),
+    true
+  ),
+  (
+    (SELECT plan_id FROM plans WHERE plan_name = 'All Access' AND price = 0),
+    (SELECT member_id FROM members WHERE first_name = 'McKenzie'),
+    true
+  );

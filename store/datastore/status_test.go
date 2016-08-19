@@ -13,13 +13,30 @@ var _ = Describe("Status db interactions", func() {
 	Describe("GetStatusList", func() {
 		var statuses []models.Status
 
-		Describe("Successful call", func() {
-			BeforeEach(func() {
+		Describe("Successful calls", func() {
+			It("should return a list of all statuses", func() {
 				statuses, _ = datastore.GetStatusList("")
+				Expect(len(statuses)).To(Equal(4))
 			})
 
-			It("should return a list of statuses", func() {
-				Expect(len(statuses)).To(Equal(4))
+			It("should return a list of one partially matching status", func() {
+				statuses, _ = datastore.GetStatusList("WHERE status_name LIKE '%Pend%'")
+				Expect(len(statuses)).To(Equal(1))
+			})
+
+			It("should return a list of one exact match status", func() {
+				statuses, _ = datastore.GetStatusList("WHERE status_name LIKE '%Pending%'")
+				Expect(len(statuses)).To(Equal(1))
+			})
+
+			It("should return a list of multiple matching statuses", func() {
+				statuses, _ = datastore.GetStatusList("WHERE status_name LIKE '%Denied%'")
+				Expect(len(statuses)).To(Equal(2))
+			})
+
+			It("should match status_id", func() {
+				statuses, _ = datastore.GetStatusList("WHERE status_id = '1'")
+				Expect(len(statuses)).To(Equal(1))
 			})
 		})
 	})

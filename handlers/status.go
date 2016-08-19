@@ -2,9 +2,7 @@ package handlers
 
 import (
 	"database/sql"
-	"fmt"
 	"net/http"
-	"net/url"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -16,42 +14,9 @@ import (
 const StatusId = "status_id"
 const InvalidStatusId = "Invalid " + StatusId
 
-// if field maps to true then partial matches will be returned
-var statusFields map[string]bool = map[string]bool{
-	"status_id":   false,
-	"status_name": true,
-}
-
-func BuildWhere(fields map[string]bool, params url.Values) string {
-	var (
-		where string = "WHERE"
-		count int    = len(params)
-		i     int    = 1
-	)
-	if count == 0 {
-		return ""
-	}
-
-	for k, v := range params {
-		if _, ok := fields[k]; ok {
-			if fields[k] == true {
-				where = fmt.Sprintf("%s %s LIKE '%%%s%%'", where, k, v[0])
-			} else {
-				where = fmt.Sprintf("%s %s = '%s'", where, k, v[0])
-			}
-
-			if i < count {
-				where += " AND"
-			}
-		}
-		i += 1
-	}
-
-	if where == "WHERE" {
-		return "LIMIT 0"
-	}
-
-	return where
+var statusFields map[string]string = map[string]string{
+	"status_id":   "int",
+	"status_name": "string",
 }
 
 func GetStatus(c *gin.Context) {

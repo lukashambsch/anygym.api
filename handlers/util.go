@@ -30,15 +30,50 @@ func BuildWhere(fields map[string]string, params url.Values) (string, error) {
 			if i < count {
 				where += " AND"
 			}
-		} else {
+		} else if k != "order_by" && k != "sort_order" {
 			return "", fmt.Errorf(invalidField)
 		}
 		i += 1
 	}
 
 	if where == "WHERE" {
-		return "LIMIT 0", nil
+		return "", nil
 	}
 
 	return where, nil
+}
+
+func BuildSort(fields map[string]string, params url.Values) (string, error) {
+	var (
+		statement    string = "ORDER BY"
+		validOrderBy bool   = false
+	)
+
+	sortOrder := params.Get("sort_order")
+	orderBy := params.Get("order_by")
+
+	if sortOrder == "" && orderBy == "" {
+		return "", nil
+	}
+
+	if sortOrder == "" {
+		sortOrder = "asc"
+	}
+	if sortOrder != "asc" && sortOrder != "desc" {
+		return "", fmt.Errorf("sort_order must be either 'asc', 'desc', or ''")
+	}
+
+	for k, _ := range fields {
+		if k == orderBy {
+			validOrderBy = true
+			break
+		}
+	}
+	if !validOrderBy {
+		return "", fmt.Errorf("Invalid order_by field.")
+	}
+
+	statement = fmt.Sprintf("%s %s %s", statement, orderBy, sortOrder)
+
+	return statement, nil
 }

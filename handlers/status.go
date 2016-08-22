@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -46,7 +47,9 @@ func GetStatus(c *gin.Context) {
 }
 
 func GetStatuses(c *gin.Context) {
-	where, err := BuildWhere(statusFields, c.Request.URL.Query())
+	var statement string
+	query := c.Request.URL.Query()
+	where, err := BuildWhere(statusFields, query)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"message": err.Error(),
@@ -54,7 +57,18 @@ func GetStatuses(c *gin.Context) {
 		return
 	}
 
-	statuses, err := datastore.GetStatusList(where)
+	sort, err := BuildSort(statusFields, query)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+
+	statement = fmt.Sprintf("%s %s", where, sort)
+
+	fmt.Println(statement)
+	statuses, err := datastore.GetStatusList(statement)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "Error getting status list.",

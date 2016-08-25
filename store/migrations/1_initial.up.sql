@@ -81,24 +81,9 @@ CREATE TABLE images (
 ,UNIQUE(gym_id, image_path)
 );
 
-CREATE TABLE business_hours (
- business_hour_id    SERIAL  PRIMARY KEY
-,gym_id              INTEGER REFERENCES gyms
-,day                 INTEGER NOT NULL
-,open_time           TIME    NOT NULL
-,close_time          TIME    NOT NULL
-);
-
 CREATE TABLE holidays (
  holiday_id   SERIAL      PRIMARY KEY
 ,holiday_name VARCHAR(50) NOT NULL UNIQUE
-);
-
-CREATE TABLE gym_holidays (
- gym_holiday_id          SERIAL  PRIMARY KEY
-,gym_id                  INTEGER NOT NULL REFERENCES gyms
-,holiday_id              INTEGER NOT NULL REFERENCES holidays
-,business_hour_id        INTEGER NOT NULL REFERENCES business_hours
 );
 
 CREATE TABLE features (
@@ -121,6 +106,22 @@ CREATE TABLE locations (
 ,website_url        VARCHAR(255)
 ,in_network         BOOLEAN
 ,monthly_member_fee FLOAT
+);
+
+CREATE TABLE days (
+ day_id   SERIAL PRIMARY KEY
+,day_name VARCHAR(9) NOT NULL
+);
+
+CREATE TABLE business_hours (
+ business_hour_id    SERIAL  PRIMARY KEY
+,location_id         INTEGER NOT NULL REFERENCES locations
+,holiday_id          INTEGER REFERENCES holidays
+,day_id              INTEGER REFERENCES days
+,open_time           TIME    NOT NULL
+,close_time          TIME    NOT NULL
+,UNIQUE(location_id, day_id)
+,UNIQUE(location_id, holiday_id)
 );
 
 CREATE TABLE statuses (

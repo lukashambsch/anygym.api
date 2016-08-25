@@ -4,8 +4,9 @@ import "time"
 
 type BusinessHour struct {
 	BusinessHourId int64     `json:"business_hour_id"`
-	GymId          int64     `json:"gym_id"`
-	Day            int       `json:"day"`
+	LocationId     int64     `json:"location_id"`
+	HolidayId      int64     `json:"holiday_id"`
+	DayId          int64     `json:"day_id"`
 	OpenTime       time.Time `json:"open_time"`
-	CloseTime      time.Time `json:close_time"`
+	CloseTime      time.Time `json:"close_time"`
 }

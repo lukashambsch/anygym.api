@@ -1,14 +1,17 @@
-INSERT INTO plans (plan_name, price) VALUES
+INSERT INTO plans (plan_name, price)
+VALUES
   ('All Access', 50),
   ('All Access', 0);
 
-INSERT INTO statuses (status_name) VALUES
+INSERT INTO statuses (status_name)
+VALUES
   ('Pending'),
   ('Approved'),
   ('Denied - Identity'),
   ('Denied - Banned');
 
-INSERT INTO holidays (holiday_name) VALUES
+INSERT INTO holidays (holiday_name)
+VALUES
   ('New Year''s Day'),
   ('Martin Luther King Day'),
   ('Presidents Day'),
@@ -22,7 +25,8 @@ INSERT INTO holidays (holiday_name) VALUES
   ('Christmas Day'),
   ('New Year''s Eve');
 
-INSERT INTO features (feature_name, feature_description) VALUES
+INSERT INTO features (feature_name, feature_description)
+VALUES
   ('Towel Service', 'Towels are provided at the location at no additional charge.'),
   ('Sauna', 'A sauna is provided.'),
   ('Personal Viewing Screens', 'Cardio equipment is equipped with a small television.'),
@@ -48,18 +52,21 @@ INSERT INTO features (feature_name, feature_description) VALUES
   ('Locker Rooms', 'Locker rooms are provided.'),
   ('Group Cycling (Spin)', 'Group cycling or spin classes are provided.');
 
-INSERT INTO users (email) VALUES
+INSERT INTO users (email)
+VALUES
   ('lukas.hambsch@gmail.com'),
   ('bugentry@hotmail.com');
 
-INSERT INTO roles (role_name) VALUES
+INSERT INTO roles (role_name)
+VALUES
   ('admin'),
   ('employee'),
   ('gym'),
   ('location'),
   ('member');
 
-INSERT INTO user_roles (user_id, role_id) VALUES
+INSERT INTO user_roles (user_id, role_id)
+VALUES
   (
     (SELECT user_id FROM users WHERE email = 'lukas.hambsch@gmail.com'),
     (SELECT role_id FROM roles WHERE role_name = 'admin')
@@ -69,7 +76,8 @@ INSERT INTO user_roles (user_id, role_id) VALUES
     (SELECT role_id FROM roles WHERE role_name = 'employee')
   );
 
-INSERT INTO support_sources (support_source_name) VALUES
+INSERT INTO support_sources (support_source_name)
+VALUES
   ('website'),
   ('mobile app - logged in'),
   ('mobile app - logged out'),
@@ -77,7 +85,8 @@ INSERT INTO support_sources (support_source_name) VALUES
   ('web app - gyms'),
   ('email');
 
-INSERT INTO members (user_id, first_name, last_name) VALUES
+INSERT INTO members (user_id, first_name, last_name)
+VALUES
   (
     (SELECT user_id FROM users WHERE email = 'lukas.hambsch@gmail.com'),
     'Lukas',
@@ -89,7 +98,8 @@ INSERT INTO members (user_id, first_name, last_name) VALUES
     'Hambsch'
   );
 
-INSERT INTO memberships (plan_id, member_id, active) VALUES
+INSERT INTO memberships (plan_id, member_id, active)
+VALUES
   (
     (SELECT plan_id FROM plans WHERE plan_name = 'All Access' AND price = 0),
     (SELECT member_id FROM members WHERE first_name = 'Lukas'),
@@ -100,3 +110,13 @@ INSERT INTO memberships (plan_id, member_id, active) VALUES
     (SELECT member_id FROM members WHERE first_name = 'McKenzie'),
     true
   );
+
+INSERT INTO days (day_name)
+VALUES
+  ('Monday'),
+  ('Tuesday'),
+  ('Wednesday'),
+  ('Thursday'),
+  ('Friday'),
+  ('Saturday'),
+  ('Sunday');

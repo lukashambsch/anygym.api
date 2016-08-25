@@ -76,8 +76,9 @@ CREATE TABLE gyms (
 CREATE TABLE images (
  image_id    SERIAL       PRIMARY KEY
 ,gym_id      INTEGER      REFERENCES gyms
-,user_id     INTEGER      REFERENCES users
-,image_path  VARCHAR(100)
+,user_id     INTEGER      UNIQUE REFERENCES users
+,image_path  VARCHAR(255)
+,UNIQUE(gym_id, image_path)
 );
 
 CREATE TABLE business_hours (

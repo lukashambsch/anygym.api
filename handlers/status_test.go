@@ -80,17 +80,55 @@ var _ = Describe("Status API", func() {
 				Expect(res.StatusCode).To(Equal(http.StatusOK))
 				Expect(len(statuses)).To(Equal(0))
 			})
+
+			It("should sort statuses by the correct field ascending", func() {
+				res, _ = http.Get(fmt.Sprintf("%s/statuses?sort_order=asc&order_by=status_name", server.URL))
+				data, _ = ioutil.ReadAll(res.Body)
+				json.Unmarshal(data, &statuses)
+				Expect(res.StatusCode).To(Equal(http.StatusOK))
+				Expect(statuses[0].StatusName).To(Equal("Approved"))
+				Expect(statuses[1].StatusName).To(Equal("Denied - Banned"))
+				Expect(statuses[2].StatusName).To(Equal("Denied - Identity"))
+				Expect(statuses[3].StatusName).To(Equal("Pending"))
+			})
+
+			It("should sort statuses by the correct fStatusNameStatusNameStatusNameield descending", func() {
+				res, _ = http.Get(fmt.Sprintf("%s/statuses?sort_order=desc&order_by=status_id", server.URL))
+				data, _ = ioutil.ReadAll(res.Body)
+				json.Unmarshal(data, &statuses)
+				Expect(res.StatusCode).To(Equal(http.StatusOK))
+				Expect(statuses[0].StatusId).To(Equal(int64(4)))
+				Expect(statuses[1].StatusId).To(Equal(int64(3)))
+				Expect(statuses[2].StatusId).To(Equal(int64(2)))
+				Expect(statuses[3].StatusId).To(Equal(int64(1)))
+			})
 		})
 
 		Describe("Unsuccessful GET w/ query params", func() {
 			var errRes handlers.APIErrorMessage
 
-			It("should return no statuses with an invalid field", func() {
+			It("should return an error with an invalid field as query param", func() {
 				res, _ = http.Get(fmt.Sprintf("%s/statuses?invalid=test", server.URL))
 				data, _ = ioutil.ReadAll(res.Body)
 				json.Unmarshal(data, &errRes)
 				Expect(res.StatusCode).To(Equal(http.StatusNotFound))
 				Expect(errRes.Message).To(Equal("Invalid field in query params."))
+			})
+
+			It("should return an error with an invalid field in order_by", func() {
+				res, _ = http.Get(fmt.Sprintf("%s/statuses?order_by=invalid", server.URL))
+				data, _ = ioutil.ReadAll(res.Body)
+				json.Unmarshal(data, &errRes)
+				Expect(res.StatusCode).To(Equal(http.StatusNotFound))
+				Expect(errRes.Message).To(Equal("Invalid order_by field."))
+			})
+
+			It("should return an error with an invalid value for sort_order", func() {
+				res, _ = http.Get(fmt.Sprintf("%s/statuses?order_by=status_name&sort_order=random", server.URL))
+				data, _ = ioutil.ReadAll(res.Body)
+				json.Unmarshal(data, &errRes)
+				Expect(res.StatusCode).To(Equal(http.StatusNotFound))
+				Expect(errRes.Message).To(Equal("sort_order must be either 'asc', 'desc', or ''"))
 			})
 		})
 	})

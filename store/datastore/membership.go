@@ -1,17 +1,20 @@
 package datastore
 
 import (
+	"fmt"
+
 	"github.com/lukashambsch/gym-all-over/models"
 	"github.com/lukashambsch/gym-all-over/store"
 )
 
-func GetMembershipList() ([]models.Membership, error) {
+func GetMembershipList(where string) ([]models.Membership, error) {
 	var (
 		memberships []models.Membership
 		membership  models.Membership
 	)
 
-	rows, err := store.DB.Query(getMembershipListQuery)
+	query := fmt.Sprintf("%s %s", getMembershipListQuery, where)
+	rows, err := store.DB.Query(query)
 	if err != nil {
 		return nil, err
 	}

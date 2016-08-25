@@ -65,6 +65,14 @@ var _ = Describe("Status API", func() {
 				Expect(len(statuses)).To(Equal(2))
 			})
 
+			It("should return a list of matching statuses - status_name - partial match", func() {
+				res, _ = http.Get(fmt.Sprintf("%s/statuses?status_name=Pend", server.URL))
+				data, _ = ioutil.ReadAll(res.Body)
+				json.Unmarshal(data, &statuses)
+				Expect(res.StatusCode).To(Equal(http.StatusOK))
+				Expect(statuses[0].StatusName).To(Equal("Pending"))
+			})
+
 			It("should return a matching status - status_id", func() {
 				res, _ = http.Get(fmt.Sprintf("%s/statuses?status_id=1", server.URL))
 				data, _ = ioutil.ReadAll(res.Body)

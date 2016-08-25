@@ -29,7 +29,7 @@ var _ = Describe("Address db interactions", func() {
 
 		Describe("Successful call", func() {
 			BeforeEach(func() {
-				addresses, _ = datastore.GetAddressList()
+				addresses, _ = datastore.GetAddressList("")
 			})
 
 			It("should return a list of addresses", func() {

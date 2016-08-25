@@ -29,7 +29,7 @@ var _ = Describe("Plan db interactions", func() {
 
 		Describe("Successful call", func() {
 			BeforeEach(func() {
-				plans, _ = datastore.GetPlanList()
+				plans, _ = datastore.GetPlanList("")
 			})
 
 			It("should return a list of plans", func() {

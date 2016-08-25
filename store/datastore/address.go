@@ -1,17 +1,20 @@
 package datastore
 
 import (
+	"fmt"
+
 	"github.com/lukashambsch/gym-all-over/models"
 	"github.com/lukashambsch/gym-all-over/store"
 )
 
-func GetAddressList() ([]models.Address, error) {
+func GetAddressList(where string) ([]models.Address, error) {
 	var (
 		addresses []models.Address
 		address   models.Address
 	)
 
-	rows, err := store.DB.Query(getAddressListQuery)
+	query := fmt.Sprintf("%s %s", getAddressListQuery, where)
+	rows, err := store.DB.Query(query)
 	if err != nil {
 		return nil, err
 	}

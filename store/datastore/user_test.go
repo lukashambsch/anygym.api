@@ -15,7 +15,7 @@ var _ = Describe("User db interactions", func() {
 
 		Describe("Successful call", func() {
 			BeforeEach(func() {
-				users, _ = datastore.GetUserList()
+				users, _ = datastore.GetUserList("")
 			})
 
 			It("should return a list of users", func() {

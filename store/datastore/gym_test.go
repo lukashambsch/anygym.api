@@ -29,7 +29,7 @@ var _ = Describe("Gym db interactions", func() {
 
 		Describe("Successful call", func() {
 			BeforeEach(func() {
-				gyms, _ = datastore.GetGymList()
+				gyms, _ = datastore.GetGymList("")
 			})
 
 			It("should return a list of gyms", func() {

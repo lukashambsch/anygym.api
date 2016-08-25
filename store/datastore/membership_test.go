@@ -15,7 +15,7 @@ var _ = Describe("Membership db interactions", func() {
 
 		Describe("Successful call", func() {
 			BeforeEach(func() {
-				memberships, _ = datastore.GetMembershipList()
+				memberships, _ = datastore.GetMembershipList("")
 			})
 
 			It("should return a list of memberships", func() {

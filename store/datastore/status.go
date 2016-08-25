@@ -14,7 +14,6 @@ func GetStatusList(where string) ([]models.Status, error) {
 	)
 
 	query := fmt.Sprintf("%s %s", getStatusListQuery, where)
-	fmt.Println(query)
 	rows, err := store.DB.Query(query)
 	if err != nil {
 		return nil, err

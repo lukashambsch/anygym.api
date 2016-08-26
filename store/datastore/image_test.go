@@ -8,13 +8,16 @@ import (
 )
 
 var _ = Describe("Image db interactions", func() {
-	var one, two, three, four *models.Image
+	var (
+		one, two, three, four *models.Image
+		gymId                 int64 = 1
+	)
 
 	BeforeEach(func() {
-		one, _ = datastore.CreateImage(models.Image{ImagePath: "/tst/img/path"})
-		two, _ = datastore.CreateImage(models.Image{ImagePath: "/tst/img/path/two"})
-		three, _ = datastore.CreateImage(models.Image{ImagePath: "/tst/img/path/three"})
-		four, _ = datastore.CreateImage(models.Image{ImagePath: "/tst/img/path/four"})
+		one, _ = datastore.CreateImage(models.Image{GymId: &gymId, ImagePath: "/tst/img/path"})
+		two, _ = datastore.CreateImage(models.Image{GymId: &gymId, ImagePath: "/tst/img/path/two"})
+		three, _ = datastore.CreateImage(models.Image{GymId: &gymId, ImagePath: "/tst/img/path/three"})
+		four, _ = datastore.CreateImage(models.Image{GymId: &gymId, ImagePath: "/tst/img/path/four"})
 	})
 
 	AfterEach(func() {
@@ -91,7 +94,7 @@ var _ = Describe("Image db interactions", func() {
 
 		Describe("Successful call", func() {
 			BeforeEach(func() {
-				image = models.Image{ImagePath: imagePath}
+				image = models.Image{GymId: &gymId, ImagePath: imagePath}
 				created, _ = datastore.CreateImage(image)
 			})
 
@@ -140,8 +143,8 @@ var _ = Describe("Image db interactions", func() {
 
 		Describe("Successful call", func() {
 			BeforeEach(func() {
-				image = models.Image{ImagePath: imagePath}
-				created, _ = datastore.CreateImage(models.Image{ImagePath: "/old/path"})
+				image = models.Image{GymId: &gymId, ImagePath: imagePath}
+				created, _ = datastore.CreateImage(models.Image{GymId: &gymId, ImagePath: "/old/path"})
 				updated, _ = datastore.UpdateImage(created.ImageId, image)
 			})
 

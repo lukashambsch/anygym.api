@@ -74,14 +74,6 @@ CREATE TABLE gyms (
 ,monthly_member_fee FLOAT
 );
 
-CREATE TABLE images (
- image_id    SERIAL       PRIMARY KEY
-,gym_id      INTEGER      REFERENCES gyms
-,user_id     INTEGER      UNIQUE REFERENCES users
-,image_path  VARCHAR(255)
-,UNIQUE(gym_id, image_path)
-);
-
 CREATE TABLE holidays (
  holiday_id   SERIAL      PRIMARY KEY
 ,holiday_name VARCHAR(50) NOT NULL UNIQUE
@@ -110,6 +102,21 @@ CREATE TABLE gym_locations (
 ,website_url        VARCHAR(255)
 ,in_network         BOOLEAN
 ,monthly_member_fee FLOAT
+);
+
+CREATE TABLE images (
+ image_id        SERIAL       PRIMARY KEY
+,gym_id          INTEGER      REFERENCES gyms
+,gym_location_id INTEGER      REFERENCES gym_locations
+,user_id         INTEGER      UNIQUE REFERENCES users
+,image_path      VARCHAR(255)
+,UNIQUE(gym_location_id, image_path)
+,UNIQUE(gym_id, image_path)
+,CONSTRAINT user_or_gym_location CHECK(
+  (gym_location_id IS NOT NULL OR user_id IS NOT NULL OR gym_id IS NOT NULL)
+  AND
+  (gym_location_id IS NULL OR user_id IS NULL OR gym_id IS NULL)
+)
 );
 
 CREATE TABLE days (
@@ -165,6 +172,7 @@ CREATE TABLE support_requests (
 ,user_id            INTEGER   REFERENCES users
 ,support_source_id  INTEGER   REFERENCES support_sources
 ,content            TEXT      NOT NULL
+,notes              TEXT
 ,created_on         TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ,resolved_on        TIMESTAMP
 );

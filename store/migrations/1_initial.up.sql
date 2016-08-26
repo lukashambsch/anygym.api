@@ -139,6 +139,7 @@ CREATE TABLE visits (
 ,gym_location_id INTEGER   NOT NULL REFERENCES gym_locations
 ,status_id       INTEGER   NOT NULL REFERENCES statuses
 ,created_on      TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+,modified_on     TIMESTAMP
 );
 
 -- Table to hold required info for outside memberships.

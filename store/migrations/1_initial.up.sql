@@ -103,7 +103,7 @@ CREATE TABLE gym_features (
 
 CREATE TABLE gym_locations (
  gym_location_id    SERIAL       PRIMARY KEY
-,address_id         INTEGER      REFERENCES addresses
+,address_id         INTEGER      NOT NULL UNIQUE REFERENCES addresses
 ,location_name      VARCHAR(50)  NOT NULL
 ,phone_number       VARCHAR(15)
 ,website_url        VARCHAR(255)

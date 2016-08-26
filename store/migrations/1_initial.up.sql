@@ -112,8 +112,8 @@ CREATE TABLE gym_locations (
 );
 
 CREATE TABLE days (
- day_id   SERIAL PRIMARY KEY
-,day_name VARCHAR(9) NOT NULL
+ day_id   SERIAL     PRIMARY KEY
+,day_name VARCHAR(9) NOT NULL UNIQUE
 );
 
 CREATE TABLE business_hours (

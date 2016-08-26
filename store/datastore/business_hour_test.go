@@ -12,13 +12,13 @@ var _ = Describe("BusinessHour db interactions", func() {
 		businessHourOne, businessHourTwo *models.BusinessHour
 		addr                             *models.Address
 		gymLocation                      *models.GymLocation
-		mondayId                         int64 = 1
-		tuesdayId                        int64 = 2
+		mondayId, tuesdayId, gymId       int64 = 1, 2, 1
 	)
 
 	BeforeEach(func() {
 		addr, _ = datastore.CreateAddress(models.Address{StreetAddress: "Testing"})
 		gymLocation, _ = datastore.CreateGymLocation(models.GymLocation{
+			GymId:        gymId,
 			AddressId:    addr.AddressId,
 			LocationName: "Testing",
 		})

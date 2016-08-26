@@ -11,16 +11,19 @@ var _ = Describe("GymLocation db interactions", func() {
 	var (
 		one, two      *models.GymLocation
 		addr, address *models.Address
+		gymId         int64 = 1
 	)
 
 	BeforeEach(func() {
 		addr, _ = datastore.CreateAddress(models.Address{StreetAddress: "Testing"})
 		address, _ = datastore.CreateAddress(models.Address{StreetAddress: "Testing Two"})
 		one, _ = datastore.CreateGymLocation(models.GymLocation{
+			GymId:        gymId,
 			AddressId:    addr.AddressId,
 			LocationName: "Testing",
 		})
 		two, _ = datastore.CreateGymLocation(models.GymLocation{
+			GymId:        gymId,
 			AddressId:    address.AddressId,
 			LocationName: "Testing Two",
 		})
@@ -102,7 +105,7 @@ var _ = Describe("GymLocation db interactions", func() {
 		Describe("Successful call", func() {
 			BeforeEach(func() {
 				newAddr, _ = datastore.CreateAddress(models.Address{StreetAddress: "New One"})
-				gymLocation = models.GymLocation{AddressId: newAddr.AddressId, LocationName: locationName}
+				gymLocation = models.GymLocation{GymId: gymId, AddressId: newAddr.AddressId, LocationName: locationName}
 				created, _ = datastore.CreateGymLocation(gymLocation)
 			})
 
@@ -124,7 +127,7 @@ var _ = Describe("GymLocation db interactions", func() {
 		Describe("Unsuccessful call", func() {
 			It("should return an error object if gymLocation is not unique", func() {
 				street := "Test Street"
-				loc := models.GymLocation{AddressId: addr.AddressId, LocationName: street}
+				loc := models.GymLocation{GymId: gymId, AddressId: addr.AddressId, LocationName: street}
 				_, err := datastore.CreateGymLocation(loc)
 				Expect(err).ToNot(BeNil())
 			})
@@ -144,8 +147,9 @@ var _ = Describe("GymLocation db interactions", func() {
 		Describe("Successful call", func() {
 			BeforeEach(func() {
 				newAddr, _ = datastore.CreateAddress(models.Address{StreetAddress: "Another Test Street"})
-				gymLocation = models.GymLocation{AddressId: newAddr.AddressId, LocationName: locationName}
+				gymLocation = models.GymLocation{GymId: gymId, AddressId: newAddr.AddressId, LocationName: locationName}
 				created, _ = datastore.CreateGymLocation(models.GymLocation{
+					GymId:        gymId,
 					AddressId:    newAddr.AddressId,
 					LocationName: "Test Name",
 				})

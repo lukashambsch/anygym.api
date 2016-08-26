@@ -12,6 +12,7 @@ var _ = Describe("Visit db interactions", func() {
 		visitOne, visitTwo *models.Visit
 		addr               *models.Address
 		gymLocation        *models.GymLocation
+		gymId              int64 = 1
 		memberId           int64 = 1
 		statusId           int64 = 1
 	)
@@ -19,6 +20,7 @@ var _ = Describe("Visit db interactions", func() {
 	BeforeEach(func() {
 		addr, _ = datastore.CreateAddress(models.Address{StreetAddress: "Testing"})
 		gymLocation, _ = datastore.CreateGymLocation(models.GymLocation{
+			GymId:        gymId,
 			AddressId:    addr.AddressId,
 			LocationName: "Testing",
 		})

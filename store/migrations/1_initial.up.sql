@@ -103,6 +103,7 @@ CREATE TABLE gym_features (
 
 CREATE TABLE gym_locations (
  gym_location_id    SERIAL       PRIMARY KEY
+,gym_id             INTEGER      NOT NULL REFERENCES gyms
 ,address_id         INTEGER      NOT NULL UNIQUE REFERENCES addresses
 ,location_name      VARCHAR(50)  NOT NULL
 ,phone_number       VARCHAR(15)
@@ -147,8 +148,11 @@ CREATE TABLE visits (
 CREATE TABLE outside_memberships (
  outside_membership_id SERIAL  PRIMARY KEY
 ,member_id             INTEGER NOT NULL REFERENCES members
-,gym_location_id       INTEGER NOT NULL REFERENCES gym_locations
-,gym_id                INTEGER NOT NULL REFERENCES gyms
+,gym_location_id       INTEGER REFERENCES gym_locations
+,gym_id                INTEGER REFERENCES gyms
+,CONSTRAINT gym_location_or_gym CHECK(
+  (gym_location_id IS NOT NULL OR gym_id IS NOT NULL) AND (gym_location_id IS NULL OR gym_id IS NULL)
+)
 );
 
 CREATE TABLE support_sources (

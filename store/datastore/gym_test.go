@@ -8,21 +8,7 @@ import (
 )
 
 var _ = Describe("Gym db interactions", func() {
-	var one, two, three, four *models.Gym
-
-	BeforeEach(func() {
-		one, _ = datastore.CreateGym(models.Gym{GymName: "Testing"})
-		two, _ = datastore.CreateGym(models.Gym{GymName: "Testing Two"})
-		three, _ = datastore.CreateGym(models.Gym{GymName: "Testing Three"})
-		four, _ = datastore.CreateGym(models.Gym{GymName: "Testing Four"})
-	})
-
-	AfterEach(func() {
-		datastore.DeleteGym(one.GymId)
-		datastore.DeleteGym(two.GymId)
-		datastore.DeleteGym(three.GymId)
-		datastore.DeleteGym(four.GymId)
-	})
+	var gymId int64 = 1
 
 	Describe("GetGymList", func() {
 		var gyms []models.Gym
@@ -43,14 +29,14 @@ var _ = Describe("Gym db interactions", func() {
 
 		Describe("Successful call", func() {
 			It("should return the correct gym", func() {
-				gym, _ = datastore.GetGym(one.GymId)
-				Expect(gym.GymId).To(Equal(one.GymId))
+				gym, _ = datastore.GetGym(gymId)
+				Expect(gym.GymId).To(Equal(gymId))
 			})
 		})
 
 		Describe("Unsuccessful call", func() {
 			var (
-				nonExistentId int64 = 5
+				nonExistentId int64 = 5000
 				err           error
 			)
 
@@ -141,7 +127,7 @@ var _ = Describe("Gym db interactions", func() {
 		Describe("Unsuccessful call", func() {
 			BeforeEach(func() {
 				gym = models.Gym{GymName: "Pending"}
-				updated, err = datastore.UpdateGym(2, gym)
+				updated, err = datastore.UpdateGym(2000, gym)
 			})
 
 			It("should return an error object", func() {
@@ -157,7 +143,8 @@ var _ = Describe("Gym db interactions", func() {
 	Describe("DeleteGym", func() {
 		Describe("Successful call", func() {
 			It("should return nil", func() {
-				err := datastore.DeleteGym(one.GymId)
+				created, _ := datastore.CreateGym(models.Gym{GymName: "Test"})
+				err := datastore.DeleteGym(created.GymId)
 				Expect(err).To(BeNil())
 			})
 		})

@@ -22,6 +22,7 @@ func GetGymLocationList(where string) ([]models.GymLocation, error) {
 	for rows.Next() {
 		err = rows.Scan(
 			&gymLocation.GymLocationId,
+			&gymLocation.GymId,
 			&gymLocation.AddressId,
 			&gymLocation.LocationName,
 			&gymLocation.PhoneNumber,
@@ -59,6 +60,7 @@ func GetGymLocation(addressId int64) (*models.GymLocation, error) {
 	row := store.DB.QueryRow(getGymLocationQuery, addressId)
 	err := row.Scan(
 		&gymLocation.GymLocationId,
+		&gymLocation.GymId,
 		&gymLocation.AddressId,
 		&gymLocation.LocationName,
 		&gymLocation.PhoneNumber,
@@ -79,6 +81,7 @@ func CreateGymLocation(gymLocation models.GymLocation) (*models.GymLocation, err
 
 	row := store.DB.QueryRow(
 		createGymLocationQuery,
+		gymLocation.GymId,
 		gymLocation.AddressId,
 		gymLocation.LocationName,
 		gymLocation.PhoneNumber,
@@ -88,6 +91,7 @@ func CreateGymLocation(gymLocation models.GymLocation) (*models.GymLocation, err
 	)
 	err := row.Scan(
 		&created.GymLocationId,
+		&created.GymId,
 		&created.AddressId,
 		&created.LocationName,
 		&created.PhoneNumber,
@@ -107,6 +111,7 @@ func UpdateGymLocation(addressId int64, gymLocation models.GymLocation) (*models
 
 	row := store.DB.QueryRow(
 		updateGymLocationQuery,
+		gymLocation.GymId,
 		gymLocation.AddressId,
 		gymLocation.LocationName,
 		gymLocation.PhoneNumber,
@@ -117,6 +122,7 @@ func UpdateGymLocation(addressId int64, gymLocation models.GymLocation) (*models
 	)
 	err := row.Scan(
 		&updated.GymLocationId,
+		&updated.GymId,
 		&updated.AddressId,
 		&updated.LocationName,
 		&updated.PhoneNumber,
@@ -157,16 +163,16 @@ WHERE gym_location_id = $1
 `
 
 const createGymLocationQuery = `
-INSERT INTO gym_locations (address_id, location_name, phone_number, website_url, in_network, monthly_member_fee)
-VALUES ($1, $2, $3, $4, $5, $6)
-RETURNING gym_location_id, address_id, location_name, phone_number, website_url, in_network, monthly_member_fee
+INSERT INTO gym_locations (gym_id, address_id, location_name, phone_number, website_url, in_network, monthly_member_fee)
+VALUES ($1, $2, $3, $4, $5, $6, $7)
+RETURNING gym_location_id, gym_id, address_id, location_name, phone_number, website_url, in_network, monthly_member_fee
 `
 
 const updateGymLocationQuery = `
 UPDATE gym_locations
-SET address_id = $1, location_name = $2, phone_number = $3, website_url = $4, in_network = $5, monthly_member_fee = $6
-WHERE gym_location_id = $7
-RETURNING gym_location_id, address_id, location_name, phone_number, website_url, in_network, monthly_member_fee
+SET gym_id = $1, address_id = $2, location_name = $3, phone_number = $4, website_url = $5, in_network = $6, monthly_member_fee = $7
+WHERE gym_location_id = $8
+RETURNING gym_location_id, gym_id, address_id, location_name, phone_number, website_url, in_network, monthly_member_fee
 `
 
 const deleteGymLocationQuery = `

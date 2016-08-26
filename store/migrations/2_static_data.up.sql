@@ -120,3 +120,10 @@ VALUES
   ('Friday'),
   ('Saturday'),
   ('Sunday');
+
+INSERT INTO gyms (gym_name)
+VALUES
+  ('24 Hour Fitness'),
+  ('LA Fitness'),
+  ('Crunch Fitness'),
+  ('YMCA');

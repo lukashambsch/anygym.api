@@ -101,8 +101,8 @@ CREATE TABLE gym_features (
 ,UNIQUE(gym_id, feature_id)
 );
 
-CREATE TABLE locations (
- location_id        SERIAL       PRIMARY KEY
+CREATE TABLE gym_locations (
+ gym_location_id    SERIAL       PRIMARY KEY
 ,address_id         INTEGER      REFERENCES addresses
 ,location_name      VARCHAR(50)  NOT NULL
 ,phone_number       VARCHAR(15)
@@ -118,13 +118,13 @@ CREATE TABLE days (
 
 CREATE TABLE business_hours (
  business_hour_id    SERIAL  PRIMARY KEY
-,location_id         INTEGER NOT NULL REFERENCES locations
+,gym_location_id     INTEGER NOT NULL REFERENCES gym_locations
 ,holiday_id          INTEGER REFERENCES holidays
 ,day_id              INTEGER REFERENCES days
 ,open_time           TIME    NOT NULL
 ,close_time          TIME    NOT NULL
-,UNIQUE(location_id, day_id)
-,UNIQUE(location_id, holiday_id)
+,UNIQUE(gym_location_id, day_id)
+,UNIQUE(gym_location_id, holiday_id)
 );
 
 CREATE TABLE statuses (
@@ -133,11 +133,11 @@ CREATE TABLE statuses (
 );
 
 CREATE TABLE visits (
- visit_id    SERIAL    PRIMARY KEY
-,member_id   INTEGER   NOT NULL REFERENCES members
-,location_id INTEGER   NOT NULL REFERENCES locations
-,status_id   INTEGER   NOT NULL REFERENCES statuses
-,created_on  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+ visit_id        SERIAL    PRIMARY KEY
+,member_id       INTEGER   NOT NULL REFERENCES members
+,gym_location_id INTEGER   NOT NULL REFERENCES gym_locations
+,status_id       INTEGER   NOT NULL REFERENCES statuses
+,created_on      TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Table to hold required info for outside memberships.
@@ -145,7 +145,7 @@ CREATE TABLE visits (
 CREATE TABLE outside_memberships (
  outside_membership_id SERIAL  PRIMARY KEY
 ,member_id             INTEGER NOT NULL REFERENCES members
-,location_id           INTEGER NOT NULL REFERENCES locations
+,gym_location_id       INTEGER NOT NULL REFERENCES gym_locations
 ,gym_id                INTEGER NOT NULL REFERENCES gyms
 );
 

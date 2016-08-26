@@ -8,7 +8,7 @@ DROP TABLE gym_features;
 DROP TABLE features;
 DROP TABLE business_hours;
 DROP TABLE days;
-DROP TABLE locations;
+DROP TABLE gym_locations;
 DROP TABLE addresses;
 DROP TABLE gyms;
 DROP TABLE holidays;

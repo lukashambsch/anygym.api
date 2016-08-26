@@ -3,6 +3,6 @@ package models
 type OutsideMembership struct {
 	OutsideMembershipId int64 `json:"outside_membership_id"`
 	MemberId            int64 `json:"member_id"`
-	LocationId          int64 `json:"location_id"`
+	GymLocationId       int64 `json:"gym_location_id"`
 	GymId               int64 `json:"gym_id"`
 }

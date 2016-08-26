@@ -16,8 +16,9 @@ CREATE TABLE roles (
 
 CREATE TABLE user_roles (
  user_role_id SERIAL  PRIMARY KEY
-,user_id      INTEGER REFERENCES users
-,role_id      INTEGER REFERENCES roles
+,user_id      INTEGER NOT NULL REFERENCES users
+,role_id      INTEGER NOT NULL REFERENCES roles
+,UNIQUE(user_id, role_id)
 );
 
 CREATE TABLE addresses (

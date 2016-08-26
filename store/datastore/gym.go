@@ -31,10 +31,11 @@ func GetGymList(where string) ([]models.Gym, error) {
 	return gyms, nil
 }
 
-func GetGymCount() (*int, error) {
+func GetGymCount(where string) (*int, error) {
 	var count int
 
-	row := store.DB.QueryRow(getGymCountQuery)
+	query := fmt.Sprintf("%s %s", getGymCountQuery, where)
+	row := store.DB.QueryRow(query)
 	err := row.Scan(&count)
 
 	if err != nil {

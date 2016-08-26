@@ -39,10 +39,11 @@ func GetUserList(where string) ([]models.User, error) {
 	return users, nil
 }
 
-func GetUserCount() (*int, error) {
+func GetUserCount(where string) (*int, error) {
 	var count int
 
-	row := store.DB.QueryRow(getUserCountQuery)
+	query := fmt.Sprintf("%s %s", getUserCountQuery, where)
+	row := store.DB.QueryRow(query)
 	err := row.Scan(&count)
 
 	if err != nil {

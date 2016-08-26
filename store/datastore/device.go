@@ -31,10 +31,11 @@ func GetDeviceList(where string) ([]models.Device, error) {
 	return devices, nil
 }
 
-func GetDeviceCount() (*int, error) {
+func GetDeviceCount(where string) (*int, error) {
 	var count int
 
-	row := store.DB.QueryRow(getDeviceCountQuery)
+	query := fmt.Sprintf("%s %s", getDeviceCountQuery, where)
+	row := store.DB.QueryRow(query)
 	err := row.Scan(&count)
 	if err != nil {
 		return nil, err

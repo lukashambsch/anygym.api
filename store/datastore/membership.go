@@ -39,10 +39,11 @@ func GetMembershipList(where string) ([]models.Membership, error) {
 	return memberships, nil
 }
 
-func GetMembershipCount() (*int, error) {
+func GetMembershipCount(where string) (*int, error) {
 	var count int
 
-	row := store.DB.QueryRow(getMembershipCountQuery)
+	query := fmt.Sprintf("%s %s", getMembershipCountQuery, where)
+	row := store.DB.QueryRow(query)
 	err := row.Scan(&count)
 
 	if err != nil {

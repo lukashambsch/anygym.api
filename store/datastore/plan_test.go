@@ -73,7 +73,7 @@ var _ = Describe("Plan db interactions", func() {
 
 		Describe("Successful call", func() {
 			BeforeEach(func() {
-				count, _ = datastore.GetPlanCount()
+				count, _ = datastore.GetPlanCount("")
 			})
 
 			It("should return the correct count", func() {

@@ -31,10 +31,11 @@ func GetImageList(where string) ([]models.Image, error) {
 	return images, nil
 }
 
-func GetImageCount() (*int, error) {
+func GetImageCount(where string) (*int, error) {
 	var count int
 
-	row := store.DB.QueryRow(getImageCountQuery)
+	query := fmt.Sprintf("%s %s", getImageCountQuery, where)
+	row := store.DB.QueryRow(query)
 	err := row.Scan(&count)
 	if err != nil {
 		return nil, err

@@ -59,7 +59,7 @@ var _ = Describe("UserRole db interactions", func() {
 
 		Describe("Successful call", func() {
 			BeforeEach(func() {
-				count, _ = datastore.GetUserRoleCount()
+				count, _ = datastore.GetUserRoleCount("")
 			})
 
 			It("should return the correct count", func() {

@@ -74,7 +74,7 @@ var _ = Describe("Member db interactions", func() {
 
 		Describe("Successful call", func() {
 			BeforeEach(func() {
-				count, _ = datastore.GetMemberCount()
+				count, _ = datastore.GetMemberCount("")
 			})
 
 			It("should return the correct count", func() {

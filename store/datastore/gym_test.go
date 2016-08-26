@@ -73,7 +73,7 @@ var _ = Describe("Gym db interactions", func() {
 
 		Describe("Successful call", func() {
 			BeforeEach(func() {
-				count, _ = datastore.GetGymCount()
+				count, _ = datastore.GetGymCount("")
 			})
 
 			It("should return the correct count", func() {

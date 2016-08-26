@@ -73,7 +73,7 @@ var _ = Describe("Image db interactions", func() {
 
 		Describe("Successful call", func() {
 			BeforeEach(func() {
-				count, _ = datastore.GetImageCount()
+				count, _ = datastore.GetImageCount("")
 			})
 
 			It("should return the correct count", func() {

@@ -59,7 +59,7 @@ var _ = Describe("User db interactions", func() {
 
 		Describe("Successful call", func() {
 			BeforeEach(func() {
-				count, _ = datastore.GetUserCount()
+				count, _ = datastore.GetUserCount("")
 			})
 
 			It("should return the correct count", func() {

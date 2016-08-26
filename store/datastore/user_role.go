@@ -31,10 +31,11 @@ func GetUserRoleList(where string) ([]models.UserRole, error) {
 	return userRoles, nil
 }
 
-func GetUserRoleCount() (*int, error) {
+func GetUserRoleCount(where string) (*int, error) {
 	var count int
 
-	row := store.DB.QueryRow(getUserRoleCountQuery)
+	query := fmt.Sprintf("%s %s", getUserRoleCountQuery, where)
+	row := store.DB.QueryRow(query)
 	err := row.Scan(&count)
 	if err != nil {
 		return nil, err

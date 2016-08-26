@@ -73,7 +73,7 @@ var _ = Describe("Address db interactions", func() {
 
 		Describe("Successful call", func() {
 			BeforeEach(func() {
-				count, _ = datastore.GetAddressCount()
+				count, _ = datastore.GetAddressCount("")
 			})
 
 			It("should return the correct count", func() {

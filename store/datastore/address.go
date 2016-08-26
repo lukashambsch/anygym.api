@@ -40,10 +40,11 @@ func GetAddressList(where string) ([]models.Address, error) {
 	return addresses, nil
 }
 
-func GetAddressCount() (*int, error) {
+func GetAddressCount(where string) (*int, error) {
 	var count int
 
-	row := store.DB.QueryRow(getAddressCountQuery)
+	query := fmt.Sprintf("%s %s", getAddressCountQuery, where)
+	row := store.DB.QueryRow(query)
 	err := row.Scan(&count)
 
 	if err != nil {

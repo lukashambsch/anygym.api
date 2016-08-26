@@ -73,7 +73,7 @@ var _ = Describe("Device db interactions", func() {
 
 		Describe("Successful call", func() {
 			BeforeEach(func() {
-				count, _ = datastore.GetDeviceCount()
+				count, _ = datastore.GetDeviceCount("")
 			})
 
 			It("should return the correct count", func() {

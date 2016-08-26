@@ -31,10 +31,11 @@ func GetPlanList(where string) ([]models.Plan, error) {
 	return plans, nil
 }
 
-func GetPlanCount() (*int, error) {
+func GetPlanCount(where string) (*int, error) {
 	var count int
 
-	row := store.DB.QueryRow(getPlanCountQuery)
+	query := fmt.Sprintf("%s %s", getPlanCountQuery, where)
+	row := store.DB.QueryRow(query)
 	err := row.Scan(&count)
 	if err != nil {
 		return nil, err

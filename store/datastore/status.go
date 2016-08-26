@@ -31,10 +31,11 @@ func GetStatusList(where string) ([]models.Status, error) {
 	return statuses, nil
 }
 
-func GetStatusCount() (*int, error) {
+func GetStatusCount(where string) (*int, error) {
 	var count int
 
-	row := store.DB.QueryRow(getStatusCountQuery)
+	query := fmt.Sprintf("%s %s", getStatusCountQuery, where)
+	row := store.DB.QueryRow(query)
 	err := row.Scan(&count)
 
 	if err != nil {

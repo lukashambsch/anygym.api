@@ -91,6 +91,7 @@ CREATE TABLE features (
  feature_id          SERIAL       PRIMARY KEY
 ,feature_name        VARCHAR(100) NOT NULL UNIQUE
 ,feature_description TEXT         NOT NULL UNIQUE
+,CONSTRAINT name_or_description CHECK(feature_name <> '' OR feature_description <> '')
 );
 
 CREATE TABLE gym_features (

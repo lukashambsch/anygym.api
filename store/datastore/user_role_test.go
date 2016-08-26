@@ -98,7 +98,6 @@ var _ = Describe("UserRole db interactions", func() {
 		Describe("Unsuccessful call", func() {
 			It("should return an error object if userRole is not unique", func() {
 				usrRole := models.UserRole{UserId: userId, RoleId: 1}
-				datastore.CreateUserRole(usrRole)
 				_, err := datastore.CreateUserRole(usrRole)
 				Expect(err).ToNot(BeNil())
 			})

@@ -96,8 +96,9 @@ CREATE TABLE features (
 
 CREATE TABLE gym_features (
  gym_feature_id SERIAL  PRIMARY KEY
-,gym_id         INTEGER REFERENCES gyms
-,feature_id     INTEGER REFERENCES features
+,gym_id         INTEGER NOT NULL REFERENCES gyms
+,feature_id     INTEGER NOT NULL REFERENCES features
+,UNIQUE(gym_id, feature_id)
 );
 
 CREATE TABLE locations (
@@ -133,9 +134,9 @@ CREATE TABLE statuses (
 
 CREATE TABLE visits (
  visit_id    SERIAL    PRIMARY KEY
-,member_id   INTEGER   REFERENCES members
-,location_id INTEGER   REFERENCES locations
-,status_id   INTEGER   REFERENCES statuses
+,member_id   INTEGER   NOT NULL REFERENCES members
+,location_id INTEGER   NOT NULL REFERENCES locations
+,status_id   INTEGER   NOT NULL REFERENCES statuses
 ,created_on  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

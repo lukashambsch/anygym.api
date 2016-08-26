@@ -110,10 +110,16 @@ var _ = Describe("Address db interactions", func() {
 		})
 
 		Describe("Unsuccessful call", func() {
+			var created *models.Address
+
+			AfterEach(func() {
+				datastore.DeleteAddress(created.AddressId)
+			})
+
 			It("should return an error object if address is not unique", func() {
 				street := "Test Street"
 				addr := models.Address{StreetAddress: street}
-				datastore.CreateAddress(addr)
+				created, _ = datastore.CreateAddress(addr)
 				_, err := datastore.CreateAddress(addr)
 				Expect(err).ToNot(BeNil())
 			})

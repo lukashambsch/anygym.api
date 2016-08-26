@@ -96,10 +96,16 @@ var _ = Describe("Holiday db interactions", func() {
 		})
 
 		Describe("Unsuccessful call", func() {
+			var created *models.Holiday
+
+			AfterEach(func() {
+				datastore.DeleteHoliday(created.HolidayId)
+			})
+
 			It("should return an error object if holiday is not unique", func() {
 				name := "Test Name"
 				pln := models.Holiday{HolidayName: name}
-				datastore.CreateHoliday(pln)
+				created, _ = datastore.CreateHoliday(pln)
 				_, err := datastore.CreateHoliday(pln)
 				Expect(err).ToNot(BeNil())
 			})

@@ -110,10 +110,16 @@ var _ = Describe("Plan db interactions", func() {
 		})
 
 		Describe("Unsuccessful call", func() {
+			var created *models.Plan
+
+			AfterEach(func() {
+				datastore.DeletePlan(created.PlanId)
+			})
+
 			It("should return an error object if plan is not unique", func() {
 				name := "Test Name"
 				pln := models.Plan{PlanName: name}
-				datastore.CreatePlan(pln)
+				created, _ = datastore.CreatePlan(pln)
 				_, err := datastore.CreatePlan(pln)
 				Expect(err).ToNot(BeNil())
 			})

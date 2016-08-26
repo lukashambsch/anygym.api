@@ -150,7 +150,10 @@ var _ = Describe("Membership db interactions", func() {
 	Describe("DeleteMembership", func() {
 		Describe("Successful call", func() {
 			It("should return nil", func() {
-				err := datastore.DeleteMembership(membershipId)
+				created, _ := datastore.CreateMembership(
+					models.Membership{PlanId: &planId, MemberId: &memberId},
+				)
+				err := datastore.DeleteMembership(created.MembershipId)
 				Expect(err).To(BeNil())
 			})
 		})

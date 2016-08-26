@@ -96,10 +96,16 @@ var _ = Describe("Role db interactions", func() {
 		})
 
 		Describe("Unsuccessful call", func() {
+			var created *models.Role
+
+			AfterEach(func() {
+				datastore.DeleteRole(created.RoleId)
+			})
+
 			It("should return an error object if role is not unique", func() {
 				name := "Test Name"
 				pln := models.Role{RoleName: name}
-				datastore.CreateRole(pln)
+				created, _ = datastore.CreateRole(pln)
 				_, err := datastore.CreateRole(pln)
 				Expect(err).ToNot(BeNil())
 			})

@@ -175,4 +175,5 @@ CREATE TABLE support_requests (
 ,notes              TEXT
 ,created_on         TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ,resolved_on        TIMESTAMP
+,CONSTRAINT has_content CHECK(content <> '')
 );

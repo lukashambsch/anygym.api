@@ -20,7 +20,7 @@ import (
 var _ = Describe("Status API", func() {
 	var (
 		server      *httptest.Server
-		statusUrl   string
+		statusURL   string
 		res         *http.Response
 		data        []byte
 		contentType string       = "application/json"
@@ -30,6 +30,7 @@ var _ = Describe("Status API", func() {
 
 	BeforeEach(func() {
 		server = httptest.NewServer(router.Load())
+        statusURL = fmt.Sprintf("%s%s/statuses", server.URL, router.V1URLBase)
 	})
 
 	AfterEach(func() {
@@ -41,8 +42,7 @@ var _ = Describe("Status API", func() {
 
 		Describe("Successful GET w/o query params", func() {
 			BeforeEach(func() {
-				statusUrl = fmt.Sprintf("%s/statuses", server.URL)
-				res, _ = http.Get(statusUrl)
+				res, _ = http.Get(statusURL)
 				data, _ = ioutil.ReadAll(res.Body)
 				json.Unmarshal(data, &statuses)
 			})
@@ -58,7 +58,7 @@ var _ = Describe("Status API", func() {
 
 		Describe("Successful GET w/ query params", func() {
 			It("should return a list of matching statuses - status_name", func() {
-				res, _ = http.Get(fmt.Sprintf("%s/statuses?status_name=Denied", server.URL))
+				res, _ = http.Get(fmt.Sprintf("%s?status_name=Denied", statusURL))
 				data, _ = ioutil.ReadAll(res.Body)
 				json.Unmarshal(data, &statuses)
 				Expect(res.StatusCode).To(Equal(http.StatusOK))
@@ -66,7 +66,7 @@ var _ = Describe("Status API", func() {
 			})
 
 			It("should return a list of matching statuses - status_name - partial match", func() {
-				res, _ = http.Get(fmt.Sprintf("%s/statuses?status_name=Pend", server.URL))
+				res, _ = http.Get(fmt.Sprintf("%s?status_name=Pend", statusURL))
 				data, _ = ioutil.ReadAll(res.Body)
 				json.Unmarshal(data, &statuses)
 				Expect(res.StatusCode).To(Equal(http.StatusOK))
@@ -74,7 +74,7 @@ var _ = Describe("Status API", func() {
 			})
 
 			It("should return a matching status - status_id", func() {
-				res, _ = http.Get(fmt.Sprintf("%s/statuses?status_id=1", server.URL))
+				res, _ = http.Get(fmt.Sprintf("%s/?status_id=1", statusURL))
 				data, _ = ioutil.ReadAll(res.Body)
 				json.Unmarshal(data, &statuses)
 				Expect(res.StatusCode).To(Equal(http.StatusOK))
@@ -82,7 +82,7 @@ var _ = Describe("Status API", func() {
 			})
 
 			It("should return no statuses with a valid field but no matches", func() {
-				res, _ = http.Get(fmt.Sprintf("%s/statuses?status_name=Testing", server.URL))
+				res, _ = http.Get(fmt.Sprintf("%s?status_name=Testing", statusURL))
 				data, _ = ioutil.ReadAll(res.Body)
 				json.Unmarshal(data, &statuses)
 				Expect(res.StatusCode).To(Equal(http.StatusOK))
@@ -90,7 +90,7 @@ var _ = Describe("Status API", func() {
 			})
 
 			It("should sort statuses by the correct field ascending", func() {
-				res, _ = http.Get(fmt.Sprintf("%s/statuses?sort_order=asc&order_by=status_name", server.URL))
+				res, _ = http.Get(fmt.Sprintf("%s?sort_order=asc&order_by=status_name", statusURL))
 				data, _ = ioutil.ReadAll(res.Body)
 				json.Unmarshal(data, &statuses)
 				Expect(res.StatusCode).To(Equal(http.StatusOK))
@@ -101,7 +101,7 @@ var _ = Describe("Status API", func() {
 			})
 
 			It("should sort statuses by the correct fStatusNameStatusNameStatusNameield descending", func() {
-				res, _ = http.Get(fmt.Sprintf("%s/statuses?sort_order=desc&order_by=status_id", server.URL))
+				res, _ = http.Get(fmt.Sprintf("%s?sort_order=desc&order_by=status_id", statusURL))
 				data, _ = ioutil.ReadAll(res.Body)
 				json.Unmarshal(data, &statuses)
 				Expect(res.StatusCode).To(Equal(http.StatusOK))
@@ -116,7 +116,7 @@ var _ = Describe("Status API", func() {
 			var errRes handlers.APIErrorMessage
 
 			It("should return an error with an invalid field as query param", func() {
-				res, _ = http.Get(fmt.Sprintf("%s/statuses?invalid=test", server.URL))
+				res, _ = http.Get(fmt.Sprintf("%s?invalid=test", statusURL))
 				data, _ = ioutil.ReadAll(res.Body)
 				json.Unmarshal(data, &errRes)
 				Expect(res.StatusCode).To(Equal(http.StatusNotFound))
@@ -124,7 +124,7 @@ var _ = Describe("Status API", func() {
 			})
 
 			It("should return an error with an invalid field in order_by", func() {
-				res, _ = http.Get(fmt.Sprintf("%s/statuses?order_by=invalid", server.URL))
+				res, _ = http.Get(fmt.Sprintf("%s?order_by=invalid", statusURL))
 				data, _ = ioutil.ReadAll(res.Body)
 				json.Unmarshal(data, &errRes)
 				Expect(res.StatusCode).To(Equal(http.StatusNotFound))
@@ -132,7 +132,7 @@ var _ = Describe("Status API", func() {
 			})
 
 			It("should return an error with an invalid value for sort_order", func() {
-				res, _ = http.Get(fmt.Sprintf("%s/statuses?order_by=status_name&sort_order=random", server.URL))
+				res, _ = http.Get(fmt.Sprintf("%s?order_by=status_name&sort_order=random", statusURL))
 				data, _ = ioutil.ReadAll(res.Body)
 				json.Unmarshal(data, &errRes)
 				Expect(res.StatusCode).To(Equal(http.StatusNotFound))
@@ -149,7 +149,7 @@ var _ = Describe("Status API", func() {
 
 		Describe("Successful GET", func() {
 			BeforeEach(func() {
-				res, _ = http.Get(fmt.Sprintf("%s/statuses/%d", server.URL, statusId))
+				res, _ = http.Get(fmt.Sprintf("%s/%d", statusURL, statusId))
 				data, _ = ioutil.ReadAll(res.Body)
 				json.Unmarshal(data, &status)
 			})
@@ -168,7 +168,7 @@ var _ = Describe("Status API", func() {
 
 			Context("Invalid status_id", func() {
 				It("should return status code 400 with a message", func() {
-					res, _ = http.Get(fmt.Sprintf("%s/statuses/asdf", server.URL))
+					res, _ = http.Get(fmt.Sprintf("%s/asdf", statusURL))
 					data, _ = ioutil.ReadAll(res.Body)
 					json.Unmarshal(data, &errRes)
 					Expect(res.StatusCode).To(Equal(http.StatusBadRequest))
@@ -178,7 +178,7 @@ var _ = Describe("Status API", func() {
 
 			Context("Non existent status_id", func() {
 				It("should return status code 404 with a message", func() {
-					res, _ = http.Get(fmt.Sprintf("%s/statuses/10", server.URL))
+					res, _ = http.Get(fmt.Sprintf("%s/10", statusURL))
 					data, _ = ioutil.ReadAll(res.Body)
 					json.Unmarshal(data, &errRes)
 					Expect(res.StatusCode).To(Equal(http.StatusNotFound))
@@ -197,7 +197,7 @@ var _ = Describe("Status API", func() {
 
 		Describe("Successful POST", func() {
 			BeforeEach(func() {
-				res, _ = http.Post(fmt.Sprintf("%s/statuses", server.URL), contentType, bytes.NewBuffer(payload))
+				res, _ = http.Post(fmt.Sprintf("%s", statusURL), contentType, bytes.NewBuffer(payload))
 				data, _ = ioutil.ReadAll(res.Body)
 				json.Unmarshal(data, &status)
 			})
@@ -225,7 +225,7 @@ var _ = Describe("Status API", func() {
 			Describe("Bad Request", func() {
 				It("should return status code 400 with a message", func() {
 					res, _ = http.Post(
-						fmt.Sprintf("%s/statuses", server.URL),
+						fmt.Sprintf("%s", statusURL),
 						contentType,
 						bytes.NewBuffer(badPayload),
 					)
@@ -239,7 +239,7 @@ var _ = Describe("Status API", func() {
 			Describe("Internal Server Error", func() {
 				It("should return status code 500 with a message", func() {
 					payload = []byte(`{"status_name": "Pending"}`)
-					res, _ = http.Post(fmt.Sprintf("%s/statuses", server.URL), contentType, bytes.NewBuffer(payload))
+					res, _ = http.Post(fmt.Sprintf("%s", statusURL), contentType, bytes.NewBuffer(payload))
 					data, _ = ioutil.ReadAll(res.Body)
 					json.Unmarshal(data, &errRes)
 					Expect(res.StatusCode).To(Equal(http.StatusInternalServerError))
@@ -260,7 +260,7 @@ var _ = Describe("Status API", func() {
 			BeforeEach(func() {
 				req, _ := http.NewRequest(
 					"PUT",
-					fmt.Sprintf("%s/statuses/%d", server.URL, statusId),
+					fmt.Sprintf("%s/%d", statusURL, statusId),
 					bytes.NewBuffer(payload),
 				)
 				req.Header.Set("Content-Type", contentType)
@@ -294,7 +294,7 @@ var _ = Describe("Status API", func() {
 			It("should return status code 400 with a message", func() {
 				req, _ := http.NewRequest(
 					"PUT",
-					fmt.Sprintf("%s/statuses/%d", server.URL, statusId),
+					fmt.Sprintf("%s/%d", statusURL, statusId),
 					bytes.NewBuffer(badPayload),
 				)
 				req.Header.Set("Content-Type", contentType)
@@ -309,7 +309,7 @@ var _ = Describe("Status API", func() {
 			It("should return status code 400 with a message", func() {
 				req, _ := http.NewRequest(
 					"PUT",
-					fmt.Sprintf("%s/statuses/a", server.URL),
+					fmt.Sprintf("%s/a", statusURL),
 					bytes.NewBuffer(payload),
 				)
 				req.Header.Set("Content-Type", contentType)
@@ -324,7 +324,7 @@ var _ = Describe("Status API", func() {
 			It("should return status code 500 with a message", func() {
 				req, _ := http.NewRequest(
 					"PUT",
-					fmt.Sprintf("%s/statuses/5", server.URL),
+					fmt.Sprintf("%s/5", statusURL),
 					bytes.NewBuffer(payload),
 				)
 				req.Header.Set("Content-Type", contentType)
@@ -345,7 +345,7 @@ var _ = Describe("Status API", func() {
 			BeforeEach(func() {
 				req, _ := http.NewRequest(
 					"DELETE",
-					fmt.Sprintf("%s/statuses/%d", server.URL, statusId),
+					fmt.Sprintf("%s/%d", statusURL, statusId),
 					bytes.NewBuffer([]byte(``)),
 				)
 				req.Header.Set("Content-Type", contentType)
@@ -377,7 +377,7 @@ var _ = Describe("Status API", func() {
 			It("should return status code 400 with a message", func() {
 				req, _ := http.NewRequest(
 					"DELETE",
-					fmt.Sprintf("%s/statuses/a", server.URL),
+					fmt.Sprintf("%s/a", statusURL),
 					bytes.NewBuffer([]byte(``)),
 				)
 				req.Header.Set("Content-Type", contentType)

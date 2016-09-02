@@ -30,7 +30,7 @@ var _ = Describe("Status API", func() {
 
 	BeforeEach(func() {
 		server = httptest.NewServer(router.Load())
-        statusURL = fmt.Sprintf("%s%s/statuses", server.URL, router.V1URLBase)
+		statusURL = fmt.Sprintf("%s%s/statuses", server.URL, router.V1URLBase)
 	})
 
 	AfterEach(func() {
@@ -66,11 +66,14 @@ var _ = Describe("Status API", func() {
 			})
 
 			It("should return a list of matching statuses - status_name - partial match", func() {
+				correct := []models.Status{
+					models.Status{StatusId: 1, StatusName: "Pending"},
+				}
 				res, _ = http.Get(fmt.Sprintf("%s?status_name=Pend", statusURL))
 				data, _ = ioutil.ReadAll(res.Body)
 				json.Unmarshal(data, &statuses)
 				Expect(res.StatusCode).To(Equal(http.StatusOK))
-				Expect(statuses[0].StatusName).To(Equal("Pending"))
+				Expect(statuses).To(Equal(correct))
 			})
 
 			It("should return a matching status - status_id", func() {

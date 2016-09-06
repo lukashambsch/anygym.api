@@ -23,133 +23,107 @@ var statusFields map[string]string = map[string]string{
 }
 
 func GetStatus(w http.ResponseWriter, r *http.Request) {
-	encoder := json.NewEncoder(w)
-	statusId, err := strconv.ParseInt(mux.Vars(r)[StatusId], 10, 64)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		encoder.Encode(APIErrorMessage{Message: InvalidStatusId})
+	statusId, message := GetId(w, r, StatusId)
+	if message != nil {
 		return
 	}
 
 	status, err := datastore.GetStatus(statusId)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			w.WriteHeader(http.StatusNotFound)
-			encoder.Encode(APIErrorMessage{Message: "Not Found"})
+			WriteJSON(w, http.StatusNotFound, APIErrorMessage{Message: "Not Found"})
 		} else {
-			w.WriteHeader(http.StatusInternalServerError)
-			encoder.Encode(APIErrorMessage{Message: err.Error()})
+			WriteJSON(w, http.StatusInternalServerError, APIErrorMessage{Message: err.Error()})
 		}
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
-	encoder.Encode(status)
+	WriteJSON(w, http.StatusOK, status)
 }
 
 func GetStatuses(w http.ResponseWriter, r *http.Request) {
 	var statement string
-	encoder := json.NewEncoder(w)
 	query := r.URL.Query()
 	where, err := BuildWhere(statusFields, query)
 	if err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		encoder.Encode(APIErrorMessage{Message: err.Error()})
+		WriteJSON(w, http.StatusNotFound, APIErrorMessage{Message: err.Error()})
 		return
 	}
 
 	sort, err := BuildSort(statusFields, query)
 	if err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		encoder.Encode(APIErrorMessage{Message: err.Error()})
+		WriteJSON(w, http.StatusNotFound, APIErrorMessage{Message: err.Error()})
 		return
 	}
 
 	statement = fmt.Sprintf("%s %s", where, sort)
-
-	fmt.Println(statement)
 	statuses, err := datastore.GetStatusList(statement)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		encoder.Encode(APIErrorMessage{Message: "Error getting status list."})
+		WriteJSON(w, http.StatusInternalServerError, APIErrorMessage{Message: "Error getting status list."})
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
-	encoder.Encode(statuses)
+	WriteJSON(w, http.StatusOK, statuses)
 }
 
 func PostStatus(w http.ResponseWriter, r *http.Request) {
 	body, _ := ioutil.ReadAll(r.Body)
 	r.Body.Close()
-	encoder := json.NewEncoder(w)
 
 	status := &models.Status{}
 	err := json.Unmarshal(body, status)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		encoder.Encode(APIErrorMessage{Message: err.Error()})
+		WriteJSON(w, http.StatusBadRequest, APIErrorMessage{Message: err.Error()})
 		return
 	}
 
 	created, err := datastore.CreateStatus(*status)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		encoder.Encode(APIErrorMessage{Message: err.Error()})
+		WriteJSON(w, http.StatusInternalServerError, APIErrorMessage{Message: err.Error()})
 		return
 	}
 
-	w.WriteHeader(http.StatusCreated)
-	encoder.Encode(created)
+	WriteJSON(w, http.StatusCreated, created)
 }
 
 func PutStatus(w http.ResponseWriter, r *http.Request) {
 	body, _ := ioutil.ReadAll(r.Body)
 	r.Body.Close()
-	encoder := json.NewEncoder(w)
 
 	statusId, err := strconv.ParseInt(mux.Vars(r)[StatusId], 10, 64)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		encoder.Encode(APIErrorMessage{Message: InvalidStatusId})
+		WriteJSON(w, http.StatusBadRequest, APIErrorMessage{Message: InvalidStatusId})
 		return
 	}
 
 	status := &models.Status{}
 	err = json.Unmarshal(body, status)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		encoder.Encode(APIErrorMessage{Message: err.Error()})
+		WriteJSON(w, http.StatusBadRequest, APIErrorMessage{Message: err.Error()})
 		return
 	}
 
 	updated, err := datastore.UpdateStatus(statusId, *status)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		encoder.Encode(APIErrorMessage{Message: err.Error()})
+		WriteJSON(w, http.StatusInternalServerError, APIErrorMessage{Message: err.Error()})
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
-	encoder.Encode(updated)
+	WriteJSON(w, http.StatusOK, updated)
 }
 
 func DeleteStatus(w http.ResponseWriter, r *http.Request) {
-	encoder := json.NewEncoder(w)
 	statusId, err := strconv.ParseInt(mux.Vars(r)[StatusId], 10, 64)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		encoder.Encode(APIErrorMessage{Message: InvalidStatusId})
+		WriteJSON(w, http.StatusBadRequest, APIErrorMessage{Message: InvalidStatusId})
 		return
 	}
 
 	err = datastore.DeleteStatus(statusId)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		encoder.Encode(APIErrorMessage{Message: err.Error()})
+		WriteJSON(w, http.StatusInternalServerError, APIErrorMessage{Message: err.Error()})
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
-	encoder.Encode(nil)
+	WriteJSON(w, http.StatusOK, nil)
 }

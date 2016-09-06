@@ -1,8 +1,14 @@
 package handlers
 
 import (
+	"database/sql"
+	"encoding/json"
 	"fmt"
+	"net/http"
 	"net/url"
+	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
 const invalidField = "Invalid field in query params."
@@ -76,4 +82,31 @@ func BuildSort(fields map[string]string, params url.Values) (string, error) {
 	statement = fmt.Sprintf("%s %s %s", statement, orderBy, sortOrder)
 
 	return statement, nil
+}
+
+func GetId(w http.ResponseWriter, r *http.Request, idField string) (int64, *APIErrorMessage) {
+	id, err := strconv.ParseInt(mux.Vars(r)[idField], 10, 64)
+	if err != nil {
+		errMes := &APIErrorMessage{Message: "Invalid " + idField}
+		WriteJSON(w, http.StatusBadRequest, errMes)
+		return id, errMes
+	}
+	return id, nil
+}
+
+func GetNotFoundError(w http.ResponseWriter, encoder *json.Encoder, err error) {
+	if err == sql.ErrNoRows {
+		w.WriteHeader(http.StatusNotFound)
+		encoder.Encode(APIErrorMessage{Message: "Not Found"})
+	} else {
+		w.WriteHeader(http.StatusInternalServerError)
+		encoder.Encode(APIErrorMessage{Message: err.Error()})
+	}
+}
+
+func WriteJSON(w http.ResponseWriter, status int, response interface{}) {
+	encoder := json.NewEncoder(w)
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(status)
+	encoder.Encode(response)
 }

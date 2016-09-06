@@ -1,9 +1,13 @@
 package main
 
-import "github.com/lukashambsch/gym-all-over/router"
+import (
+	"net/http"
+
+	"github.com/lukashambsch/gym-all-over/router"
+)
 
 func main() {
 	r := router.Load()
 
-	r.Run()
+	http.ListenAndServe(":8080", r)
 }

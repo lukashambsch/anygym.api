@@ -1,27 +1,30 @@
 package router
 
 import (
-    "fmt"
+	//"fmt"
 
-	"github.com/gin-gonic/gin"
+	//"github.com/gin-gonic/gin"
+	"github.com/gorilla/mux"
 
 	"github.com/lukashambsch/gym-all-over/handlers"
 )
 
 var V1URLBase string = "/api/v1"
 
-func Load() *gin.Engine {
+func Load() *mux.Router {
 
-	r := gin.Default()
+	r := mux.NewRouter().StrictSlash(true)
 
-    status := r.Group(fmt.Sprintf("%s%s", V1URLBase, "/statuses"))
-    {
-        status.GET("", handlers.GetStatuses)
-        status.GET("/:status_id", handlers.GetStatus)
-        status.POST("", handlers.PostStatus)
-        status.PUT("/:status_id", handlers.PutStatus)
-        status.DELETE("/:status_id", handlers.DeleteStatus)
-    }
+	r.HandleFunc("/api/v1/statuses", handlers.GetStatuses).
+		Methods("GET")
+	r.HandleFunc("/api/v1/statuses/{status_id}", handlers.GetStatus).
+		Methods("GET")
+	r.HandleFunc("/api/v1/statuses", handlers.PostStatus).
+		Methods("POST")
+	r.HandleFunc("/api/v1/statuses/{status_id}", handlers.PutStatus).
+		Methods("PUT")
+	r.HandleFunc("/api/v1/statuses/{status_id}", handlers.DeleteStatus).
+		Methods("DELETE")
 
 	return r
 }

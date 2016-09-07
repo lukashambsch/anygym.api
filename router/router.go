@@ -1,9 +1,8 @@
 package router
 
 import (
-	//"fmt"
+	"fmt"
 
-	//"github.com/gin-gonic/gin"
 	"github.com/gorilla/mux"
 
 	"github.com/lukashambsch/gym-all-over/handlers"
@@ -15,15 +14,18 @@ func Load() *mux.Router {
 
 	r := mux.NewRouter().StrictSlash(true)
 
-	r.HandleFunc("/api/v1/statuses", handlers.GetStatuses).
+	// Status endpoints
+	s := r.PathPrefix(fmt.Sprintf("%s%s", V1URLBase, "/statuses")).Subrouter()
+
+	s.HandleFunc("/", handlers.GetStatuses).
 		Methods("GET")
-	r.HandleFunc("/api/v1/statuses/{status_id}", handlers.GetStatus).
+	s.HandleFunc("/{status_id}", handlers.GetStatus).
 		Methods("GET")
-	r.HandleFunc("/api/v1/statuses", handlers.PostStatus).
+	s.HandleFunc("/", handlers.PostStatus).
 		Methods("POST")
-	r.HandleFunc("/api/v1/statuses/{status_id}", handlers.PutStatus).
+	s.HandleFunc("/{status_id}", handlers.PutStatus).
 		Methods("PUT")
-	r.HandleFunc("/api/v1/statuses/{status_id}", handlers.DeleteStatus).
+	s.HandleFunc("/{status_id}", handlers.DeleteStatus).
 		Methods("DELETE")
 
 	return r

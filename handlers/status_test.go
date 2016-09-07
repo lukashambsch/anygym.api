@@ -200,7 +200,7 @@ var _ = Describe("Status API", func() {
 
 		Describe("Successful POST", func() {
 			BeforeEach(func() {
-				res, _ = http.Post(fmt.Sprintf("%s", statusURL), contentType, bytes.NewBuffer(payload))
+				res, _ = http.Post(fmt.Sprintf("%s/", statusURL), contentType, bytes.NewBuffer(payload))
 				data, _ = ioutil.ReadAll(res.Body)
 				json.Unmarshal(data, &status)
 			})
@@ -228,7 +228,7 @@ var _ = Describe("Status API", func() {
 			Describe("Bad Request", func() {
 				It("should return status code 400 with a message", func() {
 					res, _ = http.Post(
-						fmt.Sprintf("%s", statusURL),
+						fmt.Sprintf("%s/", statusURL),
 						contentType,
 						bytes.NewBuffer(badPayload),
 					)
@@ -242,7 +242,7 @@ var _ = Describe("Status API", func() {
 			Describe("Internal Server Error", func() {
 				It("should return status code 500 with a message", func() {
 					payload = []byte(`{"status_name": "Pending"}`)
-					res, _ = http.Post(fmt.Sprintf("%s", statusURL), contentType, bytes.NewBuffer(payload))
+					res, _ = http.Post(fmt.Sprintf("%s/", statusURL), contentType, bytes.NewBuffer(payload))
 					data, _ = ioutil.ReadAll(res.Body)
 					json.Unmarshal(data, &errRes)
 					Expect(res.StatusCode).To(Equal(http.StatusInternalServerError))

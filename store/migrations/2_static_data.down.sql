@@ -1,4 +1,5 @@
 DELETE FROM memberships;
+DELETE FROM visits;
 DELETE FROM members;
 DELETE FROM plans;
 DELETE FROM statuses;
@@ -8,3 +9,6 @@ DELETE FROM user_roles;
 DELETE FROM roles;
 DELETE FROM users;
 DELETE FROM support_sources;
+DELETE FROM gym_locations;
+DELETE FROM addresses;
+DELETE FROM gyms;

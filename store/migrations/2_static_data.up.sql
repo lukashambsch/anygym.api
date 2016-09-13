@@ -127,3 +127,51 @@ VALUES
   ('LA Fitness'),
   ('Crunch Fitness'),
   ('YMCA');
+
+INSERT INTO addresses (country, state_region, city, postal_area, street_address)
+VALUES
+  ('USA', 'CA', 'San Diego', '92122', '4425 La Jolla Village Dr'),
+  ('USA', 'CA', 'San Diego', '92111', '7715 Balboa Ave');
+
+INSERT INTO gym_locations (gym_id, address_id, location_name, in_network)
+VALUES
+  (
+    (SELECT gym_id FROM gyms WHERE gym_name = '24 Hour Fitness'),
+    (SELECT address_id from addresses WHERE postal_area = '92122'),
+    'Westfield UTC',
+    false
+  ),
+  (
+    (SELECT gym_id FROM gyms WHERE gym_name = '24 Hour Fitness'),
+    (SELECT address_id from addresses WHERE postal_area = '92111'),
+    'Balboa',
+    false
+  );
+
+INSERT INTO visits (member_id, gym_location_id, status_id)
+VALUES
+  (
+    (SELECT member_id FROM members WHERE first_name = 'Lukas'),
+    (SELECT gym_location_id FROM gym_locations WHERE location_name = 'Westfield UTC'),
+    (SELECT status_id FROM statuses WHERE status_name = 'Pending')
+  ),
+  (
+    (SELECT member_id FROM members WHERE first_name = 'McKenzie'),
+    (SELECT gym_location_id FROM gym_locations WHERE location_name = 'Westfield UTC'),
+    (SELECT status_id FROM statuses WHERE status_name = 'Pending')
+  ),
+  (
+    (SELECT member_id FROM members WHERE first_name = 'Lukas'),
+    (SELECT gym_location_id FROM gym_locations WHERE location_name = 'Balboa'),
+    (SELECT status_id FROM statuses WHERE status_name = 'Pending')
+  ),
+  (
+    (SELECT member_id FROM members WHERE first_name = 'McKenzie'),
+    (SELECT gym_location_id FROM gym_locations WHERE location_name = 'Balboa'),
+    (SELECT status_id FROM statuses WHERE status_name = 'Pending')
+  ),
+  (
+    (SELECT member_id FROM members WHERE first_name = 'Lukas'),
+    (SELECT gym_location_id FROM gym_locations WHERE location_name = 'Westfield UTC'),
+    (SELECT status_id FROM statuses WHERE status_name = 'Pending')
+  );

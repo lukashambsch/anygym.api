@@ -31,6 +31,20 @@ func Load() http.Handler {
 	s.HandleFunc("/{status_id}/", handlers.DeleteStatus).
 		Methods("DELETE")
 
+	// Visit endpoints
+	v := r.PathPrefix(fmt.Sprintf("%s%s", V1URLBase, "/visits")).Subrouter()
+
+	v.HandleFunc("/", handlers.GetVisits).
+		Methods("GET")
+	v.HandleFunc("/{visit_id}/", handlers.GetVisit).
+		Methods("GET")
+	v.HandleFunc("/", handlers.PostVisit).
+		Methods("POST")
+	v.HandleFunc("/{visit_id}/", handlers.PutVisit).
+		Methods("PUT")
+	v.HandleFunc("/{visit_id}/", handlers.DeleteVisit).
+		Methods("DELETE")
+
 	logged := ghandlers.LoggingHandler(os.Stdout, r)
 
 	return logged

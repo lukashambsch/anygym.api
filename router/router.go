@@ -2,7 +2,10 @@ package router
 
 import (
 	"fmt"
+	"net/http"
+	"os"
 
+	ghandlers "github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 
 	"github.com/lukashambsch/gym-all-over/handlers"
@@ -10,7 +13,7 @@ import (
 
 var V1URLBase string = "/api/v1"
 
-func Load() *mux.Router {
+func Load() http.Handler {
 
 	r := mux.NewRouter().StrictSlash(true)
 
@@ -28,5 +31,7 @@ func Load() *mux.Router {
 	s.HandleFunc("/{status_id}/", handlers.DeleteStatus).
 		Methods("DELETE")
 
-	return r
+	logged := ghandlers.LoggingHandler(os.Stdout, r)
+
+	return logged
 }

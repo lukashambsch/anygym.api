@@ -19,13 +19,13 @@ func Load() *mux.Router {
 
 	s.HandleFunc("/", handlers.GetStatuses).
 		Methods("GET")
-	s.HandleFunc("/{status_id}", handlers.GetStatus).
+	s.HandleFunc("/{status_id}/", handlers.GetStatus).
 		Methods("GET")
 	s.HandleFunc("/", handlers.PostStatus).
 		Methods("POST")
-	s.HandleFunc("/{status_id}", handlers.PutStatus).
+	s.HandleFunc("/{status_id}/", handlers.PutStatus).
 		Methods("PUT")
-	s.HandleFunc("/{status_id}", handlers.DeleteStatus).
+	s.HandleFunc("/{status_id}/", handlers.DeleteStatus).
 		Methods("DELETE")
 
 	return r

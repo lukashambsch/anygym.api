@@ -45,7 +45,8 @@ func Load() http.Handler {
 	v.HandleFunc("/{visit_id}/", handlers.DeleteVisit).
 		Methods("DELETE")
 
-	logged := ghandlers.LoggingHandler(os.Stdout, r)
+	router := ghandlers.LoggingHandler(os.Stdout, r)
+	router = ghandlers.CORS()(router)
 
-	return logged
+	return router
 }

@@ -98,9 +98,9 @@ CREATE TABLE gym_locations (
 ,gym_id             INTEGER      NOT NULL REFERENCES gyms
 ,address_id         INTEGER      NOT NULL UNIQUE REFERENCES addresses
 ,location_name      VARCHAR(50)  NOT NULL
-,phone_number       VARCHAR(15)
-,website_url        VARCHAR(255)
-,in_network         BOOLEAN
+,phone_number       VARCHAR(15)  NOT NULL DEFAULT ''
+,website_url        VARCHAR(255) NOT NULL DEFAULT ''
+,in_network         BOOLEAN      NOT NULL DEFAULT False
 ,monthly_member_fee FLOAT
 );
 

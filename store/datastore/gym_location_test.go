@@ -45,7 +45,7 @@ var _ = Describe("GymLocation db interactions", func() {
 			})
 
 			It("should return a list of gymLocations", func() {
-				Expect(len(gymLocations)).To(Equal(2))
+				Expect(len(gymLocations)).To(Equal(4))
 			})
 		})
 	})
@@ -89,7 +89,7 @@ var _ = Describe("GymLocation db interactions", func() {
 			})
 
 			It("should return the correct count", func() {
-				Expect(*count).To(Equal(2))
+				Expect(*count).To(Equal(4))
 			})
 		})
 	})

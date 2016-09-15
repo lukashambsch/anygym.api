@@ -174,7 +174,7 @@ var _ = Describe("Status db interactions", func() {
 
 	Describe("DeleteStatus", func() {
 		var (
-			statusId int64 = 1
+			statusId int64 = 3
 			status   *models.Status
 		)
 

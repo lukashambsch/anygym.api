@@ -33,7 +33,7 @@ var _ = Describe("Address db interactions", func() {
 			})
 
 			It("should return a list of addresses", func() {
-				Expect(len(addresses)).To(Equal(4))
+				Expect(len(addresses)).To(Equal(6))
 			})
 		})
 	})
@@ -77,7 +77,7 @@ var _ = Describe("Address db interactions", func() {
 			})
 
 			It("should return the correct count", func() {
-				Expect(*count).To(Equal(4))
+				Expect(*count).To(Equal(6))
 			})
 		})
 	})
@@ -154,7 +154,7 @@ var _ = Describe("Address db interactions", func() {
 		Describe("Unsuccessful call", func() {
 			BeforeEach(func() {
 				address = models.Address{StreetAddress: "456 Test Ave."}
-				updated, err = datastore.UpdateAddress(2, address)
+				updated, err = datastore.UpdateAddress(5000, address)
 			})
 
 			It("should return an error object if address to update doesn't exist", func() {

@@ -342,7 +342,7 @@ var _ = Describe("Status API", func() {
 	})
 
 	Describe("DeleteStatus endpoint", func() {
-		var statusId int64 = 1
+		var statusId int64 = 4
 
 		Describe("Successful DELETE", func() {
 			BeforeEach(func() {
@@ -360,7 +360,7 @@ var _ = Describe("Status API", func() {
 				store.DB.QueryRow(
 					"INSERT INTO statuses (status_id, status_name) VALUES ($1, $2)",
 					statusId,
-					"Pending",
+					"Denied - Banned",
 				)
 			})
 

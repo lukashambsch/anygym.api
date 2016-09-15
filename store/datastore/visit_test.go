@@ -52,7 +52,7 @@ var _ = Describe("Visit db interactions", func() {
 			})
 
 			It("should return a list of visits", func() {
-				Expect(len(visits)).To(Equal(2))
+				Expect(len(visits)).To(Equal(7))
 			})
 		})
 	})
@@ -96,7 +96,7 @@ var _ = Describe("Visit db interactions", func() {
 			})
 
 			It("should return the correct count", func() {
-				Expect(*count).To(Equal(2))
+				Expect(*count).To(Equal(7))
 			})
 		})
 	})

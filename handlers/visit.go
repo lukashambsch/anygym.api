@@ -19,20 +19,20 @@ const InvalidVisitId = "Invalid " + VisitId
 
 var visitFields map[string]string = map[string]string{
 	"visit_id":        "int",
-	"member_id":       "string",
-	"gym_location_id": "string",
-	"status_id":       "string",
+	"member_id":       "int",
+	"gym_location_id": "int",
+	"status_id":       "int",
 	"created_on":      "date",
 	"modified_on":     "date",
 }
 
 func GetVisit(w http.ResponseWriter, r *http.Request) {
-	statusId, message := GetId(w, r, VisitId)
+	visitId, message := GetId(w, r, VisitId)
 	if message != nil {
 		return
 	}
 
-	status, err := datastore.GetVisit(statusId)
+	visit, err := datastore.GetVisit(visitId)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			WriteJSON(w, http.StatusNotFound, APIErrorMessage{Message: "Not Found"})
@@ -42,7 +42,7 @@ func GetVisit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	WriteJSON(w, http.StatusOK, status)
+	WriteJSON(w, http.StatusOK, visit)
 }
 
 func GetVisits(w http.ResponseWriter, r *http.Request) {
@@ -63,7 +63,7 @@ func GetVisits(w http.ResponseWriter, r *http.Request) {
 	statement = fmt.Sprintf("%s %s", where, sort)
 	statuses, err := datastore.GetVisitList(statement)
 	if err != nil {
-		WriteJSON(w, http.StatusInternalServerError, APIErrorMessage{Message: "Error getting status list."})
+		WriteJSON(w, http.StatusInternalServerError, APIErrorMessage{Message: "Error getting visit list."})
 		return
 	}
 
@@ -74,14 +74,14 @@ func PostVisit(w http.ResponseWriter, r *http.Request) {
 	body, _ := ioutil.ReadAll(r.Body)
 	r.Body.Close()
 
-	status := &models.Visit{}
-	err := json.Unmarshal(body, status)
+	visit := &models.Visit{}
+	err := json.Unmarshal(body, visit)
 	if err != nil {
 		WriteJSON(w, http.StatusBadRequest, APIErrorMessage{Message: err.Error()})
 		return
 	}
 
-	created, err := datastore.CreateVisit(*status)
+	created, err := datastore.CreateVisit(*visit)
 	if err != nil {
 		WriteJSON(w, http.StatusInternalServerError, APIErrorMessage{Message: err.Error()})
 		return
@@ -94,20 +94,20 @@ func PutVisit(w http.ResponseWriter, r *http.Request) {
 	body, _ := ioutil.ReadAll(r.Body)
 	r.Body.Close()
 
-	statusId, err := strconv.ParseInt(mux.Vars(r)[VisitId], 10, 64)
+	visitId, err := strconv.ParseInt(mux.Vars(r)[VisitId], 10, 64)
 	if err != nil {
 		WriteJSON(w, http.StatusBadRequest, APIErrorMessage{Message: InvalidVisitId})
 		return
 	}
 
-	status := &models.Visit{}
-	err = json.Unmarshal(body, status)
+	visit := &models.Visit{}
+	err = json.Unmarshal(body, visit)
 	if err != nil {
 		WriteJSON(w, http.StatusBadRequest, APIErrorMessage{Message: err.Error()})
 		return
 	}
 
-	updated, err := datastore.UpdateVisit(statusId, *status)
+	updated, err := datastore.UpdateVisit(visitId, *visit)
 	if err != nil {
 		WriteJSON(w, http.StatusInternalServerError, APIErrorMessage{Message: err.Error()})
 		return
@@ -117,13 +117,13 @@ func PutVisit(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteVisit(w http.ResponseWriter, r *http.Request) {
-	statusId, err := strconv.ParseInt(mux.Vars(r)[VisitId], 10, 64)
+	visitId, err := strconv.ParseInt(mux.Vars(r)[VisitId], 10, 64)
 	if err != nil {
 		WriteJSON(w, http.StatusBadRequest, APIErrorMessage{Message: InvalidVisitId})
 		return
 	}
 
-	err = datastore.DeleteVisit(statusId)
+	err = datastore.DeleteVisit(visitId)
 	if err != nil {
 		WriteJSON(w, http.StatusInternalServerError, APIErrorMessage{Message: err.Error()})
 		return

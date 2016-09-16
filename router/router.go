@@ -45,6 +45,34 @@ func Load() http.Handler {
 	v.HandleFunc("/{visit_id}/", handlers.DeleteVisit).
 		Methods("DELETE")
 
+	// Member endpoints
+	m := r.PathPrefix(fmt.Sprintf("%s%s", V1URLBase, "/members")).Subrouter()
+
+	m.HandleFunc("/", handlers.GetMembers).
+		Methods("GET")
+	m.HandleFunc("/{member_id}/", handlers.GetMember).
+		Methods("GET")
+	m.HandleFunc("/", handlers.PostMember).
+		Methods("POST")
+	m.HandleFunc("/{member_id}/", handlers.PutMember).
+		Methods("PUT")
+	m.HandleFunc("/{member_id}/", handlers.DeleteMember).
+		Methods("DELETE")
+
+	// GymLocation endpoints
+	gl := r.PathPrefix(fmt.Sprintf("%s%s", V1URLBase, "/gym_locations")).Subrouter()
+
+	gl.HandleFunc("/", handlers.GetGymLocations).
+		Methods("GET")
+	gl.HandleFunc("/{gym_location_id}/", handlers.GetGymLocation).
+		Methods("GET")
+	gl.HandleFunc("/", handlers.PostGymLocation).
+		Methods("POST")
+	gl.HandleFunc("/{gym_location_id}/", handlers.PutGymLocation).
+		Methods("PUT")
+	gl.HandleFunc("/{gym_location_id}/", handlers.DeleteGymLocation).
+		Methods("DELETE")
+
 	router := ghandlers.LoggingHandler(os.Stdout, r)
 	router = ghandlers.CORS()(router)
 

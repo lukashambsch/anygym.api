@@ -1,0 +1,10 @@
+api:
+  build: .
+  dockerfile: Dockerfile
+  links:
+    - database
+  ports:
+    - "80:80"
+
+database:
+  image: postgres

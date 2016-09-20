@@ -61,13 +61,13 @@ func GetVisits(w http.ResponseWriter, r *http.Request) {
 	}
 
 	statement = fmt.Sprintf("%s %s", where, sort)
-	statuses, err := datastore.GetVisitList(statement)
+	visits, err := datastore.GetVisitList(statement)
 	if err != nil {
 		WriteJSON(w, http.StatusInternalServerError, APIErrorMessage{Message: "Error getting visit list."})
 		return
 	}
 
-	WriteJSON(w, http.StatusOK, statuses)
+	WriteJSON(w, http.StatusOK, visits)
 }
 
 func PostVisit(w http.ResponseWriter, r *http.Request) {

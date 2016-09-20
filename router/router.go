@@ -74,7 +74,7 @@ func Load() http.Handler {
 		Methods("DELETE")
 
 	router := ghandlers.LoggingHandler(os.Stdout, r)
-	router = ghandlers.CORS()(router)
+	router = handlers.CORS(router)
 
 	return router
 }

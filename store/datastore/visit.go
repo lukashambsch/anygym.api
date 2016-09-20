@@ -105,7 +105,7 @@ func UpdateVisit(visitId int64, visit models.Visit) (*models.Visit, error) {
 		visit.MemberId,
 		visit.GymLocationId,
 		visit.StatusId,
-		time.Now().Format("01/01/2001 15:00:00"),
+		time.Now(),
 		visitId,
 	)
 	err := row.Scan(

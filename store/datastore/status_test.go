@@ -45,22 +45,22 @@ var _ = Describe("Status db interactions", func() {
 		var status *models.Status
 
 		Describe("Successful call", func() {
-			var statusId int64 = 1
+			var statusID int64 = 1
 
 			It("should return the correct status", func() {
-				status, _ = datastore.GetStatus(statusId)
-				Expect(status.StatusId).To(Equal(statusId))
+				status, _ = datastore.GetStatus(statusID)
+				Expect(status.StatusID).To(Equal(statusID))
 			})
 		})
 
 		Describe("Unsuccessful call", func() {
 			var (
-				nonExistentId int64 = 5
+				nonExistentID int64 = 5
 				err           error
 			)
 
 			BeforeEach(func() {
-				status, err = datastore.GetStatus(nonExistentId)
+				status, err = datastore.GetStatus(nonExistentID)
 			})
 
 			It("should return an error", func() {
@@ -102,7 +102,7 @@ var _ = Describe("Status db interactions", func() {
 			})
 
 			AfterEach(func() {
-				datastore.DeleteStatus(created.StatusId)
+				datastore.DeleteStatus(created.StatusID)
 			})
 
 			It("should return the created status", func() {
@@ -110,7 +110,7 @@ var _ = Describe("Status db interactions", func() {
 			})
 
 			It("should add a status to the db", func() {
-				newStatus, _ := datastore.GetStatus(created.StatusId)
+				newStatus, _ := datastore.GetStatus(created.StatusID)
 				Expect(newStatus.StatusName).To(Equal(statusName))
 			})
 		})
@@ -144,11 +144,11 @@ var _ = Describe("Status db interactions", func() {
 			BeforeEach(func() {
 				status = models.Status{StatusName: statusName}
 				created, _ = datastore.CreateStatus(models.Status{StatusName: "Created"})
-				updated, _ = datastore.UpdateStatus(created.StatusId, status)
+				updated, _ = datastore.UpdateStatus(created.StatusID, status)
 			})
 
 			AfterEach(func() {
-				datastore.DeleteStatus(updated.StatusId)
+				datastore.DeleteStatus(updated.StatusID)
 			})
 
 			It("should return the updated status", func() {
@@ -174,25 +174,25 @@ var _ = Describe("Status db interactions", func() {
 
 	Describe("DeleteStatus", func() {
 		var (
-			statusId int64 = 3
+			statusID int64 = 3
 			status   *models.Status
 		)
 
 		Describe("Successful call", func() {
 			BeforeEach(func() {
-				status, _ = datastore.GetStatus(statusId)
+				status, _ = datastore.GetStatus(statusID)
 			})
 
 			AfterEach(func() {
 				store.DB.QueryRow(
 					"INSERT INTO statuses (status_id, status_name) VALUES ($1, $2)",
-					status.StatusId,
+					status.StatusID,
 					status.StatusName,
 				)
 			})
 
 			It("should return nil", func() {
-				err := datastore.DeleteStatus(statusId)
+				err := datastore.DeleteStatus(statusID)
 				Expect(err).To(BeNil())
 			})
 		})

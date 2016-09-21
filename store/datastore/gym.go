@@ -20,7 +20,7 @@ func GetGymList(where string) ([]models.Gym, error) {
 	}
 
 	for rows.Next() {
-		err = rows.Scan(&gym.GymId, &gym.UserId, &gym.GymName, &gym.MonthlyMemberFee)
+		err = rows.Scan(&gym.GymID, &gym.UserID, &gym.GymName, &gym.MonthlyMemberFee)
 		gyms = append(gyms, gym)
 		if err != nil {
 			return nil, err
@@ -45,11 +45,11 @@ func GetGymCount(where string) (*int, error) {
 	return &count, nil
 }
 
-func GetGym(gymId int64) (*models.Gym, error) {
+func GetGym(gymID int64) (*models.Gym, error) {
 	var gym models.Gym
 
-	row := store.DB.QueryRow(getGymQuery, gymId)
-	err := row.Scan(&gym.GymId, &gym.UserId, &gym.GymName, &gym.MonthlyMemberFee)
+	row := store.DB.QueryRow(getGymQuery, gymID)
+	err := row.Scan(&gym.GymID, &gym.UserID, &gym.GymName, &gym.MonthlyMemberFee)
 
 	if err != nil {
 		return nil, err
@@ -61,8 +61,8 @@ func GetGym(gymId int64) (*models.Gym, error) {
 func CreateGym(gym models.Gym) (*models.Gym, error) {
 	var created models.Gym
 
-	row := store.DB.QueryRow(createGymQuery, gym.UserId, gym.GymName, gym.MonthlyMemberFee)
-	err := row.Scan(&created.GymId, &created.UserId, &created.GymName, &created.MonthlyMemberFee)
+	row := store.DB.QueryRow(createGymQuery, gym.UserID, gym.GymName, gym.MonthlyMemberFee)
+	err := row.Scan(&created.GymID, &created.UserID, &created.GymName, &created.MonthlyMemberFee)
 	if err != nil {
 		return nil, err
 	}
@@ -70,11 +70,11 @@ func CreateGym(gym models.Gym) (*models.Gym, error) {
 	return &created, nil
 }
 
-func UpdateGym(gymId int64, gym models.Gym) (*models.Gym, error) {
+func UpdateGym(gymID int64, gym models.Gym) (*models.Gym, error) {
 	var updated models.Gym
 
-	row := store.DB.QueryRow(updateGymQuery, gym.UserId, gym.GymName, gym.MonthlyMemberFee, gymId)
-	err := row.Scan(&updated.GymId, &updated.UserId, &updated.GymName, &updated.MonthlyMemberFee)
+	row := store.DB.QueryRow(updateGymQuery, gym.UserID, gym.GymName, gym.MonthlyMemberFee, gymID)
+	err := row.Scan(&updated.GymID, &updated.UserID, &updated.GymName, &updated.MonthlyMemberFee)
 	if err != nil {
 		return nil, err
 	}
@@ -82,13 +82,13 @@ func UpdateGym(gymId int64, gym models.Gym) (*models.Gym, error) {
 	return &updated, nil
 }
 
-func DeleteGym(gymId int64) error {
+func DeleteGym(gymID int64) error {
 	stmt, err := store.DB.Prepare(deleteGymQuery)
 	if err != nil {
 		return err
 	}
 
-	_, err = stmt.Exec(gymId)
+	_, err = stmt.Exec(gymID)
 	if err != nil {
 		return err
 	}

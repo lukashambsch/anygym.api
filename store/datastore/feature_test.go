@@ -8,7 +8,7 @@ import (
 )
 
 var _ = Describe("Feature db interactions", func() {
-	var featureId int64 = 1
+	var featureID int64 = 1
 
 	Describe("GetFeatureList", func() {
 		var features []models.Feature
@@ -29,19 +29,19 @@ var _ = Describe("Feature db interactions", func() {
 
 		Describe("Successful call", func() {
 			It("should return the correct feature", func() {
-				feature, _ = datastore.GetFeature(featureId)
-				Expect(feature.FeatureId).To(Equal(featureId))
+				feature, _ = datastore.GetFeature(featureID)
+				Expect(feature.FeatureID).To(Equal(featureID))
 			})
 		})
 
 		Describe("Unsuccessful call", func() {
 			var (
-				nonExistentId int64 = 5000
+				nonExistentID int64 = 5000
 				err           error
 			)
 
 			BeforeEach(func() {
-				feature, err = datastore.GetFeature(nonExistentId)
+				feature, err = datastore.GetFeature(nonExistentID)
 			})
 
 			It("should return an error", func() {
@@ -82,7 +82,7 @@ var _ = Describe("Feature db interactions", func() {
 			})
 
 			AfterEach(func() {
-				datastore.DeleteFeature(created.FeatureId)
+				datastore.DeleteFeature(created.FeatureID)
 			})
 
 			It("should return the created feature", func() {
@@ -90,7 +90,7 @@ var _ = Describe("Feature db interactions", func() {
 			})
 
 			It("should add a feature to the db", func() {
-				newFeature, _ := datastore.GetFeature(created.FeatureId)
+				newFeature, _ := datastore.GetFeature(created.FeatureID)
 				Expect(newFeature.FeatureName).To(Equal(featureName))
 			})
 		})
@@ -99,7 +99,7 @@ var _ = Describe("Feature db interactions", func() {
 			var created *models.Feature
 
 			AfterEach(func() {
-				datastore.DeleteFeature(created.FeatureId)
+				datastore.DeleteFeature(created.FeatureID)
 			})
 
 			It("should return an error object if feature is not unique", func() {
@@ -124,11 +124,11 @@ var _ = Describe("Feature db interactions", func() {
 			BeforeEach(func() {
 				feature = models.Feature{FeatureName: featureName, FeatureDescription: "Test Description"}
 				created, _ = datastore.CreateFeature(models.Feature{FeatureName: "Test"})
-				updated, _ = datastore.UpdateFeature(created.FeatureId, feature)
+				updated, _ = datastore.UpdateFeature(created.FeatureID, feature)
 			})
 
 			AfterEach(func() {
-				datastore.DeleteFeature(updated.FeatureId)
+				datastore.DeleteFeature(updated.FeatureID)
 			})
 
 			It("should return the updated feature", func() {
@@ -156,7 +156,7 @@ var _ = Describe("Feature db interactions", func() {
 		Describe("Successful call", func() {
 			It("should return nil", func() {
 				created, _ := datastore.CreateFeature(models.Feature{FeatureName: "Test"})
-				err := datastore.DeleteFeature(created.FeatureId)
+				err := datastore.DeleteFeature(created.FeatureID)
 				Expect(err).To(BeNil())
 			})
 		})

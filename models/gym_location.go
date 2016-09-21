@@ -1,9 +1,9 @@
 package models
 
 type GymLocation struct {
-	GymLocationId    int64    `json:"gym_location_id"`
-	GymId            int64    `json:"gym_id"`
-	AddressId        int64    `json:"address_id"`
+	GymLocationID    int64    `json:"gym_location_id"`
+	GymID            int64    `json:"gym_id"`
+	AddressID        int64    `json:"address_id"`
 	LocationName     string   `json:"location_name"`
 	PhoneNumber      string   `json:"phone_number"`
 	WebsiteUrl       string   `json:"website_url"`

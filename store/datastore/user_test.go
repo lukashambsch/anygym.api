@@ -8,7 +8,7 @@ import (
 )
 
 var _ = Describe("User db interactions", func() {
-	var userId int64 = 1
+	var userID int64 = 1
 
 	Describe("GetUserList", func() {
 		var users []models.User
@@ -29,19 +29,19 @@ var _ = Describe("User db interactions", func() {
 
 		Describe("Successful call", func() {
 			It("should return the correct user", func() {
-				user, _ = datastore.GetUser(userId)
-				Expect(user.UserId).To(Equal(userId))
+				user, _ = datastore.GetUser(userID)
+				Expect(user.UserID).To(Equal(userID))
 			})
 		})
 
 		Describe("Unsuccessful call", func() {
 			var (
-				nonExistentId int64 = 5
+				nonExistentID int64 = 5
 				err           error
 			)
 
 			BeforeEach(func() {
-				user, err = datastore.GetUser(nonExistentId)
+				user, err = datastore.GetUser(nonExistentID)
 			})
 
 			It("should return an error", func() {
@@ -82,7 +82,7 @@ var _ = Describe("User db interactions", func() {
 			})
 
 			AfterEach(func() {
-				datastore.DeleteUser(created.UserId)
+				datastore.DeleteUser(created.UserID)
 			})
 
 			It("should return the created user", func() {
@@ -90,7 +90,7 @@ var _ = Describe("User db interactions", func() {
 			})
 
 			It("should add a user to the db", func() {
-				newMember, _ := datastore.GetUser(created.UserId)
+				newMember, _ := datastore.GetUser(created.UserID)
 				Expect(newMember.Email).To(Equal(email))
 			})
 		})
@@ -117,11 +117,11 @@ var _ = Describe("User db interactions", func() {
 			BeforeEach(func() {
 				created, _ = datastore.CreateUser(models.User{Email: "different"})
 				created.Email = email
-				updated, _ = datastore.UpdateUser(created.UserId, *created)
+				updated, _ = datastore.UpdateUser(created.UserID, *created)
 			})
 
 			AfterEach(func() {
-				datastore.DeleteUser(updated.UserId)
+				datastore.DeleteUser(updated.UserID)
 			})
 
 			It("should return the updated user", func() {
@@ -149,7 +149,7 @@ var _ = Describe("User db interactions", func() {
 		Describe("Successful call", func() {
 			It("should return nil", func() {
 				created, _ := datastore.CreateUser(models.User{Email: "email"})
-				err := datastore.DeleteUser(created.UserId)
+				err := datastore.DeleteUser(created.UserID)
 				Expect(err).To(BeNil())
 			})
 		})

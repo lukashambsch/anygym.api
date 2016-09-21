@@ -8,7 +8,7 @@ import (
 )
 
 var _ = Describe("Gym db interactions", func() {
-	var gymId int64 = 1
+	var gymID int64 = 1
 
 	Describe("GetGymList", func() {
 		var gyms []models.Gym
@@ -29,19 +29,19 @@ var _ = Describe("Gym db interactions", func() {
 
 		Describe("Successful call", func() {
 			It("should return the correct gym", func() {
-				gym, _ = datastore.GetGym(gymId)
-				Expect(gym.GymId).To(Equal(gymId))
+				gym, _ = datastore.GetGym(gymID)
+				Expect(gym.GymID).To(Equal(gymID))
 			})
 		})
 
 		Describe("Unsuccessful call", func() {
 			var (
-				nonExistentId int64 = 5000
+				nonExistentID int64 = 5000
 				err           error
 			)
 
 			BeforeEach(func() {
-				gym, err = datastore.GetGym(nonExistentId)
+				gym, err = datastore.GetGym(nonExistentID)
 			})
 
 			It("should return an error", func() {
@@ -82,7 +82,7 @@ var _ = Describe("Gym db interactions", func() {
 			})
 
 			AfterEach(func() {
-				datastore.DeleteGym(created.GymId)
+				datastore.DeleteGym(created.GymID)
 			})
 
 			It("should return the created gym", func() {
@@ -90,7 +90,7 @@ var _ = Describe("Gym db interactions", func() {
 			})
 
 			It("should add a gym to the db", func() {
-				newGym, _ := datastore.GetGym(created.GymId)
+				newGym, _ := datastore.GetGym(created.GymID)
 				Expect(newGym.GymName).To(Equal(gymName))
 			})
 		})
@@ -112,11 +112,11 @@ var _ = Describe("Gym db interactions", func() {
 			BeforeEach(func() {
 				gym = models.Gym{GymName: gymName}
 				created, _ = datastore.CreateGym(models.Gym{GymName: "Gym"})
-				updated, _ = datastore.UpdateGym(created.GymId, gym)
+				updated, _ = datastore.UpdateGym(created.GymID, gym)
 			})
 
 			AfterEach(func() {
-				datastore.DeleteGym(updated.GymId)
+				datastore.DeleteGym(updated.GymID)
 			})
 
 			It("should return the updated gym", func() {
@@ -144,7 +144,7 @@ var _ = Describe("Gym db interactions", func() {
 		Describe("Successful call", func() {
 			It("should return nil", func() {
 				created, _ := datastore.CreateGym(models.Gym{GymName: "Test"})
-				err := datastore.DeleteGym(created.GymId)
+				err := datastore.DeleteGym(created.GymID)
 				Expect(err).To(BeNil())
 			})
 		})

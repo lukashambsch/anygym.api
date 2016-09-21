@@ -8,7 +8,7 @@ import (
 )
 
 var _ = Describe("UserRole db interactions", func() {
-	var userRoleId int64 = 1
+	var userRoleID int64 = 1
 
 	Describe("GetUserRoleList", func() {
 		var userRoles []models.UserRole
@@ -29,19 +29,19 @@ var _ = Describe("UserRole db interactions", func() {
 
 		Describe("Successful call", func() {
 			It("should return the correct userRole", func() {
-				userRole, _ = datastore.GetUserRole(userRoleId)
-				Expect(userRole.UserRoleId).To(Equal(userRoleId))
+				userRole, _ = datastore.GetUserRole(userRoleID)
+				Expect(userRole.UserRoleID).To(Equal(userRoleID))
 			})
 		})
 
 		Describe("Unsuccessful call", func() {
 			var (
-				nonExistentId int64 = 5
+				nonExistentID int64 = 5
 				err           error
 			)
 
 			BeforeEach(func() {
-				userRole, err = datastore.GetUserRole(nonExistentId)
+				userRole, err = datastore.GetUserRole(nonExistentID)
 			})
 
 			It("should return an error", func() {
@@ -70,34 +70,34 @@ var _ = Describe("UserRole db interactions", func() {
 
 	Describe("CreateUserRole", func() {
 		var (
-			userId   int64 = 1
+			userID   int64 = 1
 			userRole models.UserRole
 			created  *models.UserRole
 		)
 
 		Describe("Successful call", func() {
 			BeforeEach(func() {
-				userRole = models.UserRole{UserId: userId, RoleId: 5}
+				userRole = models.UserRole{UserID: userID, RoleID: 5}
 				created, _ = datastore.CreateUserRole(userRole)
 			})
 
 			AfterEach(func() {
-				datastore.DeleteUserRole(created.UserRoleId)
+				datastore.DeleteUserRole(created.UserRoleID)
 			})
 
 			It("should return the created userRole", func() {
-				Expect(created.UserId).To(Equal(userId))
+				Expect(created.UserID).To(Equal(userID))
 			})
 
 			It("should add a userRole to the db", func() {
-				newUserRole, _ := datastore.GetUserRole(created.UserRoleId)
-				Expect(newUserRole.UserId).To(Equal(userId))
+				newUserRole, _ := datastore.GetUserRole(created.UserRoleID)
+				Expect(newUserRole.UserID).To(Equal(userID))
 			})
 		})
 
 		Describe("Unsuccessful call", func() {
 			It("should return an error object if userRole is not unique", func() {
-				usrRole := models.UserRole{UserId: userId, RoleId: 1}
+				usrRole := models.UserRole{UserID: userID, RoleID: 1}
 				_, err := datastore.CreateUserRole(usrRole)
 				Expect(err).ToNot(BeNil())
 			})
@@ -106,7 +106,7 @@ var _ = Describe("UserRole db interactions", func() {
 
 	Describe("UpdateUserRole", func() {
 		var (
-			userId   int64 = 2
+			userID   int64 = 2
 			userRole models.UserRole
 			created  *models.UserRole
 			updated  *models.UserRole
@@ -115,17 +115,17 @@ var _ = Describe("UserRole db interactions", func() {
 
 		Describe("Successful call", func() {
 			BeforeEach(func() {
-				userRole = models.UserRole{UserId: userId, RoleId: 5}
-				created, _ = datastore.CreateUserRole(models.UserRole{UserId: 1, RoleId: 5})
-				updated, _ = datastore.UpdateUserRole(created.UserRoleId, userRole)
+				userRole = models.UserRole{UserID: userID, RoleID: 5}
+				created, _ = datastore.CreateUserRole(models.UserRole{UserID: 1, RoleID: 5})
+				updated, _ = datastore.UpdateUserRole(created.UserRoleID, userRole)
 			})
 
 			AfterEach(func() {
-				datastore.DeleteUserRole(updated.UserRoleId)
+				datastore.DeleteUserRole(updated.UserRoleID)
 			})
 
 			It("should return the updated userRole", func() {
-				Expect(updated.UserId).To(Equal(userId))
+				Expect(updated.UserID).To(Equal(userID))
 			})
 		})
 
@@ -148,8 +148,8 @@ var _ = Describe("UserRole db interactions", func() {
 	Describe("DeleteUserRole", func() {
 		Describe("Successful call", func() {
 			It("should return nil", func() {
-				created, _ := datastore.CreateUserRole(models.UserRole{UserId: 1, RoleId: 5})
-				err := datastore.DeleteUserRole(created.UserRoleId)
+				created, _ := datastore.CreateUserRole(models.UserRole{UserID: 1, RoleID: 5})
+				err := datastore.DeleteUserRole(created.UserRoleID)
 				Expect(err).To(BeNil())
 			})
 		})

@@ -21,7 +21,7 @@ func GetUserList(where string) ([]models.User, error) {
 
 	for rows.Next() {
 		err = rows.Scan(
-			&user.UserId,
+			&user.UserID,
 			&user.Email,
 			&user.Token,
 			&user.Secret,
@@ -53,12 +53,12 @@ func GetUserCount(where string) (*int, error) {
 	return &count, nil
 }
 
-func GetUser(userId int64) (*models.User, error) {
+func GetUser(userID int64) (*models.User, error) {
 	var user models.User
 
-	row := store.DB.QueryRow(getUserQuery, userId)
+	row := store.DB.QueryRow(getUserQuery, userID)
 	err := row.Scan(
-		&user.UserId,
+		&user.UserID,
 		&user.Email,
 		&user.Token,
 		&user.Secret,
@@ -86,7 +86,7 @@ func CreateUser(user models.User) (*models.User, error) {
 		user.PasswordHash,
 	)
 	err := row.Scan(
-		&created.UserId,
+		&created.UserID,
 		&created.Email,
 		&created.Token,
 		&created.Secret,
@@ -101,7 +101,7 @@ func CreateUser(user models.User) (*models.User, error) {
 	return &created, nil
 }
 
-func UpdateUser(userId int64, user models.User) (*models.User, error) {
+func UpdateUser(userID int64, user models.User) (*models.User, error) {
 	var updated models.User
 
 	row := store.DB.QueryRow(
@@ -111,10 +111,10 @@ func UpdateUser(userId int64, user models.User) (*models.User, error) {
 		user.Secret,
 		user.PasswordSalt,
 		user.PasswordHash,
-		userId,
+		userID,
 	)
 	err := row.Scan(
-		&updated.UserId,
+		&updated.UserID,
 		&updated.Email,
 		&updated.Token,
 		&updated.Secret,
@@ -129,13 +129,13 @@ func UpdateUser(userId int64, user models.User) (*models.User, error) {
 	return &updated, nil
 }
 
-func DeleteUser(userId int64) error {
+func DeleteUser(userID int64) error {
 	stmt, err := store.DB.Prepare(deleteUserQuery)
 	if err != nil {
 		return err
 	}
 
-	_, err = stmt.Exec(userId)
+	_, err = stmt.Exec(userID)
 	if err != nil {
 		return err
 	}

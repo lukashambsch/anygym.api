@@ -84,7 +84,7 @@ func BuildSort(fields map[string]string, params url.Values) (string, error) {
 	return statement, nil
 }
 
-func GetId(w http.ResponseWriter, r *http.Request, idField string) (int64, *APIErrorMessage) {
+func GetID(w http.ResponseWriter, r *http.Request, idField string) (int64, *APIErrorMessage) {
 	id, err := strconv.ParseInt(mux.Vars(r)[idField], 10, 64)
 	if err != nil {
 		errMes := &APIErrorMessage{Message: "Invalid " + idField}

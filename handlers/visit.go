@@ -14,8 +14,8 @@ import (
 	"github.com/lukashambsch/gym-all-over/store/datastore"
 )
 
-const VisitId = "visit_id"
-const InvalidVisitId = "Invalid " + VisitId
+const VisitID = "visit_id"
+const InvalidVisitID = "Invalid " + VisitID
 
 var visitFields map[string]string = map[string]string{
 	"visit_id":        "int",
@@ -27,12 +27,12 @@ var visitFields map[string]string = map[string]string{
 }
 
 func GetVisit(w http.ResponseWriter, r *http.Request) {
-	visitId, message := GetId(w, r, VisitId)
+	visitID, message := GetID(w, r, VisitID)
 	if message != nil {
 		return
 	}
 
-	visit, err := datastore.GetVisit(visitId)
+	visit, err := datastore.GetVisit(visitID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			WriteJSON(w, http.StatusNotFound, APIErrorMessage{Message: "Not Found"})
@@ -94,9 +94,9 @@ func PutVisit(w http.ResponseWriter, r *http.Request) {
 	body, _ := ioutil.ReadAll(r.Body)
 	r.Body.Close()
 
-	visitId, err := strconv.ParseInt(mux.Vars(r)[VisitId], 10, 64)
+	visitID, err := strconv.ParseInt(mux.Vars(r)[VisitID], 10, 64)
 	if err != nil {
-		WriteJSON(w, http.StatusBadRequest, APIErrorMessage{Message: InvalidVisitId})
+		WriteJSON(w, http.StatusBadRequest, APIErrorMessage{Message: InvalidVisitID})
 		return
 	}
 
@@ -107,7 +107,7 @@ func PutVisit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	updated, err := datastore.UpdateVisit(visitId, *visit)
+	updated, err := datastore.UpdateVisit(visitID, *visit)
 	if err != nil {
 		WriteJSON(w, http.StatusInternalServerError, APIErrorMessage{Message: err.Error()})
 		return
@@ -117,13 +117,13 @@ func PutVisit(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteVisit(w http.ResponseWriter, r *http.Request) {
-	visitId, err := strconv.ParseInt(mux.Vars(r)[VisitId], 10, 64)
+	visitID, err := strconv.ParseInt(mux.Vars(r)[VisitID], 10, 64)
 	if err != nil {
-		WriteJSON(w, http.StatusBadRequest, APIErrorMessage{Message: InvalidVisitId})
+		WriteJSON(w, http.StatusBadRequest, APIErrorMessage{Message: InvalidVisitID})
 		return
 	}
 
-	err = datastore.DeleteVisit(visitId)
+	err = datastore.DeleteVisit(visitID)
 	if err != nil {
 		WriteJSON(w, http.StatusInternalServerError, APIErrorMessage{Message: err.Error()})
 		return

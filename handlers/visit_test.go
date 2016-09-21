@@ -86,11 +86,11 @@ var _ = Describe("Visit API", func() {
 				data, _ = ioutil.ReadAll(res.Body)
 				json.Unmarshal(data, &visits)
 				Expect(res.StatusCode).To(Equal(http.StatusOK))
-				Expect(visits[0].MemberId).To(Equal(int64(1)))
-				Expect(visits[1].MemberId).To(Equal(int64(1)))
-				Expect(visits[2].MemberId).To(Equal(int64(1)))
-				Expect(visits[3].MemberId).To(Equal(int64(2)))
-				Expect(visits[4].MemberId).To(Equal(int64(2)))
+				Expect(visits[0].MemberID).To(Equal(int64(1)))
+				Expect(visits[1].MemberID).To(Equal(int64(1)))
+				Expect(visits[2].MemberID).To(Equal(int64(1)))
+				Expect(visits[3].MemberID).To(Equal(int64(2)))
+				Expect(visits[4].MemberID).To(Equal(int64(2)))
 			})
 
 			It("should sort visits by the correct field descending", func() {
@@ -98,11 +98,11 @@ var _ = Describe("Visit API", func() {
 				data, _ = ioutil.ReadAll(res.Body)
 				json.Unmarshal(data, &visits)
 				Expect(res.StatusCode).To(Equal(http.StatusOK))
-				Expect(visits[0].VisitId).To(Equal(int64(5)))
-				Expect(visits[1].VisitId).To(Equal(int64(4)))
-				Expect(visits[2].VisitId).To(Equal(int64(3)))
-				Expect(visits[3].VisitId).To(Equal(int64(2)))
-				Expect(visits[4].VisitId).To(Equal(int64(1)))
+				Expect(visits[0].VisitID).To(Equal(int64(5)))
+				Expect(visits[1].VisitID).To(Equal(int64(4)))
+				Expect(visits[2].VisitID).To(Equal(int64(3)))
+				Expect(visits[3].VisitID).To(Equal(int64(2)))
+				Expect(visits[4].VisitID).To(Equal(int64(1)))
 			})
 		})
 
@@ -138,12 +138,12 @@ var _ = Describe("Visit API", func() {
 	Describe("GetVisit endpoint", func() {
 		var (
 			visit   models.Visit
-			visitId int64 = 1
+			visitID int64 = 1
 		)
 
 		Describe("Successful GET", func() {
 			BeforeEach(func() {
-				res, _ = http.Get(fmt.Sprintf("%s/%d", visitURL, visitId))
+				res, _ = http.Get(fmt.Sprintf("%s/%d", visitURL, visitID))
 				data, _ = ioutil.ReadAll(res.Body)
 				json.Unmarshal(data, &visit)
 			})
@@ -153,7 +153,7 @@ var _ = Describe("Visit API", func() {
 			})
 
 			It("should contain the visit in the response", func() {
-				Expect(visit.VisitId).To(Equal(visitId))
+				Expect(visit.VisitID).To(Equal(visitID))
 			})
 		})
 
@@ -166,7 +166,7 @@ var _ = Describe("Visit API", func() {
 					data, _ = ioutil.ReadAll(res.Body)
 					json.Unmarshal(data, &errRes)
 					Expect(res.StatusCode).To(Equal(http.StatusBadRequest))
-					Expect(errRes.Message).To(Equal(handlers.InvalidVisitId))
+					Expect(errRes.Message).To(Equal(handlers.InvalidVisitID))
 				})
 			})
 
@@ -197,7 +197,7 @@ var _ = Describe("Visit API", func() {
 			})
 
 			AfterEach(func() {
-				datastore.DeleteVisit(visit.VisitId)
+				datastore.DeleteVisit(visit.VisitID)
 			})
 
 			It("should return visit code 201", func() {
@@ -205,11 +205,11 @@ var _ = Describe("Visit API", func() {
 			})
 
 			It("should contain the visit", func() {
-				Expect(visit.MemberId).To(Equal(int64(1)))
+				Expect(visit.MemberID).To(Equal(int64(1)))
 			})
 
 			It("should save the visit", func() {
-				Expect(visit.VisitId).ToNot(Equal(int64(0)))
+				Expect(visit.VisitID).ToNot(Equal(int64(0)))
 			})
 		})
 
@@ -247,14 +247,14 @@ var _ = Describe("Visit API", func() {
 		var (
 			visit   models.Visit
 			payload []byte = []byte(`{"member_id": 2, "gym_location_id": 1, "status_id": 1}`)
-			visitId int64  = 1
+			visitID int64  = 1
 		)
 
 		Describe("Successful PUT", func() {
 			BeforeEach(func() {
 				req, _ := http.NewRequest(
 					"PUT",
-					fmt.Sprintf("%s/%d", visitURL, visitId),
+					fmt.Sprintf("%s/%d", visitURL, visitID),
 					bytes.NewBuffer(payload),
 				)
 				req.Header.Set("Content-Type", contentType)
@@ -265,7 +265,7 @@ var _ = Describe("Visit API", func() {
 			})
 
 			AfterEach(func() {
-				datastore.UpdateVisit(visitId, models.Visit{MemberId: 1})
+				datastore.UpdateVisit(visitID, models.Visit{MemberID: 1})
 			})
 
 			It("should return visit code 200", func() {
@@ -273,12 +273,12 @@ var _ = Describe("Visit API", func() {
 			})
 
 			//It("should contain the visit", func() {
-			//Expect(visit.MemberId).To(Equal(int64(2)))
+			//Expect(visit.MemberID).To(Equal(int64(2)))
 			//})
 
 			It("should save the updated visit", func() {
-				updated, _ := datastore.GetVisit(visitId)
-				Expect(updated.VisitId).To(Equal(visitId))
+				updated, _ := datastore.GetVisit(visitID)
+				Expect(updated.VisitID).To(Equal(visitID))
 			})
 		})
 
@@ -288,7 +288,7 @@ var _ = Describe("Visit API", func() {
 			It("should return visit code 400 with a message", func() {
 				req, _ := http.NewRequest(
 					"PUT",
-					fmt.Sprintf("%s/%d", visitURL, visitId),
+					fmt.Sprintf("%s/%d", visitURL, visitID),
 					bytes.NewBuffer(badPayload),
 				)
 				req.Header.Set("Content-Type", contentType)
@@ -312,7 +312,7 @@ var _ = Describe("Visit API", func() {
 				data, _ = ioutil.ReadAll(res.Body)
 				json.Unmarshal(data, &errRes)
 				Expect(res.StatusCode).To(Equal(http.StatusBadRequest))
-				Expect(errRes.Message).To(Equal(handlers.InvalidVisitId))
+				Expect(errRes.Message).To(Equal(handlers.InvalidVisitID))
 			})
 
 			It("should return visit code 500 with a message", func() {
@@ -333,13 +333,13 @@ var _ = Describe("Visit API", func() {
 	})
 
 	Describe("DeleteVisit endpoint", func() {
-		var visitId int64 = 1
+		var visitID int64 = 1
 
 		Describe("Successful DELETE", func() {
 			BeforeEach(func() {
 				req, _ := http.NewRequest(
 					"DELETE",
-					fmt.Sprintf("%s/%d", visitURL, visitId),
+					fmt.Sprintf("%s/%d", visitURL, visitID),
 					bytes.NewBuffer([]byte(``)),
 				)
 				req.Header.Set("Content-Type", contentType)
@@ -350,7 +350,7 @@ var _ = Describe("Visit API", func() {
 			AfterEach(func() {
 				store.DB.Exec(
 					"INSERT INTO visits (visit_id, member_id, gym_location_id, status_id) VALUES ($1, $2, $3, $4)",
-					visitId,
+					visitID,
 					1,
 					1,
 					1,
@@ -362,7 +362,7 @@ var _ = Describe("Visit API", func() {
 			})
 
 			It("should delete the visit", func() {
-				_, err := datastore.GetVisit(visitId)
+				_, err := datastore.GetVisit(visitID)
 				Expect(err).ToNot(BeNil())
 			})
 		})
@@ -382,7 +382,7 @@ var _ = Describe("Visit API", func() {
 				data, _ = ioutil.ReadAll(res.Body)
 				json.Unmarshal(data, &errRes)
 				Expect(res.StatusCode).To(Equal(http.StatusBadRequest))
-				Expect(errRes.Message).To(Equal(handlers.InvalidVisitId))
+				Expect(errRes.Message).To(Equal(handlers.InvalidVisitID))
 			})
 		})
 	})

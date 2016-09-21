@@ -12,31 +12,31 @@ var _ = Describe("BusinessHour db interactions", func() {
 		businessHourOne, businessHourTwo *models.BusinessHour
 		addr                             *models.Address
 		gymLocation                      *models.GymLocation
-		mondayId, tuesdayId, gymId       int64 = 1, 2, 1
+		mondayID, tuesdayID, gymID       int64 = 1, 2, 1
 	)
 
 	BeforeEach(func() {
 		addr, _ = datastore.CreateAddress(models.Address{StreetAddress: "Testing"})
 		gymLocation, _ = datastore.CreateGymLocation(models.GymLocation{
-			GymId:        gymId,
-			AddressId:    addr.AddressId,
+			GymID:        gymID,
+			AddressID:    addr.AddressID,
 			LocationName: "Testing",
 		})
 		businessHourOne, _ = datastore.CreateBusinessHour(models.BusinessHour{
-			GymLocationId: gymLocation.GymLocationId,
-			DayId:         &mondayId,
+			GymLocationID: gymLocation.GymLocationID,
+			DayID:         &mondayID,
 		})
 		businessHourTwo, _ = datastore.CreateBusinessHour(models.BusinessHour{
-			GymLocationId: gymLocation.GymLocationId,
-			DayId:         &tuesdayId,
+			GymLocationID: gymLocation.GymLocationID,
+			DayID:         &tuesdayID,
 		})
 	})
 
 	AfterEach(func() {
-		datastore.DeleteBusinessHour(businessHourOne.BusinessHourId)
-		datastore.DeleteBusinessHour(businessHourTwo.BusinessHourId)
-		datastore.DeleteGymLocation(gymLocation.GymLocationId)
-		datastore.DeleteAddress(addr.AddressId)
+		datastore.DeleteBusinessHour(businessHourOne.BusinessHourID)
+		datastore.DeleteBusinessHour(businessHourTwo.BusinessHourID)
+		datastore.DeleteGymLocation(gymLocation.GymLocationID)
+		datastore.DeleteAddress(addr.AddressID)
 	})
 
 	Describe("GetBusinessHourList", func() {
@@ -58,19 +58,19 @@ var _ = Describe("BusinessHour db interactions", func() {
 
 		Describe("Successful call", func() {
 			It("should return the correct businessHour", func() {
-				businessHour, _ = datastore.GetBusinessHour(businessHourOne.BusinessHourId)
-				Expect(businessHour.BusinessHourId).To(Equal(businessHourOne.BusinessHourId))
+				businessHour, _ = datastore.GetBusinessHour(businessHourOne.BusinessHourID)
+				Expect(businessHour.BusinessHourID).To(Equal(businessHourOne.BusinessHourID))
 			})
 		})
 
 		Describe("Unsuccessful call", func() {
 			var (
-				nonExistentId int64 = 5000
+				nonExistentID int64 = 5000
 				err           error
 			)
 
 			BeforeEach(func() {
-				businessHour, err = datastore.GetBusinessHour(nonExistentId)
+				businessHour, err = datastore.GetBusinessHour(nonExistentID)
 			})
 
 			It("should return an error", func() {
@@ -99,7 +99,7 @@ var _ = Describe("BusinessHour db interactions", func() {
 
 	Describe("CreateBusinessHour", func() {
 		var (
-			wednesdayId  int64 = 3
+			wednesdayID  int64 = 3
 			businessHour models.BusinessHour
 			created      *models.BusinessHour
 		)
@@ -107,23 +107,23 @@ var _ = Describe("BusinessHour db interactions", func() {
 		Describe("Successful call", func() {
 			BeforeEach(func() {
 				businessHour = models.BusinessHour{
-					GymLocationId: gymLocation.GymLocationId,
-					DayId:         &wednesdayId,
+					GymLocationID: gymLocation.GymLocationID,
+					DayID:         &wednesdayID,
 				}
 				created, _ = datastore.CreateBusinessHour(businessHour)
 			})
 
 			AfterEach(func() {
-				datastore.DeleteBusinessHour(created.BusinessHourId)
+				datastore.DeleteBusinessHour(created.BusinessHourID)
 			})
 
 			It("should return the created businessHour", func() {
-				Expect(created.DayId).To(Equal(&wednesdayId))
+				Expect(created.DayID).To(Equal(&wednesdayID))
 			})
 
 			It("should add a businessHour to the db", func() {
-				newMember, _ := datastore.GetBusinessHour(created.BusinessHourId)
-				Expect(newMember.DayId).To(Equal(&wednesdayId))
+				newMember, _ := datastore.GetBusinessHour(created.BusinessHourID)
+				Expect(newMember.DayID).To(Equal(&wednesdayID))
 			})
 		})
 
@@ -138,7 +138,7 @@ var _ = Describe("BusinessHour db interactions", func() {
 
 	Describe("UpdateBusinessHour", func() {
 		var (
-			wednesdayId, thursdayId int64 = 3, 4
+			wednesdayID, thursdayID int64 = 3, 4
 			businessHour            models.BusinessHour
 			created                 *models.BusinessHour
 			updated                 *models.BusinessHour
@@ -148,27 +148,27 @@ var _ = Describe("BusinessHour db interactions", func() {
 		Describe("Successful call", func() {
 			BeforeEach(func() {
 				created, _ = datastore.CreateBusinessHour(models.BusinessHour{
-					GymLocationId: gymLocation.GymLocationId,
-					DayId:         &wednesdayId,
+					GymLocationID: gymLocation.GymLocationID,
+					DayID:         &wednesdayID,
 				})
-				created.DayId = &thursdayId
-				updated, _ = datastore.UpdateBusinessHour(created.BusinessHourId, *created)
+				created.DayID = &thursdayID
+				updated, _ = datastore.UpdateBusinessHour(created.BusinessHourID, *created)
 			})
 
 			AfterEach(func() {
-				datastore.DeleteBusinessHour(updated.BusinessHourId)
+				datastore.DeleteBusinessHour(updated.BusinessHourID)
 			})
 
 			It("should return the updated businessHour", func() {
-				Expect(updated.DayId).To(Equal(&thursdayId))
+				Expect(updated.DayID).To(Equal(&thursdayID))
 			})
 		})
 
 		Describe("Unsuccessful call", func() {
 			BeforeEach(func() {
 				businessHour = models.BusinessHour{
-					GymLocationId: gymLocation.GymLocationId,
-					DayId:         &wednesdayId,
+					GymLocationID: gymLocation.GymLocationID,
+					DayID:         &wednesdayID,
 				}
 				updated, err = datastore.UpdateBusinessHour(5000, businessHour)
 			})
@@ -186,12 +186,12 @@ var _ = Describe("BusinessHour db interactions", func() {
 	Describe("DeleteBusinessHour", func() {
 		Describe("Successful call", func() {
 			It("should return nil", func() {
-				var wednesdayId int64 = 3
+				var wednesdayID int64 = 3
 				created, _ := datastore.CreateBusinessHour(models.BusinessHour{
-					GymLocationId: gymLocation.GymLocationId,
-					DayId:         &wednesdayId,
+					GymLocationID: gymLocation.GymLocationID,
+					DayID:         &wednesdayID,
 				})
-				err := datastore.DeleteBusinessHour(created.BusinessHourId)
+				err := datastore.DeleteBusinessHour(created.BusinessHourID)
 				Expect(err).To(BeNil())
 			})
 		})

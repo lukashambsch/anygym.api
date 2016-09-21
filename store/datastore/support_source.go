@@ -20,7 +20,7 @@ func GetSupportSourceList(where string) ([]models.SupportSource, error) {
 	}
 
 	for rows.Next() {
-		err = rows.Scan(&supportSource.SupportSourceId, &supportSource.SupportSourceName)
+		err = rows.Scan(&supportSource.SupportSourceID, &supportSource.SupportSourceName)
 		supportSources = append(supportSources, supportSource)
 		if err != nil {
 			return nil, err
@@ -44,11 +44,11 @@ func GetSupportSourceCount(where string) (*int, error) {
 	return &count, nil
 }
 
-func GetSupportSource(supportSourceId int64) (*models.SupportSource, error) {
+func GetSupportSource(supportSourceID int64) (*models.SupportSource, error) {
 	var supportSource models.SupportSource
 
-	row := store.DB.QueryRow(getSupportSourceQuery, supportSourceId)
-	err := row.Scan(&supportSource.SupportSourceId, &supportSource.SupportSourceName)
+	row := store.DB.QueryRow(getSupportSourceQuery, supportSourceID)
+	err := row.Scan(&supportSource.SupportSourceID, &supportSource.SupportSourceName)
 	if err != nil {
 		return nil, err
 	}
@@ -60,7 +60,7 @@ func CreateSupportSource(supportSource models.SupportSource) (*models.SupportSou
 	var created models.SupportSource
 
 	row := store.DB.QueryRow(createSupportSourceQuery, supportSource.SupportSourceName)
-	err := row.Scan(&created.SupportSourceId, &created.SupportSourceName)
+	err := row.Scan(&created.SupportSourceID, &created.SupportSourceName)
 	if err != nil {
 		return nil, err
 	}
@@ -68,11 +68,11 @@ func CreateSupportSource(supportSource models.SupportSource) (*models.SupportSou
 	return &created, nil
 }
 
-func UpdateSupportSource(supportSourceId int64, supportSource models.SupportSource) (*models.SupportSource, error) {
+func UpdateSupportSource(supportSourceID int64, supportSource models.SupportSource) (*models.SupportSource, error) {
 	var updated models.SupportSource
 
-	row := store.DB.QueryRow(updateSupportSourceQuery, supportSource.SupportSourceName, supportSourceId)
-	err := row.Scan(&updated.SupportSourceId, &updated.SupportSourceName)
+	row := store.DB.QueryRow(updateSupportSourceQuery, supportSource.SupportSourceName, supportSourceID)
+	err := row.Scan(&updated.SupportSourceID, &updated.SupportSourceName)
 	if err != nil {
 		return nil, err
 	}
@@ -80,13 +80,13 @@ func UpdateSupportSource(supportSourceId int64, supportSource models.SupportSour
 	return &updated, nil
 }
 
-func DeleteSupportSource(supportSourceId int64) error {
+func DeleteSupportSource(supportSourceID int64) error {
 	stmt, err := store.DB.Prepare(deleteSupportSourceQuery)
 	if err != nil {
 		return err
 	}
 
-	_, err = stmt.Exec(supportSourceId)
+	_, err = stmt.Exec(supportSourceID)
 	if err != nil {
 		return err
 	}

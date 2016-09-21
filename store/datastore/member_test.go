@@ -10,19 +10,19 @@ import (
 
 var _ = Describe("Member db interactions", func() {
 	var (
-		memberId int64 = 1
+		memberID int64 = 1
 		member   *models.Member
 		user     *models.User
 	)
 
 	BeforeEach(func() {
 		user, _ = datastore.CreateUser(models.User{Email: "testemail@gmail.com"})
-		member, _ = datastore.CreateMember(models.Member{FirstName: "Test First", UserId: &user.UserId})
+		member, _ = datastore.CreateMember(models.Member{FirstName: "Test First", UserID: &user.UserID})
 	})
 
 	AfterEach(func() {
-		datastore.DeleteMember(member.MemberId)
-		err := datastore.DeleteUser(user.UserId)
+		datastore.DeleteMember(member.MemberID)
+		err := datastore.DeleteUser(user.UserID)
 		fmt.Printf("%#v", err)
 	})
 
@@ -43,20 +43,20 @@ var _ = Describe("Member db interactions", func() {
 	Describe("GetMember", func() {
 		Describe("Successful call", func() {
 			It("should return the correct member", func() {
-				mbr, _ := datastore.GetMember(memberId)
-				Expect(mbr.MemberId).To(Equal(memberId))
+				mbr, _ := datastore.GetMember(memberID)
+				Expect(mbr.MemberID).To(Equal(memberID))
 			})
 		})
 
 		Describe("Unsuccessful call", func() {
 			var (
-				nonExistentId int64 = 99999
+				nonExistentID int64 = 99999
 				err           error
 				mbr           *models.Member
 			)
 
 			BeforeEach(func() {
-				mbr, err = datastore.GetMember(nonExistentId)
+				mbr, err = datastore.GetMember(nonExistentID)
 			})
 
 			It("should return an error", func() {
@@ -93,13 +93,13 @@ var _ = Describe("Member db interactions", func() {
 		Describe("Successful call", func() {
 			BeforeEach(func() {
 				usr, _ = datastore.CreateUser(models.User{Email: "Another Test"})
-				mbr := models.Member{UserId: &usr.UserId, FirstName: firstName}
+				mbr := models.Member{UserID: &usr.UserID, FirstName: firstName}
 				created, _ = datastore.CreateMember(mbr)
 			})
 
 			AfterEach(func() {
-				datastore.DeleteMember(created.MemberId)
-				datastore.DeleteUser(usr.UserId)
+				datastore.DeleteMember(created.MemberID)
+				datastore.DeleteUser(usr.UserID)
 			})
 
 			It("should return the created member", func() {
@@ -107,7 +107,7 @@ var _ = Describe("Member db interactions", func() {
 			})
 
 			It("should add a member to the db", func() {
-				newMember, _ := datastore.GetMember(created.MemberId)
+				newMember, _ := datastore.GetMember(created.MemberID)
 				Expect(newMember.FirstName).To(Equal(firstName))
 			})
 		})
@@ -134,14 +134,14 @@ var _ = Describe("Member db interactions", func() {
 		Describe("Successful call", func() {
 			BeforeEach(func() {
 				usr, _ = datastore.CreateUser(models.User{Email: "Email"})
-				created, _ = datastore.CreateMember(models.Member{FirstName: "First Name", UserId: &usr.UserId})
+				created, _ = datastore.CreateMember(models.Member{FirstName: "First Name", UserID: &usr.UserID})
 				created.FirstName = firstName
-				updated, err = datastore.UpdateMember(created.MemberId, *created)
+				updated, err = datastore.UpdateMember(created.MemberID, *created)
 			})
 
 			AfterEach(func() {
-				datastore.DeleteMember(updated.MemberId)
-				datastore.DeleteUser(usr.UserId)
+				datastore.DeleteMember(updated.MemberID)
+				datastore.DeleteUser(usr.UserID)
 			})
 
 			It("should return the updated member", func() {
@@ -168,7 +168,7 @@ var _ = Describe("Member db interactions", func() {
 	Describe("DeleteMember", func() {
 		Describe("Successful call", func() {
 			It("should return nil", func() {
-				err := datastore.DeleteMember(member.MemberId)
+				err := datastore.DeleteMember(member.MemberID)
 				Expect(err).To(BeNil())
 			})
 		})

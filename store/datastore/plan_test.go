@@ -18,10 +18,10 @@ var _ = Describe("Plan db interactions", func() {
 	})
 
 	AfterEach(func() {
-		datastore.DeletePlan(one.PlanId)
-		datastore.DeletePlan(two.PlanId)
-		datastore.DeletePlan(three.PlanId)
-		datastore.DeletePlan(four.PlanId)
+		datastore.DeletePlan(one.PlanID)
+		datastore.DeletePlan(two.PlanID)
+		datastore.DeletePlan(three.PlanID)
+		datastore.DeletePlan(four.PlanID)
 	})
 
 	Describe("GetPlanList", func() {
@@ -43,19 +43,19 @@ var _ = Describe("Plan db interactions", func() {
 
 		Describe("Successful call", func() {
 			It("should return the correct plan", func() {
-				plan, _ = datastore.GetPlan(one.PlanId)
-				Expect(plan.PlanId).To(Equal(one.PlanId))
+				plan, _ = datastore.GetPlan(one.PlanID)
+				Expect(plan.PlanID).To(Equal(one.PlanID))
 			})
 		})
 
 		Describe("Unsuccessful call", func() {
 			var (
-				nonExistentId int64 = 5
+				nonExistentID int64 = 5
 				err           error
 			)
 
 			BeforeEach(func() {
-				plan, err = datastore.GetPlan(nonExistentId)
+				plan, err = datastore.GetPlan(nonExistentID)
 			})
 
 			It("should return an error", func() {
@@ -96,7 +96,7 @@ var _ = Describe("Plan db interactions", func() {
 			})
 
 			AfterEach(func() {
-				datastore.DeletePlan(created.PlanId)
+				datastore.DeletePlan(created.PlanID)
 			})
 
 			It("should return the created plan", func() {
@@ -104,7 +104,7 @@ var _ = Describe("Plan db interactions", func() {
 			})
 
 			It("should add a plan to the db", func() {
-				newPlan, _ := datastore.GetPlan(created.PlanId)
+				newPlan, _ := datastore.GetPlan(created.PlanID)
 				Expect(newPlan.PlanName).To(Equal(planName))
 			})
 		})
@@ -113,7 +113,7 @@ var _ = Describe("Plan db interactions", func() {
 			var created *models.Plan
 
 			AfterEach(func() {
-				datastore.DeletePlan(created.PlanId)
+				datastore.DeletePlan(created.PlanID)
 			})
 
 			It("should return an error object if plan is not unique", func() {
@@ -139,11 +139,11 @@ var _ = Describe("Plan db interactions", func() {
 			BeforeEach(func() {
 				plan = models.Plan{PlanName: planName}
 				created, _ = datastore.CreatePlan(models.Plan{PlanName: "Daily"})
-				updated, _ = datastore.UpdatePlan(created.PlanId, plan)
+				updated, _ = datastore.UpdatePlan(created.PlanID, plan)
 			})
 
 			AfterEach(func() {
-				datastore.DeletePlan(updated.PlanId)
+				datastore.DeletePlan(updated.PlanID)
 			})
 
 			It("should return the updated plan", func() {
@@ -170,7 +170,7 @@ var _ = Describe("Plan db interactions", func() {
 	Describe("DeletePlan", func() {
 		Describe("Successful call", func() {
 			It("should return nil", func() {
-				err := datastore.DeletePlan(one.PlanId)
+				err := datastore.DeletePlan(one.PlanID)
 				Expect(err).To(BeNil())
 			})
 		})

@@ -21,7 +21,7 @@ func GetAddressList(where string) ([]models.Address, error) {
 
 	for rows.Next() {
 		err = rows.Scan(
-			&address.AddressId,
+			&address.AddressID,
 			&address.Country,
 			&address.StateRegion,
 			&address.City,
@@ -54,12 +54,12 @@ func GetAddressCount(where string) (*int, error) {
 	return &count, nil
 }
 
-func GetAddress(addressId int64) (*models.Address, error) {
+func GetAddress(addressID int64) (*models.Address, error) {
 	var address models.Address
 
-	row := store.DB.QueryRow(getAddressQuery, addressId)
+	row := store.DB.QueryRow(getAddressQuery, addressID)
 	err := row.Scan(
-		&address.AddressId,
+		&address.AddressID,
 		&address.Country,
 		&address.StateRegion,
 		&address.City,
@@ -90,7 +90,7 @@ func CreateAddress(address models.Address) (*models.Address, error) {
 		address.Longitude,
 	)
 	err := row.Scan(
-		&created.AddressId,
+		&created.AddressID,
 		&created.Country,
 		&created.StateRegion,
 		&created.City,
@@ -106,7 +106,7 @@ func CreateAddress(address models.Address) (*models.Address, error) {
 	return &created, nil
 }
 
-func UpdateAddress(addressId int64, address models.Address) (*models.Address, error) {
+func UpdateAddress(addressID int64, address models.Address) (*models.Address, error) {
 	var updated models.Address
 
 	row := store.DB.QueryRow(
@@ -118,10 +118,10 @@ func UpdateAddress(addressId int64, address models.Address) (*models.Address, er
 		address.StreetAddress,
 		address.Latitude,
 		address.Longitude,
-		addressId,
+		addressID,
 	)
 	err := row.Scan(
-		&updated.AddressId,
+		&updated.AddressID,
 		&updated.Country,
 		&updated.StateRegion,
 		&updated.City,
@@ -137,13 +137,13 @@ func UpdateAddress(addressId int64, address models.Address) (*models.Address, er
 	return &updated, nil
 }
 
-func DeleteAddress(addressId int64) error {
+func DeleteAddress(addressID int64) error {
 	stmt, err := store.DB.Prepare(deleteAddressQuery)
 	if err != nil {
 		return err
 	}
 
-	_, err = stmt.Exec(addressId)
+	_, err = stmt.Exec(addressID)
 	if err != nil {
 		return err
 	}

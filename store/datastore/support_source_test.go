@@ -8,7 +8,7 @@ import (
 )
 
 var _ = Describe("SupportSource db interactions", func() {
-	var supportSourceId int64 = 1
+	var supportSourceID int64 = 1
 
 	Describe("GetSupportSourceList", func() {
 		var supportSources []models.SupportSource
@@ -29,19 +29,19 @@ var _ = Describe("SupportSource db interactions", func() {
 
 		Describe("Successful call", func() {
 			It("should return the correct supportSource", func() {
-				supportSource, _ = datastore.GetSupportSource(supportSourceId)
-				Expect(supportSource.SupportSourceId).To(Equal(supportSourceId))
+				supportSource, _ = datastore.GetSupportSource(supportSourceID)
+				Expect(supportSource.SupportSourceID).To(Equal(supportSourceID))
 			})
 		})
 
 		Describe("Unsuccessful call", func() {
 			var (
-				nonExistentId int64 = 5000
+				nonExistentID int64 = 5000
 				err           error
 			)
 
 			BeforeEach(func() {
-				supportSource, err = datastore.GetSupportSource(nonExistentId)
+				supportSource, err = datastore.GetSupportSource(nonExistentID)
 			})
 
 			It("should return an error", func() {
@@ -82,7 +82,7 @@ var _ = Describe("SupportSource db interactions", func() {
 			})
 
 			AfterEach(func() {
-				datastore.DeleteSupportSource(created.SupportSourceId)
+				datastore.DeleteSupportSource(created.SupportSourceID)
 			})
 
 			It("should return the created supportSource", func() {
@@ -90,7 +90,7 @@ var _ = Describe("SupportSource db interactions", func() {
 			})
 
 			It("should add a supportSource to the db", func() {
-				newSupportSource, _ := datastore.GetSupportSource(created.SupportSourceId)
+				newSupportSource, _ := datastore.GetSupportSource(created.SupportSourceID)
 				Expect(newSupportSource.SupportSourceName).To(Equal(supportSourceName))
 			})
 		})
@@ -99,7 +99,7 @@ var _ = Describe("SupportSource db interactions", func() {
 			var created *models.SupportSource
 
 			AfterEach(func() {
-				datastore.DeleteSupportSource(created.SupportSourceId)
+				datastore.DeleteSupportSource(created.SupportSourceID)
 			})
 
 			It("should return an error object if supportSource is not unique", func() {
@@ -125,11 +125,11 @@ var _ = Describe("SupportSource db interactions", func() {
 			BeforeEach(func() {
 				supportSource = models.SupportSource{SupportSourceName: supportSourceName}
 				created, _ = datastore.CreateSupportSource(models.SupportSource{SupportSourceName: "Daily"})
-				updated, _ = datastore.UpdateSupportSource(created.SupportSourceId, supportSource)
+				updated, _ = datastore.UpdateSupportSource(created.SupportSourceID, supportSource)
 			})
 
 			AfterEach(func() {
-				datastore.DeleteSupportSource(updated.SupportSourceId)
+				datastore.DeleteSupportSource(updated.SupportSourceID)
 			})
 
 			It("should return the updated supportSource", func() {
@@ -157,7 +157,7 @@ var _ = Describe("SupportSource db interactions", func() {
 		Describe("Successful call", func() {
 			It("should return nil", func() {
 				created, _ := datastore.CreateSupportSource(models.SupportSource{SupportSourceName: "Testing"})
-				err := datastore.DeleteSupportSource(created.SupportSourceId)
+				err := datastore.DeleteSupportSource(created.SupportSourceID)
 				Expect(err).To(BeNil())
 			})
 		})

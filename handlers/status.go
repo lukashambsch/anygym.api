@@ -14,8 +14,8 @@ import (
 	"github.com/lukashambsch/gym-all-over/store/datastore"
 )
 
-const StatusId = "status_id"
-const InvalidStatusId = "Invalid " + StatusId
+const StatusID = "status_id"
+const InvalidStatusID = "Invalid " + StatusID
 
 var statusFields map[string]string = map[string]string{
 	"status_id":   "int",
@@ -23,12 +23,12 @@ var statusFields map[string]string = map[string]string{
 }
 
 func GetStatus(w http.ResponseWriter, r *http.Request) {
-	statusId, message := GetId(w, r, StatusId)
+	statusID, message := GetID(w, r, StatusID)
 	if message != nil {
 		return
 	}
 
-	status, err := datastore.GetStatus(statusId)
+	status, err := datastore.GetStatus(statusID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			WriteJSON(w, http.StatusNotFound, APIErrorMessage{Message: "Not Found"})
@@ -90,9 +90,9 @@ func PutStatus(w http.ResponseWriter, r *http.Request) {
 	body, _ := ioutil.ReadAll(r.Body)
 	r.Body.Close()
 
-	statusId, err := strconv.ParseInt(mux.Vars(r)[StatusId], 10, 64)
+	statusID, err := strconv.ParseInt(mux.Vars(r)[StatusID], 10, 64)
 	if err != nil {
-		WriteJSON(w, http.StatusBadRequest, APIErrorMessage{Message: InvalidStatusId})
+		WriteJSON(w, http.StatusBadRequest, APIErrorMessage{Message: InvalidStatusID})
 		return
 	}
 
@@ -103,7 +103,7 @@ func PutStatus(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	updated, err := datastore.UpdateStatus(statusId, *status)
+	updated, err := datastore.UpdateStatus(statusID, *status)
 	if err != nil {
 		WriteJSON(w, http.StatusInternalServerError, APIErrorMessage{Message: err.Error()})
 		return
@@ -113,13 +113,13 @@ func PutStatus(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteStatus(w http.ResponseWriter, r *http.Request) {
-	statusId, err := strconv.ParseInt(mux.Vars(r)[StatusId], 10, 64)
+	statusID, err := strconv.ParseInt(mux.Vars(r)[StatusID], 10, 64)
 	if err != nil {
-		WriteJSON(w, http.StatusBadRequest, APIErrorMessage{Message: InvalidStatusId})
+		WriteJSON(w, http.StatusBadRequest, APIErrorMessage{Message: InvalidStatusID})
 		return
 	}
 
-	err = datastore.DeleteStatus(statusId)
+	err = datastore.DeleteStatus(statusID)
 	if err != nil {
 		WriteJSON(w, http.StatusInternalServerError, APIErrorMessage{Message: err.Error()})
 		return

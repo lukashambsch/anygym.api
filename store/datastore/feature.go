@@ -20,7 +20,7 @@ func GetFeatureList(where string) ([]models.Feature, error) {
 	}
 
 	for rows.Next() {
-		err = rows.Scan(&feature.FeatureId, &feature.FeatureName, &feature.FeatureDescription)
+		err = rows.Scan(&feature.FeatureID, &feature.FeatureName, &feature.FeatureDescription)
 		features = append(features, feature)
 		if err != nil {
 			return nil, err
@@ -44,11 +44,11 @@ func GetFeatureCount(where string) (*int, error) {
 	return &count, nil
 }
 
-func GetFeature(featureId int64) (*models.Feature, error) {
+func GetFeature(featureID int64) (*models.Feature, error) {
 	var feature models.Feature
 
-	row := store.DB.QueryRow(getFeatureQuery, featureId)
-	err := row.Scan(&feature.FeatureId, &feature.FeatureName, &feature.FeatureDescription)
+	row := store.DB.QueryRow(getFeatureQuery, featureID)
+	err := row.Scan(&feature.FeatureID, &feature.FeatureName, &feature.FeatureDescription)
 	if err != nil {
 		return nil, err
 	}
@@ -60,7 +60,7 @@ func CreateFeature(feature models.Feature) (*models.Feature, error) {
 	var created models.Feature
 
 	row := store.DB.QueryRow(createFeatureQuery, feature.FeatureName, feature.FeatureDescription)
-	err := row.Scan(&created.FeatureId, &created.FeatureName, &created.FeatureDescription)
+	err := row.Scan(&created.FeatureID, &created.FeatureName, &created.FeatureDescription)
 	if err != nil {
 		return nil, err
 	}
@@ -68,11 +68,11 @@ func CreateFeature(feature models.Feature) (*models.Feature, error) {
 	return &created, nil
 }
 
-func UpdateFeature(featureId int64, feature models.Feature) (*models.Feature, error) {
+func UpdateFeature(featureID int64, feature models.Feature) (*models.Feature, error) {
 	var updated models.Feature
 
-	row := store.DB.QueryRow(updateFeatureQuery, feature.FeatureName, feature.FeatureDescription, featureId)
-	err := row.Scan(&updated.FeatureId, &updated.FeatureName, &updated.FeatureDescription)
+	row := store.DB.QueryRow(updateFeatureQuery, feature.FeatureName, feature.FeatureDescription, featureID)
+	err := row.Scan(&updated.FeatureID, &updated.FeatureName, &updated.FeatureDescription)
 	if err != nil {
 		return nil, err
 	}
@@ -80,13 +80,13 @@ func UpdateFeature(featureId int64, feature models.Feature) (*models.Feature, er
 	return &updated, nil
 }
 
-func DeleteFeature(featureId int64) error {
+func DeleteFeature(featureID int64) error {
 	stmt, err := store.DB.Prepare(deleteFeatureQuery)
 	if err != nil {
 		return err
 	}
 
-	_, err = stmt.Exec(featureId)
+	_, err = stmt.Exec(featureID)
 	if err != nil {
 		return err
 	}

@@ -16,8 +16,8 @@ var _ = Describe("SupportRequest db interactions", func() {
 	})
 
 	AfterEach(func() {
-		datastore.DeleteSupportRequest(reqOne.SupportRequestId)
-		datastore.DeleteSupportRequest(reqTwo.SupportRequestId)
+		datastore.DeleteSupportRequest(reqOne.SupportRequestID)
+		datastore.DeleteSupportRequest(reqTwo.SupportRequestID)
 	})
 
 	Describe("GetSupportRequestList", func() {
@@ -39,19 +39,19 @@ var _ = Describe("SupportRequest db interactions", func() {
 
 		Describe("Successful call", func() {
 			It("should return the correct supportRequest", func() {
-				supportRequest, _ = datastore.GetSupportRequest(reqOne.SupportRequestId)
-				Expect(supportRequest.SupportRequestId).To(Equal(reqOne.SupportRequestId))
+				supportRequest, _ = datastore.GetSupportRequest(reqOne.SupportRequestID)
+				Expect(supportRequest.SupportRequestID).To(Equal(reqOne.SupportRequestID))
 			})
 		})
 
 		Describe("Unsuccessful call", func() {
 			var (
-				nonExistentId int64 = 5000
+				nonExistentID int64 = 5000
 				err           error
 			)
 
 			BeforeEach(func() {
-				supportRequest, err = datastore.GetSupportRequest(nonExistentId)
+				supportRequest, err = datastore.GetSupportRequest(nonExistentID)
 			})
 
 			It("should return an error", func() {
@@ -93,7 +93,7 @@ var _ = Describe("SupportRequest db interactions", func() {
 			})
 
 			AfterEach(func() {
-				datastore.DeleteSupportRequest(created.SupportRequestId)
+				datastore.DeleteSupportRequest(created.SupportRequestID)
 			})
 
 			It("should return the created supportRequest", func() {
@@ -101,7 +101,7 @@ var _ = Describe("SupportRequest db interactions", func() {
 			})
 
 			It("should add a supportRequest to the db", func() {
-				newSupportRequest, _ := datastore.GetSupportRequest(created.SupportRequestId)
+				newSupportRequest, _ := datastore.GetSupportRequest(created.SupportRequestID)
 				Expect(newSupportRequest.Content).To(Equal(content))
 			})
 		})
@@ -113,7 +113,7 @@ var _ = Describe("SupportRequest db interactions", func() {
             })
 
             AfterEach(func() {
-                datastore.DeleteSupportRequest(created.SupportRequestId)
+                datastore.DeleteSupportRequest(created.SupportRequestID)
             })
 
             It("should return an error object", func() {
@@ -135,11 +135,11 @@ var _ = Describe("SupportRequest db interactions", func() {
 			BeforeEach(func() {
 				supportRequest = models.SupportRequest{Content: content}
 				created, _ = datastore.CreateSupportRequest(models.SupportRequest{Content: "SupportRequest"})
-				updated, _ = datastore.UpdateSupportRequest(created.SupportRequestId, supportRequest)
+				updated, _ = datastore.UpdateSupportRequest(created.SupportRequestID, supportRequest)
 			})
 
 			AfterEach(func() {
-				datastore.DeleteSupportRequest(updated.SupportRequestId)
+				datastore.DeleteSupportRequest(updated.SupportRequestID)
 			})
 
 			It("should return the updated supportRequest", func() {
@@ -167,7 +167,7 @@ var _ = Describe("SupportRequest db interactions", func() {
 		Describe("Successful call", func() {
 			It("should return nil", func() {
 				created, _ := datastore.CreateSupportRequest(models.SupportRequest{Content: "Test"})
-				err := datastore.DeleteSupportRequest(created.SupportRequestId)
+				err := datastore.DeleteSupportRequest(created.SupportRequestID)
 				Expect(err).To(BeNil())
 			})
 		})

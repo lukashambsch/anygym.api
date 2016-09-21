@@ -20,7 +20,7 @@ func GetGymFeatureList(where string) ([]models.GymFeature, error) {
 	}
 
 	for rows.Next() {
-		err = rows.Scan(&gymFeature.GymFeatureId, &gymFeature.GymId, &gymFeature.FeatureId)
+		err = rows.Scan(&gymFeature.GymFeatureID, &gymFeature.GymID, &gymFeature.FeatureID)
 		gymFeatures = append(gymFeatures, gymFeature)
 		if err != nil {
 			return nil, err
@@ -44,11 +44,11 @@ func GetGymFeatureCount(where string) (*int, error) {
 	return &count, nil
 }
 
-func GetGymFeature(gymFeatureId int64) (*models.GymFeature, error) {
+func GetGymFeature(gymFeatureID int64) (*models.GymFeature, error) {
 	var gymFeature models.GymFeature
 
-	row := store.DB.QueryRow(getGymFeatureQuery, gymFeatureId)
-	err := row.Scan(&gymFeature.GymFeatureId, &gymFeature.GymId, &gymFeature.FeatureId)
+	row := store.DB.QueryRow(getGymFeatureQuery, gymFeatureID)
+	err := row.Scan(&gymFeature.GymFeatureID, &gymFeature.GymID, &gymFeature.FeatureID)
 	if err != nil {
 		return nil, err
 	}
@@ -59,8 +59,8 @@ func GetGymFeature(gymFeatureId int64) (*models.GymFeature, error) {
 func CreateGymFeature(gymFeature models.GymFeature) (*models.GymFeature, error) {
 	var created models.GymFeature
 
-	row := store.DB.QueryRow(createGymFeatureQuery, gymFeature.GymId, gymFeature.FeatureId)
-	err := row.Scan(&created.GymFeatureId, &created.GymId, &created.FeatureId)
+	row := store.DB.QueryRow(createGymFeatureQuery, gymFeature.GymID, gymFeature.FeatureID)
+	err := row.Scan(&created.GymFeatureID, &created.GymID, &created.FeatureID)
 	if err != nil {
 		return nil, err
 	}
@@ -68,11 +68,11 @@ func CreateGymFeature(gymFeature models.GymFeature) (*models.GymFeature, error) 
 	return &created, nil
 }
 
-func UpdateGymFeature(gymFeatureId int64, gymFeature models.GymFeature) (*models.GymFeature, error) {
+func UpdateGymFeature(gymFeatureID int64, gymFeature models.GymFeature) (*models.GymFeature, error) {
 	var updated models.GymFeature
 
-	row := store.DB.QueryRow(updateGymFeatureQuery, gymFeature.GymId, gymFeature.FeatureId, gymFeatureId)
-	err := row.Scan(&updated.GymFeatureId, &updated.GymId, &updated.FeatureId)
+	row := store.DB.QueryRow(updateGymFeatureQuery, gymFeature.GymID, gymFeature.FeatureID, gymFeatureID)
+	err := row.Scan(&updated.GymFeatureID, &updated.GymID, &updated.FeatureID)
 	if err != nil {
 		return nil, err
 	}
@@ -80,13 +80,13 @@ func UpdateGymFeature(gymFeatureId int64, gymFeature models.GymFeature) (*models
 	return &updated, nil
 }
 
-func DeleteGymFeature(gymFeatureId int64) error {
+func DeleteGymFeature(gymFeatureID int64) error {
 	stmt, err := store.DB.Prepare(deleteGymFeatureQuery)
 	if err != nil {
 		return err
 	}
 
-	_, err = stmt.Exec(gymFeatureId)
+	_, err = stmt.Exec(gymFeatureID)
 	if err != nil {
 		return err
 	}

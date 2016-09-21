@@ -67,7 +67,7 @@ var _ = Describe("Status API", func() {
 
 			It("should return a list of matching statuses - status_name - partial match", func() {
 				correct := []models.Status{
-					models.Status{StatusId: 1, StatusName: "Pending"},
+					models.Status{StatusID: 1, StatusName: "Pending"},
 				}
 				res, _ = http.Get(fmt.Sprintf("%s?status_name=Pend", statusURL))
 				data, _ = ioutil.ReadAll(res.Body)
@@ -108,10 +108,10 @@ var _ = Describe("Status API", func() {
 				data, _ = ioutil.ReadAll(res.Body)
 				json.Unmarshal(data, &statuses)
 				Expect(res.StatusCode).To(Equal(http.StatusOK))
-				Expect(statuses[0].StatusId).To(Equal(int64(4)))
-				Expect(statuses[1].StatusId).To(Equal(int64(3)))
-				Expect(statuses[2].StatusId).To(Equal(int64(2)))
-				Expect(statuses[3].StatusId).To(Equal(int64(1)))
+				Expect(statuses[0].StatusID).To(Equal(int64(4)))
+				Expect(statuses[1].StatusID).To(Equal(int64(3)))
+				Expect(statuses[2].StatusID).To(Equal(int64(2)))
+				Expect(statuses[3].StatusID).To(Equal(int64(1)))
 			})
 		})
 
@@ -147,12 +147,12 @@ var _ = Describe("Status API", func() {
 	Describe("GetStatus endpoint", func() {
 		var (
 			status   models.Status
-			statusId int64 = 1
+			statusID int64 = 1
 		)
 
 		Describe("Successful GET", func() {
 			BeforeEach(func() {
-				res, _ = http.Get(fmt.Sprintf("%s/%d", statusURL, statusId))
+				res, _ = http.Get(fmt.Sprintf("%s/%d", statusURL, statusID))
 				data, _ = ioutil.ReadAll(res.Body)
 				json.Unmarshal(data, &status)
 			})
@@ -162,7 +162,7 @@ var _ = Describe("Status API", func() {
 			})
 
 			It("should contain the status in the response", func() {
-				Expect(status.StatusId).To(Equal(statusId))
+				Expect(status.StatusID).To(Equal(statusID))
 			})
 		})
 
@@ -175,7 +175,7 @@ var _ = Describe("Status API", func() {
 					data, _ = ioutil.ReadAll(res.Body)
 					json.Unmarshal(data, &errRes)
 					Expect(res.StatusCode).To(Equal(http.StatusBadRequest))
-					Expect(errRes.Message).To(Equal(handlers.InvalidStatusId))
+					Expect(errRes.Message).To(Equal(handlers.InvalidStatusID))
 				})
 			})
 
@@ -206,7 +206,7 @@ var _ = Describe("Status API", func() {
 			})
 
 			AfterEach(func() {
-				datastore.DeleteStatus(status.StatusId)
+				datastore.DeleteStatus(status.StatusID)
 			})
 
 			It("should return status code 201", func() {
@@ -218,7 +218,7 @@ var _ = Describe("Status API", func() {
 			})
 
 			It("should save the status", func() {
-				Expect(status.StatusId).ToNot(Equal(0))
+				Expect(status.StatusID).ToNot(Equal(0))
 			})
 		})
 
@@ -256,14 +256,14 @@ var _ = Describe("Status API", func() {
 		var (
 			status   models.Status
 			payload  []byte = []byte(`{"status_name": "Updated"}`)
-			statusId int64  = 1
+			statusID int64  = 1
 		)
 
 		Describe("Successful PUT", func() {
 			BeforeEach(func() {
 				req, _ := http.NewRequest(
 					"PUT",
-					fmt.Sprintf("%s/%d", statusURL, statusId),
+					fmt.Sprintf("%s/%d", statusURL, statusID),
 					bytes.NewBuffer(payload),
 				)
 				req.Header.Set("Content-Type", contentType)
@@ -274,7 +274,7 @@ var _ = Describe("Status API", func() {
 			})
 
 			AfterEach(func() {
-				datastore.UpdateStatus(statusId, models.Status{StatusName: "Pending"})
+				datastore.UpdateStatus(statusID, models.Status{StatusName: "Pending"})
 			})
 
 			It("should return status code 200", func() {
@@ -286,8 +286,8 @@ var _ = Describe("Status API", func() {
 			})
 
 			It("should save the updated status", func() {
-				updated, _ := datastore.GetStatus(statusId)
-				Expect(updated.StatusId).To(Equal(statusId))
+				updated, _ := datastore.GetStatus(statusID)
+				Expect(updated.StatusID).To(Equal(statusID))
 			})
 		})
 
@@ -297,7 +297,7 @@ var _ = Describe("Status API", func() {
 			It("should return status code 400 with a message", func() {
 				req, _ := http.NewRequest(
 					"PUT",
-					fmt.Sprintf("%s/%d", statusURL, statusId),
+					fmt.Sprintf("%s/%d", statusURL, statusID),
 					bytes.NewBuffer(badPayload),
 				)
 				req.Header.Set("Content-Type", contentType)
@@ -321,7 +321,7 @@ var _ = Describe("Status API", func() {
 				data, _ = ioutil.ReadAll(res.Body)
 				json.Unmarshal(data, &errRes)
 				Expect(res.StatusCode).To(Equal(http.StatusBadRequest))
-				Expect(errRes.Message).To(Equal(handlers.InvalidStatusId))
+				Expect(errRes.Message).To(Equal(handlers.InvalidStatusID))
 			})
 
 			It("should return status code 500 with a message", func() {
@@ -342,13 +342,13 @@ var _ = Describe("Status API", func() {
 	})
 
 	Describe("DeleteStatus endpoint", func() {
-		var statusId int64 = 4
+		var statusID int64 = 4
 
 		Describe("Successful DELETE", func() {
 			BeforeEach(func() {
 				req, _ := http.NewRequest(
 					"DELETE",
-					fmt.Sprintf("%s/%d", statusURL, statusId),
+					fmt.Sprintf("%s/%d", statusURL, statusID),
 					bytes.NewBuffer([]byte(``)),
 				)
 				req.Header.Set("Content-Type", contentType)
@@ -359,7 +359,7 @@ var _ = Describe("Status API", func() {
 			AfterEach(func() {
 				store.DB.QueryRow(
 					"INSERT INTO statuses (status_id, status_name) VALUES ($1, $2)",
-					statusId,
+					statusID,
 					"Denied - Banned",
 				)
 			})
@@ -369,7 +369,7 @@ var _ = Describe("Status API", func() {
 			})
 
 			It("should delete the status", func() {
-				_, err := datastore.GetStatus(statusId)
+				_, err := datastore.GetStatus(statusID)
 				Expect(err).ToNot(BeNil())
 			})
 		})
@@ -389,7 +389,7 @@ var _ = Describe("Status API", func() {
 				data, _ = ioutil.ReadAll(res.Body)
 				json.Unmarshal(data, &errRes)
 				Expect(res.StatusCode).To(Equal(http.StatusBadRequest))
-				Expect(errRes.Message).To(Equal(handlers.InvalidStatusId))
+				Expect(errRes.Message).To(Equal(handlers.InvalidStatusID))
 			})
 		})
 	})

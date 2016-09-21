@@ -8,7 +8,7 @@ import (
 )
 
 var _ = Describe("Holiday db interactions", func() {
-	var holidayId int64 = 1
+	var holidayID int64 = 1
 
 	Describe("GetHolidayList", func() {
 		var holidays []models.Holiday
@@ -29,19 +29,19 @@ var _ = Describe("Holiday db interactions", func() {
 
 		Describe("Successful call", func() {
 			It("should return the correct holiday", func() {
-				holiday, _ = datastore.GetHoliday(holidayId)
-				Expect(holiday.HolidayId).To(Equal(holidayId))
+				holiday, _ = datastore.GetHoliday(holidayID)
+				Expect(holiday.HolidayID).To(Equal(holidayID))
 			})
 		})
 
 		Describe("Unsuccessful call", func() {
 			var (
-				nonExistentId int64 = 5000
+				nonExistentID int64 = 5000
 				err           error
 			)
 
 			BeforeEach(func() {
-				holiday, err = datastore.GetHoliday(nonExistentId)
+				holiday, err = datastore.GetHoliday(nonExistentID)
 			})
 
 			It("should return an error", func() {
@@ -82,7 +82,7 @@ var _ = Describe("Holiday db interactions", func() {
 			})
 
 			AfterEach(func() {
-				datastore.DeleteHoliday(created.HolidayId)
+				datastore.DeleteHoliday(created.HolidayID)
 			})
 
 			It("should return the created holiday", func() {
@@ -90,7 +90,7 @@ var _ = Describe("Holiday db interactions", func() {
 			})
 
 			It("should add a holiday to the db", func() {
-				newHoliday, _ := datastore.GetHoliday(created.HolidayId)
+				newHoliday, _ := datastore.GetHoliday(created.HolidayID)
 				Expect(newHoliday.HolidayName).To(Equal(holidayName))
 			})
 		})
@@ -99,7 +99,7 @@ var _ = Describe("Holiday db interactions", func() {
 			var created *models.Holiday
 
 			AfterEach(func() {
-				datastore.DeleteHoliday(created.HolidayId)
+				datastore.DeleteHoliday(created.HolidayID)
 			})
 
 			It("should return an error object if holiday is not unique", func() {
@@ -125,11 +125,11 @@ var _ = Describe("Holiday db interactions", func() {
 			BeforeEach(func() {
 				holiday = models.Holiday{HolidayName: holidayName}
 				created, _ = datastore.CreateHoliday(models.Holiday{HolidayName: "Daily"})
-				updated, _ = datastore.UpdateHoliday(created.HolidayId, holiday)
+				updated, _ = datastore.UpdateHoliday(created.HolidayID, holiday)
 			})
 
 			AfterEach(func() {
-				datastore.DeleteHoliday(updated.HolidayId)
+				datastore.DeleteHoliday(updated.HolidayID)
 			})
 
 			It("should return the updated holiday", func() {
@@ -157,7 +157,7 @@ var _ = Describe("Holiday db interactions", func() {
 		Describe("Successful call", func() {
 			It("should return nil", func() {
 				created, _ := datastore.CreateHoliday(models.Holiday{HolidayName: "Testing"})
-				err := datastore.DeleteHoliday(created.HolidayId)
+				err := datastore.DeleteHoliday(created.HolidayID)
 				Expect(err).To(BeNil())
 			})
 		})

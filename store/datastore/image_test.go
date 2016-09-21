@@ -10,21 +10,21 @@ import (
 var _ = Describe("Image db interactions", func() {
 	var (
 		one, two, three, four *models.Image
-		gymId                 int64 = 1
+		gymID                 int64 = 1
 	)
 
 	BeforeEach(func() {
-		one, _ = datastore.CreateImage(models.Image{GymId: &gymId, ImagePath: "/tst/img/path"})
-		two, _ = datastore.CreateImage(models.Image{GymId: &gymId, ImagePath: "/tst/img/path/two"})
-		three, _ = datastore.CreateImage(models.Image{GymId: &gymId, ImagePath: "/tst/img/path/three"})
-		four, _ = datastore.CreateImage(models.Image{GymId: &gymId, ImagePath: "/tst/img/path/four"})
+		one, _ = datastore.CreateImage(models.Image{GymID: &gymID, ImagePath: "/tst/img/path"})
+		two, _ = datastore.CreateImage(models.Image{GymID: &gymID, ImagePath: "/tst/img/path/two"})
+		three, _ = datastore.CreateImage(models.Image{GymID: &gymID, ImagePath: "/tst/img/path/three"})
+		four, _ = datastore.CreateImage(models.Image{GymID: &gymID, ImagePath: "/tst/img/path/four"})
 	})
 
 	AfterEach(func() {
-		datastore.DeleteImage(one.ImageId)
-		datastore.DeleteImage(two.ImageId)
-		datastore.DeleteImage(three.ImageId)
-		datastore.DeleteImage(four.ImageId)
+		datastore.DeleteImage(one.ImageID)
+		datastore.DeleteImage(two.ImageID)
+		datastore.DeleteImage(three.ImageID)
+		datastore.DeleteImage(four.ImageID)
 	})
 
 	Describe("GetImageList", func() {
@@ -46,19 +46,19 @@ var _ = Describe("Image db interactions", func() {
 
 		Describe("Successful call", func() {
 			It("should return the correct image", func() {
-				image, _ = datastore.GetImage(one.ImageId)
-				Expect(image.ImageId).To(Equal(one.ImageId))
+				image, _ = datastore.GetImage(one.ImageID)
+				Expect(image.ImageID).To(Equal(one.ImageID))
 			})
 		})
 
 		Describe("Unsuccessful call", func() {
 			var (
-				nonExistentId int64 = 5
+				nonExistentID int64 = 5
 				err           error
 			)
 
 			BeforeEach(func() {
-				image, err = datastore.GetImage(nonExistentId)
+				image, err = datastore.GetImage(nonExistentID)
 			})
 
 			It("should return an error", func() {
@@ -94,12 +94,12 @@ var _ = Describe("Image db interactions", func() {
 
 		Describe("Successful call", func() {
 			BeforeEach(func() {
-				image = models.Image{GymId: &gymId, ImagePath: imagePath}
+				image = models.Image{GymID: &gymID, ImagePath: imagePath}
 				created, _ = datastore.CreateImage(image)
 			})
 
 			AfterEach(func() {
-				datastore.DeleteImage(created.ImageId)
+				datastore.DeleteImage(created.ImageID)
 			})
 
 			It("should return the created image", func() {
@@ -107,7 +107,7 @@ var _ = Describe("Image db interactions", func() {
 			})
 
 			It("should add a image to the db", func() {
-				newImage, _ := datastore.GetImage(created.ImageId)
+				newImage, _ := datastore.GetImage(created.ImageID)
 				Expect(newImage.ImagePath).To(Equal(imagePath))
 			})
 		})
@@ -119,12 +119,12 @@ var _ = Describe("Image db interactions", func() {
 			)
 
 			AfterEach(func() {
-				datastore.DeleteImage(created.ImageId)
+				datastore.DeleteImage(created.ImageID)
 			})
 
 			It("should return an error object if user_id is not unique", func() {
-				var userId int64 = int64(1)
-				img := models.Image{UserId: &userId, ImagePath: "/tst/path"}
+				var userID int64 = int64(1)
+				img := models.Image{UserID: &userID, ImagePath: "/tst/path"}
 				created, _ = datastore.CreateImage(img)
 				_, err = datastore.CreateImage(img)
 				Expect(err).ToNot(BeNil())
@@ -143,13 +143,13 @@ var _ = Describe("Image db interactions", func() {
 
 		Describe("Successful call", func() {
 			BeforeEach(func() {
-				image = models.Image{GymId: &gymId, ImagePath: imagePath}
-				created, _ = datastore.CreateImage(models.Image{GymId: &gymId, ImagePath: "/old/path"})
-				updated, _ = datastore.UpdateImage(created.ImageId, image)
+				image = models.Image{GymID: &gymID, ImagePath: imagePath}
+				created, _ = datastore.CreateImage(models.Image{GymID: &gymID, ImagePath: "/old/path"})
+				updated, _ = datastore.UpdateImage(created.ImageID, image)
 			})
 
 			AfterEach(func() {
-				datastore.DeleteImage(updated.ImageId)
+				datastore.DeleteImage(updated.ImageID)
 			})
 
 			It("should return the updated image", func() {
@@ -176,7 +176,7 @@ var _ = Describe("Image db interactions", func() {
 	Describe("DeleteImage", func() {
 		Describe("Successful call", func() {
 			It("should return nil", func() {
-				err := datastore.DeleteImage(one.ImageId)
+				err := datastore.DeleteImage(one.ImageID)
 				Expect(err).To(BeNil())
 			})
 		})

@@ -21,9 +21,9 @@ func GetMemberList(where string) ([]models.Member, error) {
 
 	for rows.Next() {
 		err = rows.Scan(
-			&member.MemberId,
-			&member.UserId,
-			&member.AddressId,
+			&member.MemberID,
+			&member.UserID,
+			&member.AddressID,
 			&member.FirstName,
 			&member.LastName,
 		)
@@ -51,14 +51,14 @@ func GetMemberCount(where string) (*int, error) {
 	return &count, nil
 }
 
-func GetMember(memberId int64) (*models.Member, error) {
+func GetMember(memberID int64) (*models.Member, error) {
 	var member models.Member
 
-	row := store.DB.QueryRow(getMemberQuery, memberId)
+	row := store.DB.QueryRow(getMemberQuery, memberID)
 	err := row.Scan(
-		&member.MemberId,
-		&member.UserId,
-		&member.AddressId,
+		&member.MemberID,
+		&member.UserID,
+		&member.AddressID,
 		&member.FirstName,
 		&member.LastName,
 	)
@@ -75,15 +75,15 @@ func CreateMember(member models.Member) (*models.Member, error) {
 
 	row := store.DB.QueryRow(
 		createMemberQuery,
-		member.UserId,
-		member.AddressId,
+		member.UserID,
+		member.AddressID,
 		member.FirstName,
 		member.LastName,
 	)
 	err := row.Scan(
-		&created.MemberId,
-		&created.UserId,
-		&created.AddressId,
+		&created.MemberID,
+		&created.UserID,
+		&created.AddressID,
 		&created.FirstName,
 		&created.LastName,
 	)
@@ -94,21 +94,21 @@ func CreateMember(member models.Member) (*models.Member, error) {
 	return &created, nil
 }
 
-func UpdateMember(memberId int64, member models.Member) (*models.Member, error) {
+func UpdateMember(memberID int64, member models.Member) (*models.Member, error) {
 	var updated models.Member
 
 	row := store.DB.QueryRow(
 		updateMemberQuery,
-		member.UserId,
-		member.AddressId,
+		member.UserID,
+		member.AddressID,
 		member.FirstName,
 		member.LastName,
-		memberId,
+		memberID,
 	)
 	err := row.Scan(
-		&updated.MemberId,
-		&updated.UserId,
-		&updated.AddressId,
+		&updated.MemberID,
+		&updated.UserID,
+		&updated.AddressID,
 		&updated.FirstName,
 		&updated.LastName,
 	)
@@ -119,13 +119,13 @@ func UpdateMember(memberId int64, member models.Member) (*models.Member, error) 
 	return &updated, nil
 }
 
-func DeleteMember(memberId int64) error {
+func DeleteMember(memberID int64) error {
 	stmt, err := store.DB.Prepare(deleteMemberQuery)
 	if err != nil {
 		return err
 	}
 
-	_, err = stmt.Exec(memberId)
+	_, err = stmt.Exec(memberID)
 	if err != nil {
 		return err
 	}

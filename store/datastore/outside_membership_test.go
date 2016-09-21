@@ -10,23 +10,23 @@ import (
 var _ = Describe("OutsideMembership db interactions", func() {
 	var (
 		outsideMembershipOne, outsideMembershipTwo *models.OutsideMembership
-		memberId, gymOneId, gymTwoId               int64 = 1, 1, 2
+		memberID, gymOneID, gymTwoID               int64 = 1, 1, 2
 	)
 
 	BeforeEach(func() {
 		outsideMembershipOne, _ = datastore.CreateOutsideMembership(models.OutsideMembership{
-			GymId:    &gymOneId,
-			MemberId: memberId,
+			GymID:    &gymOneID,
+			MemberID: memberID,
 		})
 		outsideMembershipTwo, _ = datastore.CreateOutsideMembership(models.OutsideMembership{
-			GymId:    &gymTwoId,
-			MemberId: memberId,
+			GymID:    &gymTwoID,
+			MemberID: memberID,
 		})
 	})
 
 	AfterEach(func() {
-		datastore.DeleteOutsideMembership(outsideMembershipOne.OutsideMembershipId)
-		datastore.DeleteOutsideMembership(outsideMembershipTwo.OutsideMembershipId)
+		datastore.DeleteOutsideMembership(outsideMembershipOne.OutsideMembershipID)
+		datastore.DeleteOutsideMembership(outsideMembershipTwo.OutsideMembershipID)
 	})
 
 	Describe("GetOutsideMembershipList", func() {
@@ -48,19 +48,19 @@ var _ = Describe("OutsideMembership db interactions", func() {
 
 		Describe("Successful call", func() {
 			It("should return the correct outsideMembership", func() {
-				outsideMembership, _ = datastore.GetOutsideMembership(outsideMembershipOne.OutsideMembershipId)
-				Expect(outsideMembership.OutsideMembershipId).To(Equal(outsideMembershipOne.OutsideMembershipId))
+				outsideMembership, _ = datastore.GetOutsideMembership(outsideMembershipOne.OutsideMembershipID)
+				Expect(outsideMembership.OutsideMembershipID).To(Equal(outsideMembershipOne.OutsideMembershipID))
 			})
 		})
 
 		Describe("Unsuccessful call", func() {
 			var (
-				nonExistentId int64 = 5000
+				nonExistentID int64 = 5000
 				err           error
 			)
 
 			BeforeEach(func() {
-				outsideMembership, err = datastore.GetOutsideMembership(nonExistentId)
+				outsideMembership, err = datastore.GetOutsideMembership(nonExistentID)
 			})
 
 			It("should return an error", func() {
@@ -89,7 +89,7 @@ var _ = Describe("OutsideMembership db interactions", func() {
 
 	Describe("CreateOutsideMembership", func() {
 		var (
-			otherGymId        int64 = 3
+			otherGymID        int64 = 3
 			outsideMembership models.OutsideMembership
 			created           *models.OutsideMembership
 		)
@@ -97,23 +97,23 @@ var _ = Describe("OutsideMembership db interactions", func() {
 		Describe("Successful call", func() {
 			BeforeEach(func() {
 				outsideMembership = models.OutsideMembership{
-					GymId:    &otherGymId,
-					MemberId: memberId,
+					GymID:    &otherGymID,
+					MemberID: memberID,
 				}
 				created, _ = datastore.CreateOutsideMembership(outsideMembership)
 			})
 
 			AfterEach(func() {
-				datastore.DeleteOutsideMembership(created.OutsideMembershipId)
+				datastore.DeleteOutsideMembership(created.OutsideMembershipID)
 			})
 
 			It("should return the created outsideMembership", func() {
-				Expect(created.GymId).To(Equal(&otherGymId))
+				Expect(created.GymID).To(Equal(&otherGymID))
 			})
 
 			It("should add a outsideMembership to the db", func() {
-				newMember, _ := datastore.GetOutsideMembership(created.OutsideMembershipId)
-				Expect(newMember.GymId).To(Equal(&otherGymId))
+				newMember, _ := datastore.GetOutsideMembership(created.OutsideMembershipID)
+				Expect(newMember.GymID).To(Equal(&otherGymID))
 			})
 		})
 
@@ -128,7 +128,7 @@ var _ = Describe("OutsideMembership db interactions", func() {
 
 	Describe("UpdateOutsideMembership", func() {
 		var (
-			gymOneId, gymTwoId int64 = 3, 4
+			gymOneID, gymTwoID int64 = 3, 4
 			outsideMembership  models.OutsideMembership
 			created            *models.OutsideMembership
 			updated            *models.OutsideMembership
@@ -138,27 +138,27 @@ var _ = Describe("OutsideMembership db interactions", func() {
 		Describe("Successful call", func() {
 			BeforeEach(func() {
 				created, _ = datastore.CreateOutsideMembership(models.OutsideMembership{
-					GymId:    &gymOneId,
-					MemberId: memberId,
+					GymID:    &gymOneID,
+					MemberID: memberID,
 				})
-				created.GymId = &gymTwoId
-				updated, _ = datastore.UpdateOutsideMembership(created.OutsideMembershipId, *created)
+				created.GymID = &gymTwoID
+				updated, _ = datastore.UpdateOutsideMembership(created.OutsideMembershipID, *created)
 			})
 
 			AfterEach(func() {
-				datastore.DeleteOutsideMembership(updated.OutsideMembershipId)
+				datastore.DeleteOutsideMembership(updated.OutsideMembershipID)
 			})
 
 			It("should return the updated outsideMembership", func() {
-				Expect(updated.GymId).To(Equal(&gymTwoId))
+				Expect(updated.GymID).To(Equal(&gymTwoID))
 			})
 		})
 
 		Describe("Unsuccessful call", func() {
 			BeforeEach(func() {
 				outsideMembership = models.OutsideMembership{
-					GymId:    &gymOneId,
-					MemberId: memberId,
+					GymID:    &gymOneID,
+					MemberID: memberID,
 				}
 				updated, err = datastore.UpdateOutsideMembership(5000, outsideMembership)
 			})
@@ -176,12 +176,12 @@ var _ = Describe("OutsideMembership db interactions", func() {
 	Describe("DeleteOutsideMembership", func() {
 		Describe("Successful call", func() {
 			It("should return nil", func() {
-				var otherGymId int64 = 3
+				var otherGymID int64 = 3
 				created, _ := datastore.CreateOutsideMembership(models.OutsideMembership{
-					GymId:    &otherGymId,
-					MemberId: memberId,
+					GymID:    &otherGymID,
+					MemberID: memberID,
 				})
-				err := datastore.DeleteOutsideMembership(created.OutsideMembershipId)
+				err := datastore.DeleteOutsideMembership(created.OutsideMembershipID)
 				Expect(err).To(BeNil())
 			})
 		})

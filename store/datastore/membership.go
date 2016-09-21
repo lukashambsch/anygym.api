@@ -21,9 +21,9 @@ func GetMembershipList(where string) ([]models.Membership, error) {
 
 	for rows.Next() {
 		err = rows.Scan(
-			&membership.MembershipId,
-			&membership.PlanId,
-			&membership.MemberId,
+			&membership.MembershipID,
+			&membership.PlanID,
+			&membership.MemberID,
 			&membership.StartDate,
 			&membership.RenewDate,
 			&membership.EndDate,
@@ -53,14 +53,14 @@ func GetMembershipCount(where string) (*int, error) {
 	return &count, nil
 }
 
-func GetMembership(membershipId int64) (*models.Membership, error) {
+func GetMembership(membershipID int64) (*models.Membership, error) {
 	var membership models.Membership
 
-	row := store.DB.QueryRow(getMembershipQuery, membershipId)
+	row := store.DB.QueryRow(getMembershipQuery, membershipID)
 	err := row.Scan(
-		&membership.MembershipId,
-		&membership.PlanId,
-		&membership.MemberId,
+		&membership.MembershipID,
+		&membership.PlanID,
+		&membership.MemberID,
 		&membership.StartDate,
 		&membership.RenewDate,
 		&membership.EndDate,
@@ -79,17 +79,17 @@ func CreateMembership(membership models.Membership) (*models.Membership, error) 
 
 	row := store.DB.QueryRow(
 		createMembershipQuery,
-		membership.PlanId,
-		membership.MemberId,
+		membership.PlanID,
+		membership.MemberID,
 		membership.StartDate,
 		membership.RenewDate,
 		membership.EndDate,
 		membership.Active,
 	)
 	err := row.Scan(
-		&created.MembershipId,
-		&created.PlanId,
-		&created.MemberId,
+		&created.MembershipID,
+		&created.PlanID,
+		&created.MemberID,
 		&created.StartDate,
 		&created.RenewDate,
 		&created.EndDate,
@@ -102,23 +102,23 @@ func CreateMembership(membership models.Membership) (*models.Membership, error) 
 	return &created, nil
 }
 
-func UpdateMembership(membershipId int64, membership models.Membership) (*models.Membership, error) {
+func UpdateMembership(membershipID int64, membership models.Membership) (*models.Membership, error) {
 	var updated models.Membership
 
 	row := store.DB.QueryRow(
 		updateMembershipQuery,
-		membership.PlanId,
-		membership.MemberId,
+		membership.PlanID,
+		membership.MemberID,
 		membership.StartDate,
 		membership.RenewDate,
 		membership.EndDate,
 		membership.Active,
-		membershipId,
+		membershipID,
 	)
 	err := row.Scan(
-		&updated.MembershipId,
-		&updated.PlanId,
-		&updated.MemberId,
+		&updated.MembershipID,
+		&updated.PlanID,
+		&updated.MemberID,
 		&updated.StartDate,
 		&updated.RenewDate,
 		&updated.EndDate,
@@ -131,13 +131,13 @@ func UpdateMembership(membershipId int64, membership models.Membership) (*models
 	return &updated, nil
 }
 
-func DeleteMembership(membershipId int64) error {
+func DeleteMembership(membershipID int64) error {
 	stmt, err := store.DB.Prepare(deleteMembershipQuery)
 	if err != nil {
 		return err
 	}
 
-	_, err = stmt.Exec(membershipId)
+	_, err = stmt.Exec(membershipID)
 	if err != nil {
 		return err
 	}

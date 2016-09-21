@@ -12,35 +12,35 @@ var _ = Describe("Visit db interactions", func() {
 		visitOne, visitTwo *models.Visit
 		addr               *models.Address
 		gymLocation        *models.GymLocation
-		gymId              int64 = 1
-		memberId           int64 = 1
-		statusId           int64 = 1
+		gymID              int64 = 1
+		memberID           int64 = 1
+		statusID           int64 = 1
 	)
 
 	BeforeEach(func() {
 		addr, _ = datastore.CreateAddress(models.Address{StreetAddress: "Testing"})
 		gymLocation, _ = datastore.CreateGymLocation(models.GymLocation{
-			GymId:        gymId,
-			AddressId:    addr.AddressId,
+			GymID:        gymID,
+			AddressID:    addr.AddressID,
 			LocationName: "Testing",
 		})
 		visitOne, _ = datastore.CreateVisit(models.Visit{
-			MemberId:      memberId,
-			GymLocationId: gymLocation.GymLocationId,
-			StatusId:      statusId,
+			MemberID:      memberID,
+			GymLocationID: gymLocation.GymLocationID,
+			StatusID:      statusID,
 		})
 		visitTwo, _ = datastore.CreateVisit(models.Visit{
-			MemberId:      memberId,
-			GymLocationId: gymLocation.GymLocationId,
-			StatusId:      statusId,
+			MemberID:      memberID,
+			GymLocationID: gymLocation.GymLocationID,
+			StatusID:      statusID,
 		})
 	})
 
 	AfterEach(func() {
-		datastore.DeleteVisit(visitOne.VisitId)
-		datastore.DeleteVisit(visitTwo.VisitId)
-		datastore.DeleteGymLocation(gymLocation.GymLocationId)
-		datastore.DeleteAddress(addr.AddressId)
+		datastore.DeleteVisit(visitOne.VisitID)
+		datastore.DeleteVisit(visitTwo.VisitID)
+		datastore.DeleteGymLocation(gymLocation.GymLocationID)
+		datastore.DeleteAddress(addr.AddressID)
 	})
 
 	Describe("GetVisitList", func() {
@@ -62,19 +62,19 @@ var _ = Describe("Visit db interactions", func() {
 
 		Describe("Successful call", func() {
 			It("should return the correct visit", func() {
-				visit, _ = datastore.GetVisit(visitOne.VisitId)
-				Expect(visit.VisitId).To(Equal(visitOne.VisitId))
+				visit, _ = datastore.GetVisit(visitOne.VisitID)
+				Expect(visit.VisitID).To(Equal(visitOne.VisitID))
 			})
 		})
 
 		Describe("Unsuccessful call", func() {
 			var (
-				nonExistentId int64 = 5000
+				nonExistentID int64 = 5000
 				err           error
 			)
 
 			BeforeEach(func() {
-				visit, err = datastore.GetVisit(nonExistentId)
+				visit, err = datastore.GetVisit(nonExistentID)
 			})
 
 			It("should return an error", func() {
@@ -110,24 +110,24 @@ var _ = Describe("Visit db interactions", func() {
 		Describe("Successful call", func() {
 			BeforeEach(func() {
 				visit = models.Visit{
-					MemberId:      memberId,
-					GymLocationId: gymLocation.GymLocationId,
-					StatusId:      statusId,
+					MemberID:      memberID,
+					GymLocationID: gymLocation.GymLocationID,
+					StatusID:      statusID,
 				}
 				created, _ = datastore.CreateVisit(visit)
 			})
 
 			AfterEach(func() {
-				datastore.DeleteVisit(created.VisitId)
+				datastore.DeleteVisit(created.VisitID)
 			})
 
 			It("should return the created visit", func() {
-				Expect(created.StatusId).To(Equal(statusId))
+				Expect(created.StatusID).To(Equal(statusID))
 			})
 
 			It("should add a visit to the db", func() {
-				newMember, _ := datastore.GetVisit(created.VisitId)
-				Expect(newMember.StatusId).To(Equal(statusId))
+				newMember, _ := datastore.GetVisit(created.VisitID)
+				Expect(newMember.StatusID).To(Equal(statusID))
 			})
 		})
 
@@ -142,7 +142,7 @@ var _ = Describe("Visit db interactions", func() {
 
 	Describe("UpdateVisit", func() {
 		var (
-			otherId int64 = 3
+			otherID int64 = 3
 			visit   models.Visit
 			created *models.Visit
 			updated *models.Visit
@@ -152,28 +152,28 @@ var _ = Describe("Visit db interactions", func() {
 		Describe("Successful call", func() {
 			BeforeEach(func() {
 				created, _ = datastore.CreateVisit(models.Visit{
-					MemberId:      memberId,
-					GymLocationId: gymLocation.GymLocationId,
-					StatusId:      statusId,
+					MemberID:      memberID,
+					GymLocationID: gymLocation.GymLocationID,
+					StatusID:      statusID,
 				})
-				created.StatusId = otherId
-				updated, _ = datastore.UpdateVisit(created.VisitId, *created)
+				created.StatusID = otherID
+				updated, _ = datastore.UpdateVisit(created.VisitID, *created)
 			})
 
 			AfterEach(func() {
-				datastore.DeleteVisit(updated.VisitId)
+				datastore.DeleteVisit(updated.VisitID)
 			})
 
 			It("should return the updated visit", func() {
-				Expect(updated.StatusId).To(Equal(otherId))
+				Expect(updated.StatusID).To(Equal(otherID))
 			})
 		})
 
 		Describe("Unsuccessful call", func() {
 			BeforeEach(func() {
 				visit = models.Visit{
-					GymLocationId: gymLocation.GymLocationId,
-					StatusId:      statusId,
+					GymLocationID: gymLocation.GymLocationID,
+					StatusID:      statusID,
 				}
 				updated, err = datastore.UpdateVisit(5000, visit)
 			})
@@ -192,11 +192,11 @@ var _ = Describe("Visit db interactions", func() {
 		Describe("Successful call", func() {
 			It("should return nil", func() {
 				created, _ := datastore.CreateVisit(models.Visit{
-					MemberId:      memberId,
-					GymLocationId: gymLocation.GymLocationId,
-					StatusId:      statusId,
+					MemberID:      memberID,
+					GymLocationID: gymLocation.GymLocationID,
+					StatusID:      statusID,
 				})
-				err := datastore.DeleteVisit(created.VisitId)
+				err := datastore.DeleteVisit(created.VisitID)
 				Expect(err).To(BeNil())
 			})
 		})

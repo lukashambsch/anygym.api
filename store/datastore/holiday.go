@@ -20,7 +20,7 @@ func GetHolidayList(where string) ([]models.Holiday, error) {
 	}
 
 	for rows.Next() {
-		err = rows.Scan(&holiday.HolidayId, &holiday.HolidayName)
+		err = rows.Scan(&holiday.HolidayID, &holiday.HolidayName)
 		holidays = append(holidays, holiday)
 		if err != nil {
 			return nil, err
@@ -44,11 +44,11 @@ func GetHolidayCount(where string) (*int, error) {
 	return &count, nil
 }
 
-func GetHoliday(holidayId int64) (*models.Holiday, error) {
+func GetHoliday(holidayID int64) (*models.Holiday, error) {
 	var holiday models.Holiday
 
-	row := store.DB.QueryRow(getHolidayQuery, holidayId)
-	err := row.Scan(&holiday.HolidayId, &holiday.HolidayName)
+	row := store.DB.QueryRow(getHolidayQuery, holidayID)
+	err := row.Scan(&holiday.HolidayID, &holiday.HolidayName)
 	if err != nil {
 		return nil, err
 	}
@@ -60,7 +60,7 @@ func CreateHoliday(holiday models.Holiday) (*models.Holiday, error) {
 	var created models.Holiday
 
 	row := store.DB.QueryRow(createHolidayQuery, holiday.HolidayName)
-	err := row.Scan(&created.HolidayId, &created.HolidayName)
+	err := row.Scan(&created.HolidayID, &created.HolidayName)
 	if err != nil {
 		return nil, err
 	}
@@ -68,11 +68,11 @@ func CreateHoliday(holiday models.Holiday) (*models.Holiday, error) {
 	return &created, nil
 }
 
-func UpdateHoliday(holidayId int64, holiday models.Holiday) (*models.Holiday, error) {
+func UpdateHoliday(holidayID int64, holiday models.Holiday) (*models.Holiday, error) {
 	var updated models.Holiday
 
-	row := store.DB.QueryRow(updateHolidayQuery, holiday.HolidayName, holidayId)
-	err := row.Scan(&updated.HolidayId, &updated.HolidayName)
+	row := store.DB.QueryRow(updateHolidayQuery, holiday.HolidayName, holidayID)
+	err := row.Scan(&updated.HolidayID, &updated.HolidayName)
 	if err != nil {
 		return nil, err
 	}
@@ -80,13 +80,13 @@ func UpdateHoliday(holidayId int64, holiday models.Holiday) (*models.Holiday, er
 	return &updated, nil
 }
 
-func DeleteHoliday(holidayId int64) error {
+func DeleteHoliday(holidayID int64) error {
 	stmt, err := store.DB.Prepare(deleteHolidayQuery)
 	if err != nil {
 		return err
 	}
 
-	_, err = stmt.Exec(holidayId)
+	_, err = stmt.Exec(holidayID)
 	if err != nil {
 		return err
 	}

@@ -15,14 +15,14 @@ var _ = Describe("GymFeature db interactions", func() {
 
 	BeforeEach(func() {
 		gym, _ = datastore.CreateGym(models.Gym{GymName: "Test Gym Name"})
-		one, _ = datastore.CreateGymFeature(models.GymFeature{GymId: gym.GymId, FeatureId: 1})
-		two, _ = datastore.CreateGymFeature(models.GymFeature{GymId: gym.GymId, FeatureId: 2})
+		one, _ = datastore.CreateGymFeature(models.GymFeature{GymID: gym.GymID, FeatureID: 1})
+		two, _ = datastore.CreateGymFeature(models.GymFeature{GymID: gym.GymID, FeatureID: 2})
 	})
 
 	AfterEach(func() {
-		datastore.DeleteGymFeature(one.GymFeatureId)
-		datastore.DeleteGymFeature(two.GymFeatureId)
-		datastore.DeleteGym(gym.GymId)
+		datastore.DeleteGymFeature(one.GymFeatureID)
+		datastore.DeleteGymFeature(two.GymFeatureID)
+		datastore.DeleteGym(gym.GymID)
 	})
 
 	Describe("GetGymFeatureList", func() {
@@ -44,19 +44,19 @@ var _ = Describe("GymFeature db interactions", func() {
 
 		Describe("Successful call", func() {
 			It("should return the correct gymFeature", func() {
-				gymFeature, _ = datastore.GetGymFeature(one.GymFeatureId)
-				Expect(gymFeature.GymFeatureId).To(Equal(one.GymFeatureId))
+				gymFeature, _ = datastore.GetGymFeature(one.GymFeatureID)
+				Expect(gymFeature.GymFeatureID).To(Equal(one.GymFeatureID))
 			})
 		})
 
 		Describe("Unsuccessful call", func() {
 			var (
-				nonExistentId int64 = 5000
+				nonExistentID int64 = 5000
 				err           error
 			)
 
 			BeforeEach(func() {
-				gymFeature, err = datastore.GetGymFeature(nonExistentId)
+				gymFeature, err = datastore.GetGymFeature(nonExistentID)
 			})
 
 			It("should return an error", func() {
@@ -85,28 +85,28 @@ var _ = Describe("GymFeature db interactions", func() {
 
 	Describe("CreateGymFeature", func() {
 		var (
-			featureId  int64 = 3
+			featureID  int64 = 3
 			gymFeature models.GymFeature
 			created    *models.GymFeature
 		)
 
 		Describe("Successful call", func() {
 			BeforeEach(func() {
-				gymFeature = models.GymFeature{GymId: gym.GymId, FeatureId: featureId}
+				gymFeature = models.GymFeature{GymID: gym.GymID, FeatureID: featureID}
 				created, _ = datastore.CreateGymFeature(gymFeature)
 			})
 
 			AfterEach(func() {
-				datastore.DeleteGymFeature(created.GymFeatureId)
+				datastore.DeleteGymFeature(created.GymFeatureID)
 			})
 
 			It("should return the created gymFeature", func() {
-				Expect(created.FeatureId).To(Equal(featureId))
+				Expect(created.FeatureID).To(Equal(featureID))
 			})
 
 			It("should add a gymFeature to the db", func() {
-				newGymFeature, _ := datastore.GetGymFeature(created.GymFeatureId)
-				Expect(newGymFeature.FeatureId).To(Equal(featureId))
+				newGymFeature, _ := datastore.GetGymFeature(created.GymFeatureID)
+				Expect(newGymFeature.FeatureID).To(Equal(featureID))
 			})
 		})
 
@@ -114,11 +114,11 @@ var _ = Describe("GymFeature db interactions", func() {
 			var created *models.GymFeature
 
 			AfterEach(func() {
-				datastore.DeleteGymFeature(created.GymFeatureId)
+				datastore.DeleteGymFeature(created.GymFeatureID)
 			})
 
 			It("should return an error object if gymFeature is not unique", func() {
-				gymFtr := models.GymFeature{GymId: gym.GymId, FeatureId: featureId}
+				gymFtr := models.GymFeature{GymID: gym.GymID, FeatureID: featureID}
 				created, _ = datastore.CreateGymFeature(gymFtr)
 				_, err := datastore.CreateGymFeature(gymFtr)
 				Expect(err).ToNot(BeNil())
@@ -128,7 +128,7 @@ var _ = Describe("GymFeature db interactions", func() {
 
 	Describe("UpdateGymFeature", func() {
 		var (
-			featureId  int64 = 18
+			featureID  int64 = 18
 			gymFeature models.GymFeature
 			created    *models.GymFeature
 			updated    *models.GymFeature
@@ -137,17 +137,17 @@ var _ = Describe("GymFeature db interactions", func() {
 
 		Describe("Successful call", func() {
 			BeforeEach(func() {
-				gymFeature = models.GymFeature{GymId: gym.GymId, FeatureId: featureId}
-				created, _ = datastore.CreateGymFeature(models.GymFeature{GymId: gym.GymId, FeatureId: featureId})
-				updated, _ = datastore.UpdateGymFeature(created.GymFeatureId, gymFeature)
+				gymFeature = models.GymFeature{GymID: gym.GymID, FeatureID: featureID}
+				created, _ = datastore.CreateGymFeature(models.GymFeature{GymID: gym.GymID, FeatureID: featureID})
+				updated, _ = datastore.UpdateGymFeature(created.GymFeatureID, gymFeature)
 			})
 
 			AfterEach(func() {
-				datastore.DeleteGymFeature(updated.GymFeatureId)
+				datastore.DeleteGymFeature(updated.GymFeatureID)
 			})
 
 			It("should return the updated gymFeature", func() {
-				Expect(updated.FeatureId).To(Equal(featureId))
+				Expect(updated.FeatureID).To(Equal(featureID))
 			})
 		})
 
@@ -170,8 +170,8 @@ var _ = Describe("GymFeature db interactions", func() {
 	Describe("DeleteGymFeature", func() {
 		Describe("Successful call", func() {
 			It("should return nil", func() {
-				created, _ := datastore.CreateGymFeature(models.GymFeature{GymId: gym.GymId, FeatureId: 10})
-				err := datastore.DeleteGymFeature(created.GymFeatureId)
+				created, _ := datastore.CreateGymFeature(models.GymFeature{GymID: gym.GymID, FeatureID: 10})
+				err := datastore.DeleteGymFeature(created.GymFeatureID)
 				Expect(err).To(BeNil())
 			})
 		})

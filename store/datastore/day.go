@@ -20,7 +20,7 @@ func GetDayList(where string) ([]models.Day, error) {
 	}
 
 	for rows.Next() {
-		err = rows.Scan(&day.DayId, &day.DayName)
+		err = rows.Scan(&day.DayID, &day.DayName)
 		days = append(days, day)
 		if err != nil {
 			return nil, err
@@ -44,11 +44,11 @@ func GetDayCount(where string) (*int, error) {
 	return &count, nil
 }
 
-func GetDay(dayId int64) (*models.Day, error) {
+func GetDay(dayID int64) (*models.Day, error) {
 	var day models.Day
 
-	row := store.DB.QueryRow(getDayQuery, dayId)
-	err := row.Scan(&day.DayId, &day.DayName)
+	row := store.DB.QueryRow(getDayQuery, dayID)
+	err := row.Scan(&day.DayID, &day.DayName)
 	if err != nil {
 		return nil, err
 	}
@@ -60,7 +60,7 @@ func CreateDay(day models.Day) (*models.Day, error) {
 	var created models.Day
 
 	row := store.DB.QueryRow(createDayQuery, day.DayName)
-	err := row.Scan(&created.DayId, &created.DayName)
+	err := row.Scan(&created.DayID, &created.DayName)
 	if err != nil {
 		return nil, err
 	}
@@ -68,11 +68,11 @@ func CreateDay(day models.Day) (*models.Day, error) {
 	return &created, nil
 }
 
-func UpdateDay(dayId int64, day models.Day) (*models.Day, error) {
+func UpdateDay(dayID int64, day models.Day) (*models.Day, error) {
 	var updated models.Day
 
-	row := store.DB.QueryRow(updateDayQuery, day.DayName, dayId)
-	err := row.Scan(&updated.DayId, &updated.DayName)
+	row := store.DB.QueryRow(updateDayQuery, day.DayName, dayID)
+	err := row.Scan(&updated.DayID, &updated.DayName)
 	if err != nil {
 		return nil, err
 	}
@@ -80,13 +80,13 @@ func UpdateDay(dayId int64, day models.Day) (*models.Day, error) {
 	return &updated, nil
 }
 
-func DeleteDay(dayId int64) error {
+func DeleteDay(dayID int64) error {
 	stmt, err := store.DB.Prepare(deleteDayQuery)
 	if err != nil {
 		return err
 	}
 
-	_, err = stmt.Exec(dayId)
+	_, err = stmt.Exec(dayID)
 	if err != nil {
 		return err
 	}

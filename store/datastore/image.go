@@ -20,7 +20,7 @@ func GetImageList(where string) ([]models.Image, error) {
 	}
 
 	for rows.Next() {
-		err = rows.Scan(&image.ImageId, &image.GymId, &image.GymLocationId, &image.UserId, &image.ImagePath)
+		err = rows.Scan(&image.ImageID, &image.GymID, &image.GymLocationID, &image.UserID, &image.ImagePath)
 		images = append(images, image)
 		if err != nil {
 			return nil, err
@@ -44,11 +44,11 @@ func GetImageCount(where string) (*int, error) {
 	return &count, nil
 }
 
-func GetImage(imageId int64) (*models.Image, error) {
+func GetImage(imageID int64) (*models.Image, error) {
 	var image models.Image
 
-	row := store.DB.QueryRow(getImageQuery, imageId)
-	err := row.Scan(&image.ImageId, &image.GymId, &image.GymLocationId, &image.UserId, &image.ImagePath)
+	row := store.DB.QueryRow(getImageQuery, imageID)
+	err := row.Scan(&image.ImageID, &image.GymID, &image.GymLocationID, &image.UserID, &image.ImagePath)
 	if err != nil {
 		return nil, err
 	}
@@ -59,8 +59,8 @@ func GetImage(imageId int64) (*models.Image, error) {
 func CreateImage(image models.Image) (*models.Image, error) {
 	var created models.Image
 
-	row := store.DB.QueryRow(createImageQuery, image.GymId, image.GymLocationId, image.UserId, image.ImagePath)
-	err := row.Scan(&created.ImageId, &created.GymId, &created.GymLocationId, &created.UserId, &created.ImagePath)
+	row := store.DB.QueryRow(createImageQuery, image.GymID, image.GymLocationID, image.UserID, image.ImagePath)
+	err := row.Scan(&created.ImageID, &created.GymID, &created.GymLocationID, &created.UserID, &created.ImagePath)
 	if err != nil {
 		return nil, err
 	}
@@ -68,11 +68,11 @@ func CreateImage(image models.Image) (*models.Image, error) {
 	return &created, nil
 }
 
-func UpdateImage(imageId int64, image models.Image) (*models.Image, error) {
+func UpdateImage(imageID int64, image models.Image) (*models.Image, error) {
 	var updated models.Image
 
-	row := store.DB.QueryRow(updateImageQuery, image.GymId, image.GymLocationId, image.UserId, image.ImagePath, imageId)
-	err := row.Scan(&updated.ImageId, &updated.GymId, &updated.GymLocationId, &updated.UserId, &updated.ImagePath)
+	row := store.DB.QueryRow(updateImageQuery, image.GymID, image.GymLocationID, image.UserID, image.ImagePath, imageID)
+	err := row.Scan(&updated.ImageID, &updated.GymID, &updated.GymLocationID, &updated.UserID, &updated.ImagePath)
 	if err != nil {
 		return nil, err
 	}
@@ -80,13 +80,13 @@ func UpdateImage(imageId int64, image models.Image) (*models.Image, error) {
 	return &updated, nil
 }
 
-func DeleteImage(imageId int64) error {
+func DeleteImage(imageID int64) error {
 	stmt, err := store.DB.Prepare(deleteImageQuery)
 	if err != nil {
 		return err
 	}
 
-	_, err = stmt.Exec(imageId)
+	_, err = stmt.Exec(imageID)
 	if err != nil {
 		return err
 	}

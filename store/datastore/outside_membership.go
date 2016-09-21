@@ -21,10 +21,10 @@ func GetOutsideMembershipList(where string) ([]models.OutsideMembership, error) 
 
 	for rows.Next() {
 		err = rows.Scan(
-			&outsideMembership.OutsideMembershipId,
-			&outsideMembership.MemberId,
-			&outsideMembership.GymLocationId,
-			&outsideMembership.GymId,
+			&outsideMembership.OutsideMembershipID,
+			&outsideMembership.MemberID,
+			&outsideMembership.GymLocationID,
+			&outsideMembership.GymID,
 		)
 		outsideMemberships = append(outsideMemberships, outsideMembership)
 		if err != nil {
@@ -50,15 +50,15 @@ func GetOutsideMembershipCount(where string) (*int, error) {
 	return &count, nil
 }
 
-func GetOutsideMembership(outsideMembershipId int64) (*models.OutsideMembership, error) {
+func GetOutsideMembership(outsideMembershipID int64) (*models.OutsideMembership, error) {
 	var outsideMembership models.OutsideMembership
 
-	row := store.DB.QueryRow(getOutsideMembershipQuery, outsideMembershipId)
+	row := store.DB.QueryRow(getOutsideMembershipQuery, outsideMembershipID)
 	err := row.Scan(
-		&outsideMembership.OutsideMembershipId,
-		&outsideMembership.MemberId,
-		&outsideMembership.GymLocationId,
-		&outsideMembership.GymId,
+		&outsideMembership.OutsideMembershipID,
+		&outsideMembership.MemberID,
+		&outsideMembership.GymLocationID,
+		&outsideMembership.GymID,
 	)
 
 	if err != nil {
@@ -73,15 +73,15 @@ func CreateOutsideMembership(outsideMembership models.OutsideMembership) (*model
 
 	row := store.DB.QueryRow(
 		createOutsideMembershipQuery,
-		outsideMembership.MemberId,
-		outsideMembership.GymLocationId,
-		outsideMembership.GymId,
+		outsideMembership.MemberID,
+		outsideMembership.GymLocationID,
+		outsideMembership.GymID,
 	)
 	err := row.Scan(
-		&created.OutsideMembershipId,
-		&created.MemberId,
-		&created.GymLocationId,
-		&created.GymId,
+		&created.OutsideMembershipID,
+		&created.MemberID,
+		&created.GymLocationID,
+		&created.GymID,
 	)
 	if err != nil {
 		return nil, err
@@ -90,21 +90,21 @@ func CreateOutsideMembership(outsideMembership models.OutsideMembership) (*model
 	return &created, nil
 }
 
-func UpdateOutsideMembership(outsideMembershipId int64, outsideMembership models.OutsideMembership) (*models.OutsideMembership, error) {
+func UpdateOutsideMembership(outsideMembershipID int64, outsideMembership models.OutsideMembership) (*models.OutsideMembership, error) {
 	var updated models.OutsideMembership
 
 	row := store.DB.QueryRow(
 		updateOutsideMembershipQuery,
-		outsideMembership.MemberId,
-		outsideMembership.GymLocationId,
-		outsideMembership.GymId,
-		outsideMembershipId,
+		outsideMembership.MemberID,
+		outsideMembership.GymLocationID,
+		outsideMembership.GymID,
+		outsideMembershipID,
 	)
 	err := row.Scan(
-		&updated.OutsideMembershipId,
-		&updated.MemberId,
-		&updated.GymLocationId,
-		&updated.GymId,
+		&updated.OutsideMembershipID,
+		&updated.MemberID,
+		&updated.GymLocationID,
+		&updated.GymID,
 	)
 	if err != nil {
 		return nil, err
@@ -113,13 +113,13 @@ func UpdateOutsideMembership(outsideMembershipId int64, outsideMembership models
 	return &updated, nil
 }
 
-func DeleteOutsideMembership(outsideMembershipId int64) error {
+func DeleteOutsideMembership(outsideMembershipID int64) error {
 	stmt, err := store.DB.Prepare(deleteOutsideMembershipQuery)
 	if err != nil {
 		return err
 	}
 
-	_, err = stmt.Exec(outsideMembershipId)
+	_, err = stmt.Exec(outsideMembershipID)
 	if err != nil {
 		return err
 	}

@@ -8,7 +8,7 @@ import (
 )
 
 var _ = Describe("Membership db interactions", func() {
-	var membershipId, planId, memberId int64 = 1, 1, 1
+	var membershipID, planID, memberID int64 = 1, 1, 1
 
 	Describe("GetMembershipList", func() {
 		var memberships []models.Membership
@@ -29,19 +29,19 @@ var _ = Describe("Membership db interactions", func() {
 
 		Describe("Successful call", func() {
 			It("should return the correct membership", func() {
-				membership, _ = datastore.GetMembership(membershipId)
-				Expect(membership.MembershipId).To(Equal(membershipId))
+				membership, _ = datastore.GetMembership(membershipID)
+				Expect(membership.MembershipID).To(Equal(membershipID))
 			})
 		})
 
 		Describe("Unsuccessful call", func() {
 			var (
-				nonExistentId int64 = 5
+				nonExistentID int64 = 5
 				err           error
 			)
 
 			BeforeEach(func() {
-				membership, err = datastore.GetMembership(nonExistentId)
+				membership, err = datastore.GetMembership(nonExistentID)
 			})
 
 			It("should return an error", func() {
@@ -77,12 +77,12 @@ var _ = Describe("Membership db interactions", func() {
 
 		Describe("Successful call", func() {
 			BeforeEach(func() {
-				membership = models.Membership{PlanId: &planId, MemberId: &memberId, Active: active}
+				membership = models.Membership{PlanID: &planID, MemberID: &memberID, Active: active}
 				created, _ = datastore.CreateMembership(membership)
 			})
 
 			AfterEach(func() {
-				datastore.DeleteMembership(created.MembershipId)
+				datastore.DeleteMembership(created.MembershipID)
 			})
 
 			It("should return the created membership", func() {
@@ -90,7 +90,7 @@ var _ = Describe("Membership db interactions", func() {
 			})
 
 			It("should add a membership to the db", func() {
-				newMember, _ := datastore.GetMembership(created.MembershipId)
+				newMember, _ := datastore.GetMembership(created.MembershipID)
 				Expect(newMember.Active).To(Equal(active))
 			})
 		})
@@ -116,14 +116,14 @@ var _ = Describe("Membership db interactions", func() {
 		Describe("Successful call", func() {
 			BeforeEach(func() {
 				created, _ = datastore.CreateMembership(
-					models.Membership{PlanId: &planId, MemberId: &memberId},
+					models.Membership{PlanID: &planID, MemberID: &memberID},
 				)
 				created.Active = active
-				updated, _ = datastore.UpdateMembership(created.MembershipId, *created)
+				updated, _ = datastore.UpdateMembership(created.MembershipID, *created)
 			})
 
 			AfterEach(func() {
-				datastore.DeleteMembership(updated.MembershipId)
+				datastore.DeleteMembership(updated.MembershipID)
 			})
 
 			It("should return the updated membership", func() {
@@ -133,7 +133,7 @@ var _ = Describe("Membership db interactions", func() {
 
 		Describe("Unsuccessful call", func() {
 			BeforeEach(func() {
-				membership = models.Membership{PlanId: &planId, MemberId: &memberId}
+				membership = models.Membership{PlanID: &planID, MemberID: &memberID}
 				updated, err = datastore.UpdateMembership(3, membership)
 			})
 
@@ -151,9 +151,9 @@ var _ = Describe("Membership db interactions", func() {
 		Describe("Successful call", func() {
 			It("should return nil", func() {
 				created, _ := datastore.CreateMembership(
-					models.Membership{PlanId: &planId, MemberId: &memberId},
+					models.Membership{PlanID: &planID, MemberID: &memberID},
 				)
-				err := datastore.DeleteMembership(created.MembershipId)
+				err := datastore.DeleteMembership(created.MembershipID)
 				Expect(err).To(BeNil())
 			})
 		})

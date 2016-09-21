@@ -20,7 +20,7 @@ func GetDeviceList(where string) ([]models.Device, error) {
 	}
 
 	for rows.Next() {
-		err = rows.Scan(&device.DeviceId, &device.UserId, &device.DeviceToken)
+		err = rows.Scan(&device.DeviceID, &device.UserID, &device.DeviceToken)
 		devices = append(devices, device)
 		if err != nil {
 			return nil, err
@@ -44,11 +44,11 @@ func GetDeviceCount(where string) (*int, error) {
 	return &count, nil
 }
 
-func GetDevice(deviceId int64) (*models.Device, error) {
+func GetDevice(deviceID int64) (*models.Device, error) {
 	var device models.Device
 
-	row := store.DB.QueryRow(getDeviceQuery, deviceId)
-	err := row.Scan(&device.DeviceId, &device.UserId, &device.DeviceToken)
+	row := store.DB.QueryRow(getDeviceQuery, deviceID)
+	err := row.Scan(&device.DeviceID, &device.UserID, &device.DeviceToken)
 	if err != nil {
 		return nil, err
 	}
@@ -59,8 +59,8 @@ func GetDevice(deviceId int64) (*models.Device, error) {
 func CreateDevice(device models.Device) (*models.Device, error) {
 	var created models.Device
 
-	row := store.DB.QueryRow(createDeviceQuery, device.UserId, device.DeviceToken)
-	err := row.Scan(&created.DeviceId, &created.UserId, &created.DeviceToken)
+	row := store.DB.QueryRow(createDeviceQuery, device.UserID, device.DeviceToken)
+	err := row.Scan(&created.DeviceID, &created.UserID, &created.DeviceToken)
 	if err != nil {
 		return nil, err
 	}
@@ -68,11 +68,11 @@ func CreateDevice(device models.Device) (*models.Device, error) {
 	return &created, nil
 }
 
-func UpdateDevice(deviceId int64, device models.Device) (*models.Device, error) {
+func UpdateDevice(deviceID int64, device models.Device) (*models.Device, error) {
 	var updated models.Device
 
-	row := store.DB.QueryRow(updateDeviceQuery, device.UserId, device.DeviceToken, deviceId)
-	err := row.Scan(&updated.DeviceId, &updated.UserId, &updated.DeviceToken)
+	row := store.DB.QueryRow(updateDeviceQuery, device.UserID, device.DeviceToken, deviceID)
+	err := row.Scan(&updated.DeviceID, &updated.UserID, &updated.DeviceToken)
 	if err != nil {
 		return nil, err
 	}
@@ -80,13 +80,13 @@ func UpdateDevice(deviceId int64, device models.Device) (*models.Device, error) 
 	return &updated, nil
 }
 
-func DeleteDevice(deviceId int64) error {
+func DeleteDevice(deviceID int64) error {
 	stmt, err := store.DB.Prepare(deleteDeviceQuery)
 	if err != nil {
 		return err
 	}
 
-	_, err = stmt.Exec(deviceId)
+	_, err = stmt.Exec(deviceID)
 	if err != nil {
 		return err
 	}

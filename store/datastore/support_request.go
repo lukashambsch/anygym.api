@@ -21,9 +21,9 @@ func GetSupportRequestList(where string) ([]models.SupportRequest, error) {
 
 	for rows.Next() {
 		err = rows.Scan(
-			&supportRequest.SupportRequestId,
-			&supportRequest.UserId,
-			&supportRequest.SupportSourceId,
+			&supportRequest.SupportRequestID,
+			&supportRequest.UserID,
+			&supportRequest.SupportSourceID,
 			&supportRequest.Content,
 			&supportRequest.Notes,
 			&supportRequest.CreatedOn,
@@ -53,14 +53,14 @@ func GetSupportRequestCount(where string) (*int, error) {
 	return &count, nil
 }
 
-func GetSupportRequest(supportRequestId int64) (*models.SupportRequest, error) {
+func GetSupportRequest(supportRequestID int64) (*models.SupportRequest, error) {
 	var supportRequest models.SupportRequest
 
-	row := store.DB.QueryRow(getSupportRequestQuery, supportRequestId)
+	row := store.DB.QueryRow(getSupportRequestQuery, supportRequestID)
 	err := row.Scan(
-		&supportRequest.SupportRequestId,
-		&supportRequest.UserId,
-		&supportRequest.SupportSourceId,
+		&supportRequest.SupportRequestID,
+		&supportRequest.UserID,
+		&supportRequest.SupportSourceID,
 		&supportRequest.Content,
 		&supportRequest.Notes,
 		&supportRequest.CreatedOn,
@@ -79,17 +79,17 @@ func CreateSupportRequest(supportRequest models.SupportRequest) (*models.Support
 
 	row := store.DB.QueryRow(
 		createSupportRequestQuery,
-		supportRequest.UserId,
-		supportRequest.SupportSourceId,
+		supportRequest.UserID,
+		supportRequest.SupportSourceID,
 		supportRequest.Content,
 		supportRequest.Notes,
 		supportRequest.CreatedOn,
 		supportRequest.ResolvedOn,
 	)
 	err := row.Scan(
-		&created.SupportRequestId,
-		&created.UserId,
-		&created.SupportSourceId,
+		&created.SupportRequestID,
+		&created.UserID,
+		&created.SupportSourceID,
 		&created.Content,
 		&created.Notes,
 		&created.CreatedOn,
@@ -102,23 +102,23 @@ func CreateSupportRequest(supportRequest models.SupportRequest) (*models.Support
 	return &created, nil
 }
 
-func UpdateSupportRequest(supportRequestId int64, supportRequest models.SupportRequest) (*models.SupportRequest, error) {
+func UpdateSupportRequest(supportRequestID int64, supportRequest models.SupportRequest) (*models.SupportRequest, error) {
 	var updated models.SupportRequest
 
 	row := store.DB.QueryRow(
 		updateSupportRequestQuery,
-		supportRequest.UserId,
-		supportRequest.SupportSourceId,
+		supportRequest.UserID,
+		supportRequest.SupportSourceID,
 		supportRequest.Content,
 		supportRequest.Notes,
 		supportRequest.CreatedOn,
 		supportRequest.ResolvedOn,
-		supportRequestId,
+		supportRequestID,
 	)
 	err := row.Scan(
-		&updated.SupportRequestId,
-		&updated.UserId,
-		&updated.SupportSourceId,
+		&updated.SupportRequestID,
+		&updated.UserID,
+		&updated.SupportSourceID,
 		&updated.Content,
 		&updated.Notes,
 		&updated.CreatedOn,
@@ -131,13 +131,13 @@ func UpdateSupportRequest(supportRequestId int64, supportRequest models.SupportR
 	return &updated, nil
 }
 
-func DeleteSupportRequest(supportRequestId int64) error {
+func DeleteSupportRequest(supportRequestID int64) error {
 	stmt, err := store.DB.Prepare(deleteSupportRequestQuery)
 	if err != nil {
 		return err
 	}
 
-	_, err = stmt.Exec(supportRequestId)
+	_, err = stmt.Exec(supportRequestID)
 	if err != nil {
 		return err
 	}

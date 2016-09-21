@@ -22,10 +22,10 @@ func GetVisitList(where string) ([]models.Visit, error) {
 
 	for rows.Next() {
 		err = rows.Scan(
-			&visit.VisitId,
-			&visit.MemberId,
-			&visit.GymLocationId,
-			&visit.StatusId,
+			&visit.VisitID,
+			&visit.MemberID,
+			&visit.GymLocationID,
+			&visit.StatusID,
 			&visit.CreatedOn,
 			&visit.ModifiedOn,
 		)
@@ -53,15 +53,15 @@ func GetVisitCount(where string) (*int, error) {
 	return &count, nil
 }
 
-func GetVisit(visitId int64) (*models.Visit, error) {
+func GetVisit(visitID int64) (*models.Visit, error) {
 	var visit models.Visit
 
-	row := store.DB.QueryRow(getVisitQuery, visitId)
+	row := store.DB.QueryRow(getVisitQuery, visitID)
 	err := row.Scan(
-		&visit.VisitId,
-		&visit.MemberId,
-		&visit.GymLocationId,
-		&visit.StatusId,
+		&visit.VisitID,
+		&visit.MemberID,
+		&visit.GymLocationID,
+		&visit.StatusID,
 		&visit.CreatedOn,
 		&visit.ModifiedOn,
 	)
@@ -78,15 +78,15 @@ func CreateVisit(visit models.Visit) (*models.Visit, error) {
 
 	row := store.DB.QueryRow(
 		createVisitQuery,
-		visit.MemberId,
-		visit.GymLocationId,
-		visit.StatusId,
+		visit.MemberID,
+		visit.GymLocationID,
+		visit.StatusID,
 	)
 	err := row.Scan(
-		&created.VisitId,
-		&created.MemberId,
-		&created.GymLocationId,
-		&created.StatusId,
+		&created.VisitID,
+		&created.MemberID,
+		&created.GymLocationID,
+		&created.StatusID,
 		&created.CreatedOn,
 		&created.ModifiedOn,
 	)
@@ -97,22 +97,22 @@ func CreateVisit(visit models.Visit) (*models.Visit, error) {
 	return &created, nil
 }
 
-func UpdateVisit(visitId int64, visit models.Visit) (*models.Visit, error) {
+func UpdateVisit(visitID int64, visit models.Visit) (*models.Visit, error) {
 	var updated models.Visit
 
 	row := store.DB.QueryRow(
 		updateVisitQuery,
-		visit.MemberId,
-		visit.GymLocationId,
-		visit.StatusId,
+		visit.MemberID,
+		visit.GymLocationID,
+		visit.StatusID,
 		time.Now(),
-		visitId,
+		visitID,
 	)
 	err := row.Scan(
-		&updated.VisitId,
-		&updated.MemberId,
-		&updated.GymLocationId,
-		&updated.StatusId,
+		&updated.VisitID,
+		&updated.MemberID,
+		&updated.GymLocationID,
+		&updated.StatusID,
 		&updated.CreatedOn,
 		&updated.ModifiedOn,
 	)
@@ -123,13 +123,13 @@ func UpdateVisit(visitId int64, visit models.Visit) (*models.Visit, error) {
 	return &updated, nil
 }
 
-func DeleteVisit(visitId int64) error {
+func DeleteVisit(visitID int64) error {
 	stmt, err := store.DB.Prepare(deleteVisitQuery)
 	if err != nil {
 		return err
 	}
 
-	_, err = stmt.Exec(visitId)
+	_, err = stmt.Exec(visitID)
 	if err != nil {
 		return err
 	}

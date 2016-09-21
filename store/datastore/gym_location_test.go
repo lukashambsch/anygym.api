@@ -11,29 +11,29 @@ var _ = Describe("GymLocation db interactions", func() {
 	var (
 		one, two      *models.GymLocation
 		addr, address *models.Address
-		gymId         int64 = 1
+		gymID         int64 = 1
 	)
 
 	BeforeEach(func() {
 		addr, _ = datastore.CreateAddress(models.Address{StreetAddress: "Testing"})
 		address, _ = datastore.CreateAddress(models.Address{StreetAddress: "Testing Two"})
 		one, _ = datastore.CreateGymLocation(models.GymLocation{
-			GymId:        gymId,
-			AddressId:    addr.AddressId,
+			GymID:        gymID,
+			AddressID:    addr.AddressID,
 			LocationName: "Testing",
 		})
 		two, _ = datastore.CreateGymLocation(models.GymLocation{
-			GymId:        gymId,
-			AddressId:    address.AddressId,
+			GymID:        gymID,
+			AddressID:    address.AddressID,
 			LocationName: "Testing Two",
 		})
 	})
 
 	AfterEach(func() {
-		datastore.DeleteGymLocation(one.GymLocationId)
-		datastore.DeleteGymLocation(two.GymLocationId)
-		datastore.DeleteAddress(addr.AddressId)
-		datastore.DeleteAddress(address.AddressId)
+		datastore.DeleteGymLocation(one.GymLocationID)
+		datastore.DeleteGymLocation(two.GymLocationID)
+		datastore.DeleteAddress(addr.AddressID)
+		datastore.DeleteAddress(address.AddressID)
 	})
 
 	Describe("GetGymLocationList", func() {
@@ -55,19 +55,19 @@ var _ = Describe("GymLocation db interactions", func() {
 
 		Describe("Successful call", func() {
 			It("should return the correct gymLocation", func() {
-				gymLocation, _ = datastore.GetGymLocation(one.GymLocationId)
-				Expect(gymLocation.GymLocationId).To(Equal(one.GymLocationId))
+				gymLocation, _ = datastore.GetGymLocation(one.GymLocationID)
+				Expect(gymLocation.GymLocationID).To(Equal(one.GymLocationID))
 			})
 		})
 
 		Describe("Unsuccessful call", func() {
 			var (
-				nonExistentId int64 = 5000
+				nonExistentID int64 = 5000
 				err           error
 			)
 
 			BeforeEach(func() {
-				gymLocation, err = datastore.GetGymLocation(nonExistentId)
+				gymLocation, err = datastore.GetGymLocation(nonExistentID)
 			})
 
 			It("should return an error", func() {
@@ -105,13 +105,13 @@ var _ = Describe("GymLocation db interactions", func() {
 		Describe("Successful call", func() {
 			BeforeEach(func() {
 				newAddr, _ = datastore.CreateAddress(models.Address{StreetAddress: "New One"})
-				gymLocation = models.GymLocation{GymId: gymId, AddressId: newAddr.AddressId, LocationName: locationName}
+				gymLocation = models.GymLocation{GymID: gymID, AddressID: newAddr.AddressID, LocationName: locationName}
 				created, _ = datastore.CreateGymLocation(gymLocation)
 			})
 
 			AfterEach(func() {
-				datastore.DeleteGymLocation(created.GymLocationId)
-				datastore.DeleteAddress(newAddr.AddressId)
+				datastore.DeleteGymLocation(created.GymLocationID)
+				datastore.DeleteAddress(newAddr.AddressID)
 			})
 
 			It("should return the created gymLocation", func() {
@@ -119,7 +119,7 @@ var _ = Describe("GymLocation db interactions", func() {
 			})
 
 			It("should add a gymLocation to the db", func() {
-				newGymLocation, _ := datastore.GetGymLocation(created.GymLocationId)
+				newGymLocation, _ := datastore.GetGymLocation(created.GymLocationID)
 				Expect(newGymLocation.LocationName).To(Equal(locationName))
 			})
 		})
@@ -127,7 +127,7 @@ var _ = Describe("GymLocation db interactions", func() {
 		Describe("Unsuccessful call", func() {
 			It("should return an error object if gymLocation is not unique", func() {
 				street := "Test Street"
-				loc := models.GymLocation{GymId: gymId, AddressId: addr.AddressId, LocationName: street}
+				loc := models.GymLocation{GymID: gymID, AddressID: addr.AddressID, LocationName: street}
 				_, err := datastore.CreateGymLocation(loc)
 				Expect(err).ToNot(BeNil())
 			})
@@ -147,18 +147,18 @@ var _ = Describe("GymLocation db interactions", func() {
 		Describe("Successful call", func() {
 			BeforeEach(func() {
 				newAddr, _ = datastore.CreateAddress(models.Address{StreetAddress: "Another Test Street"})
-				gymLocation = models.GymLocation{GymId: gymId, AddressId: newAddr.AddressId, LocationName: locationName}
+				gymLocation = models.GymLocation{GymID: gymID, AddressID: newAddr.AddressID, LocationName: locationName}
 				created, _ = datastore.CreateGymLocation(models.GymLocation{
-					GymId:        gymId,
-					AddressId:    newAddr.AddressId,
+					GymID:        gymID,
+					AddressID:    newAddr.AddressID,
 					LocationName: "Test Name",
 				})
-				updated, _ = datastore.UpdateGymLocation(created.GymLocationId, gymLocation)
+				updated, _ = datastore.UpdateGymLocation(created.GymLocationID, gymLocation)
 			})
 
 			AfterEach(func() {
-				datastore.DeleteGymLocation(updated.GymLocationId)
-				datastore.DeleteAddress(newAddr.AddressId)
+				datastore.DeleteGymLocation(updated.GymLocationID)
+				datastore.DeleteAddress(newAddr.AddressID)
 			})
 
 			It("should return the updated gymLocation", func() {
@@ -185,7 +185,7 @@ var _ = Describe("GymLocation db interactions", func() {
 	Describe("DeleteGymLocation", func() {
 		Describe("Successful call", func() {
 			It("should return nil", func() {
-				err := datastore.DeleteGymLocation(one.GymLocationId)
+				err := datastore.DeleteGymLocation(one.GymLocationID)
 				Expect(err).To(BeNil())
 			})
 		})

@@ -20,7 +20,7 @@ func GetRoleList(where string) ([]models.Role, error) {
 	}
 
 	for rows.Next() {
-		err = rows.Scan(&role.RoleId, &role.RoleName)
+		err = rows.Scan(&role.RoleID, &role.RoleName)
 		roles = append(roles, role)
 		if err != nil {
 			return nil, err
@@ -44,11 +44,11 @@ func GetRoleCount(where string) (*int, error) {
 	return &count, nil
 }
 
-func GetRole(roleId int64) (*models.Role, error) {
+func GetRole(roleID int64) (*models.Role, error) {
 	var role models.Role
 
-	row := store.DB.QueryRow(getRoleQuery, roleId)
-	err := row.Scan(&role.RoleId, &role.RoleName)
+	row := store.DB.QueryRow(getRoleQuery, roleID)
+	err := row.Scan(&role.RoleID, &role.RoleName)
 	if err != nil {
 		return nil, err
 	}
@@ -60,7 +60,7 @@ func CreateRole(role models.Role) (*models.Role, error) {
 	var created models.Role
 
 	row := store.DB.QueryRow(createRoleQuery, role.RoleName)
-	err := row.Scan(&created.RoleId, &created.RoleName)
+	err := row.Scan(&created.RoleID, &created.RoleName)
 	if err != nil {
 		return nil, err
 	}
@@ -68,11 +68,11 @@ func CreateRole(role models.Role) (*models.Role, error) {
 	return &created, nil
 }
 
-func UpdateRole(roleId int64, role models.Role) (*models.Role, error) {
+func UpdateRole(roleID int64, role models.Role) (*models.Role, error) {
 	var updated models.Role
 
-	row := store.DB.QueryRow(updateRoleQuery, role.RoleName, roleId)
-	err := row.Scan(&updated.RoleId, &updated.RoleName)
+	row := store.DB.QueryRow(updateRoleQuery, role.RoleName, roleID)
+	err := row.Scan(&updated.RoleID, &updated.RoleName)
 	if err != nil {
 		return nil, err
 	}
@@ -80,13 +80,13 @@ func UpdateRole(roleId int64, role models.Role) (*models.Role, error) {
 	return &updated, nil
 }
 
-func DeleteRole(roleId int64) error {
+func DeleteRole(roleID int64) error {
 	stmt, err := store.DB.Prepare(deleteRoleQuery)
 	if err != nil {
 		return err
 	}
 
-	_, err = stmt.Exec(roleId)
+	_, err = stmt.Exec(roleID)
 	if err != nil {
 		return err
 	}

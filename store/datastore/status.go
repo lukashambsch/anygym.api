@@ -20,7 +20,7 @@ func GetStatusList(where string) ([]models.Status, error) {
 	}
 
 	for rows.Next() {
-		err = rows.Scan(&status.StatusId, &status.StatusName)
+		err = rows.Scan(&status.StatusID, &status.StatusName)
 		statuses = append(statuses, status)
 		if err != nil {
 			return nil, err
@@ -45,11 +45,11 @@ func GetStatusCount(where string) (*int, error) {
 	return &count, nil
 }
 
-func GetStatus(statusId int64) (*models.Status, error) {
+func GetStatus(statusID int64) (*models.Status, error) {
 	var status models.Status
 
-	row := store.DB.QueryRow(getStatusQuery, statusId)
-	err := row.Scan(&status.StatusId, &status.StatusName)
+	row := store.DB.QueryRow(getStatusQuery, statusID)
+	err := row.Scan(&status.StatusID, &status.StatusName)
 
 	if err != nil {
 		return nil, err
@@ -62,7 +62,7 @@ func CreateStatus(status models.Status) (*models.Status, error) {
 	var created models.Status
 
 	row := store.DB.QueryRow(createStatusQuery, status.StatusName)
-	err := row.Scan(&created.StatusId, &created.StatusName)
+	err := row.Scan(&created.StatusID, &created.StatusName)
 	if err != nil {
 		return nil, err
 	}
@@ -70,11 +70,11 @@ func CreateStatus(status models.Status) (*models.Status, error) {
 	return &created, nil
 }
 
-func UpdateStatus(statusId int64, status models.Status) (*models.Status, error) {
+func UpdateStatus(statusID int64, status models.Status) (*models.Status, error) {
 	var updated models.Status
 
-	row := store.DB.QueryRow(updateStatusQuery, status.StatusName, statusId)
-	err := row.Scan(&updated.StatusId, &updated.StatusName)
+	row := store.DB.QueryRow(updateStatusQuery, status.StatusName, statusID)
+	err := row.Scan(&updated.StatusID, &updated.StatusName)
 	if err != nil {
 		return nil, err
 	}
@@ -82,13 +82,13 @@ func UpdateStatus(statusId int64, status models.Status) (*models.Status, error) 
 	return &updated, nil
 }
 
-func DeleteStatus(statusId int64) error {
+func DeleteStatus(statusID int64) error {
 	stmt, err := store.DB.Prepare(deleteStatusQuery)
 	if err != nil {
 		return err
 	}
 
-	_, err = stmt.Exec(statusId)
+	_, err = stmt.Exec(statusID)
 	if err != nil {
 		return err
 	}

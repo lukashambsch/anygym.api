@@ -14,8 +14,8 @@ import (
 	"github.com/lukashambsch/gym-all-over/store/datastore"
 )
 
-const GymLocationId = "gym_location_id"
-const InvalidGymLocationId = "Invalid " + GymLocationId
+const GymLocationID = "gym_location_id"
+const InvalidGymLocationID = "Invalid " + GymLocationID
 
 var gym_locationFields map[string]string = map[string]string{
 	"gym_location_id":    "int",
@@ -29,12 +29,12 @@ var gym_locationFields map[string]string = map[string]string{
 }
 
 func GetGymLocation(w http.ResponseWriter, r *http.Request) {
-	gymLocationId, message := GetId(w, r, GymLocationId)
+	gymLocationID, message := GetID(w, r, GymLocationID)
 	if message != nil {
 		return
 	}
 
-	gym_location, err := datastore.GetGymLocation(gymLocationId)
+	gym_location, err := datastore.GetGymLocation(gymLocationID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			WriteJSON(w, http.StatusNotFound, APIErrorMessage{Message: "Not Found"})
@@ -96,9 +96,9 @@ func PutGymLocation(w http.ResponseWriter, r *http.Request) {
 	body, _ := ioutil.ReadAll(r.Body)
 	r.Body.Close()
 
-	gymLocationId, err := strconv.ParseInt(mux.Vars(r)[GymLocationId], 10, 64)
+	gymLocationID, err := strconv.ParseInt(mux.Vars(r)[GymLocationID], 10, 64)
 	if err != nil {
-		WriteJSON(w, http.StatusBadRequest, APIErrorMessage{Message: InvalidGymLocationId})
+		WriteJSON(w, http.StatusBadRequest, APIErrorMessage{Message: InvalidGymLocationID})
 		return
 	}
 
@@ -109,7 +109,7 @@ func PutGymLocation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	updated, err := datastore.UpdateGymLocation(gymLocationId, *gym_location)
+	updated, err := datastore.UpdateGymLocation(gymLocationID, *gym_location)
 	if err != nil {
 		WriteJSON(w, http.StatusInternalServerError, APIErrorMessage{Message: err.Error()})
 		return
@@ -119,13 +119,13 @@ func PutGymLocation(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteGymLocation(w http.ResponseWriter, r *http.Request) {
-	gymLocationId, err := strconv.ParseInt(mux.Vars(r)[GymLocationId], 10, 64)
+	gymLocationID, err := strconv.ParseInt(mux.Vars(r)[GymLocationID], 10, 64)
 	if err != nil {
-		WriteJSON(w, http.StatusBadRequest, APIErrorMessage{Message: InvalidGymLocationId})
+		WriteJSON(w, http.StatusBadRequest, APIErrorMessage{Message: InvalidGymLocationID})
 		return
 	}
 
-	err = datastore.DeleteGymLocation(gymLocationId)
+	err = datastore.DeleteGymLocation(gymLocationID)
 	if err != nil {
 		WriteJSON(w, http.StatusInternalServerError, APIErrorMessage{Message: err.Error()})
 		return

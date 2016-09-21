@@ -8,7 +8,7 @@ import (
 )
 
 var _ = Describe("Day db interactions", func() {
-	var dayId int64 = 1
+	var dayID int64 = 1
 
 	Describe("GetDayList", func() {
 		var days []models.Day
@@ -29,19 +29,19 @@ var _ = Describe("Day db interactions", func() {
 
 		Describe("Successful call", func() {
 			It("should return the correct day", func() {
-				day, _ = datastore.GetDay(dayId)
-				Expect(day.DayId).To(Equal(dayId))
+				day, _ = datastore.GetDay(dayID)
+				Expect(day.DayID).To(Equal(dayID))
 			})
 		})
 
 		Describe("Unsuccessful call", func() {
 			var (
-				nonExistentId int64 = 5000
+				nonExistentID int64 = 5000
 				err           error
 			)
 
 			BeforeEach(func() {
-				day, err = datastore.GetDay(nonExistentId)
+				day, err = datastore.GetDay(nonExistentID)
 			})
 
 			It("should return an error", func() {
@@ -82,7 +82,7 @@ var _ = Describe("Day db interactions", func() {
 			})
 
 			AfterEach(func() {
-				datastore.DeleteDay(created.DayId)
+				datastore.DeleteDay(created.DayID)
 			})
 
 			It("should return the created day", func() {
@@ -90,7 +90,7 @@ var _ = Describe("Day db interactions", func() {
 			})
 
 			It("should add a day to the db", func() {
-				newDay, _ := datastore.GetDay(created.DayId)
+				newDay, _ := datastore.GetDay(created.DayID)
 				Expect(newDay.DayName).To(Equal(dayName))
 			})
 		})
@@ -99,7 +99,7 @@ var _ = Describe("Day db interactions", func() {
 			var created *models.Day
 
 			AfterEach(func() {
-				datastore.DeleteDay(created.DayId)
+				datastore.DeleteDay(created.DayID)
 			})
 
 			It("should return an error object if day is not unique", func() {
@@ -125,11 +125,11 @@ var _ = Describe("Day db interactions", func() {
 			BeforeEach(func() {
 				day = models.Day{DayName: dayName}
 				created, _ = datastore.CreateDay(models.Day{DayName: "Daily"})
-				updated, _ = datastore.UpdateDay(created.DayId, day)
+				updated, _ = datastore.UpdateDay(created.DayID, day)
 			})
 
 			AfterEach(func() {
-				datastore.DeleteDay(updated.DayId)
+				datastore.DeleteDay(updated.DayID)
 			})
 
 			It("should return the updated day", func() {
@@ -157,7 +157,7 @@ var _ = Describe("Day db interactions", func() {
 		Describe("Successful call", func() {
 			It("should return nil", func() {
 				created, _ := datastore.CreateDay(models.Day{DayName: "Testing"})
-				err := datastore.DeleteDay(created.DayId)
+				err := datastore.DeleteDay(created.DayID)
 				Expect(err).To(BeNil())
 			})
 		})

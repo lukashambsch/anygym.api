@@ -21,9 +21,9 @@ func GetGymLocationList(where string) ([]models.GymLocation, error) {
 
 	for rows.Next() {
 		err = rows.Scan(
-			&gymLocation.GymLocationId,
-			&gymLocation.GymId,
-			&gymLocation.AddressId,
+			&gymLocation.GymLocationID,
+			&gymLocation.GymID,
+			&gymLocation.AddressID,
 			&gymLocation.LocationName,
 			&gymLocation.PhoneNumber,
 			&gymLocation.WebsiteUrl,
@@ -54,14 +54,14 @@ func GetGymLocationCount(where string) (*int, error) {
 	return &count, nil
 }
 
-func GetGymLocation(addressId int64) (*models.GymLocation, error) {
+func GetGymLocation(addressID int64) (*models.GymLocation, error) {
 	var gymLocation models.GymLocation
 
-	row := store.DB.QueryRow(getGymLocationQuery, addressId)
+	row := store.DB.QueryRow(getGymLocationQuery, addressID)
 	err := row.Scan(
-		&gymLocation.GymLocationId,
-		&gymLocation.GymId,
-		&gymLocation.AddressId,
+		&gymLocation.GymLocationID,
+		&gymLocation.GymID,
+		&gymLocation.AddressID,
 		&gymLocation.LocationName,
 		&gymLocation.PhoneNumber,
 		&gymLocation.WebsiteUrl,
@@ -81,8 +81,8 @@ func CreateGymLocation(gymLocation models.GymLocation) (*models.GymLocation, err
 
 	row := store.DB.QueryRow(
 		createGymLocationQuery,
-		gymLocation.GymId,
-		gymLocation.AddressId,
+		gymLocation.GymID,
+		gymLocation.AddressID,
 		gymLocation.LocationName,
 		gymLocation.PhoneNumber,
 		gymLocation.WebsiteUrl,
@@ -90,9 +90,9 @@ func CreateGymLocation(gymLocation models.GymLocation) (*models.GymLocation, err
 		gymLocation.MonthlyMemberFee,
 	)
 	err := row.Scan(
-		&created.GymLocationId,
-		&created.GymId,
-		&created.AddressId,
+		&created.GymLocationID,
+		&created.GymID,
+		&created.AddressID,
 		&created.LocationName,
 		&created.PhoneNumber,
 		&created.WebsiteUrl,
@@ -106,24 +106,24 @@ func CreateGymLocation(gymLocation models.GymLocation) (*models.GymLocation, err
 	return &created, nil
 }
 
-func UpdateGymLocation(addressId int64, gymLocation models.GymLocation) (*models.GymLocation, error) {
+func UpdateGymLocation(addressID int64, gymLocation models.GymLocation) (*models.GymLocation, error) {
 	var updated models.GymLocation
 
 	row := store.DB.QueryRow(
 		updateGymLocationQuery,
-		gymLocation.GymId,
-		gymLocation.AddressId,
+		gymLocation.GymID,
+		gymLocation.AddressID,
 		gymLocation.LocationName,
 		gymLocation.PhoneNumber,
 		gymLocation.WebsiteUrl,
 		gymLocation.InNetwork,
 		gymLocation.MonthlyMemberFee,
-		addressId,
+		addressID,
 	)
 	err := row.Scan(
-		&updated.GymLocationId,
-		&updated.GymId,
-		&updated.AddressId,
+		&updated.GymLocationID,
+		&updated.GymID,
+		&updated.AddressID,
 		&updated.LocationName,
 		&updated.PhoneNumber,
 		&updated.WebsiteUrl,
@@ -137,13 +137,13 @@ func UpdateGymLocation(addressId int64, gymLocation models.GymLocation) (*models
 	return &updated, nil
 }
 
-func DeleteGymLocation(addressId int64) error {
+func DeleteGymLocation(addressID int64) error {
 	stmt, err := store.DB.Prepare(deleteGymLocationQuery)
 	if err != nil {
 		return err
 	}
 
-	_, err = stmt.Exec(addressId)
+	_, err = stmt.Exec(addressID)
 	if err != nil {
 		return err
 	}

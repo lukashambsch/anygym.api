@@ -20,7 +20,7 @@ func GetUserRoleList(where string) ([]models.UserRole, error) {
 	}
 
 	for rows.Next() {
-		err = rows.Scan(&userRole.UserRoleId, &userRole.UserId, &userRole.RoleId)
+		err = rows.Scan(&userRole.UserRoleID, &userRole.UserID, &userRole.RoleID)
 		userRoles = append(userRoles, userRole)
 		if err != nil {
 			return nil, err
@@ -44,11 +44,11 @@ func GetUserRoleCount(where string) (*int, error) {
 	return &count, nil
 }
 
-func GetUserRole(userRoleId int64) (*models.UserRole, error) {
+func GetUserRole(userRoleID int64) (*models.UserRole, error) {
 	var userRole models.UserRole
 
-	row := store.DB.QueryRow(getUserRoleQuery, userRoleId)
-	err := row.Scan(&userRole.UserRoleId, &userRole.UserId, &userRole.RoleId)
+	row := store.DB.QueryRow(getUserRoleQuery, userRoleID)
+	err := row.Scan(&userRole.UserRoleID, &userRole.UserID, &userRole.RoleID)
 	if err != nil {
 		return nil, err
 	}
@@ -59,8 +59,8 @@ func GetUserRole(userRoleId int64) (*models.UserRole, error) {
 func CreateUserRole(userRole models.UserRole) (*models.UserRole, error) {
 	var created models.UserRole
 
-	row := store.DB.QueryRow(createUserRoleQuery, userRole.UserId, userRole.RoleId)
-	err := row.Scan(&created.UserRoleId, &created.UserId, &created.RoleId)
+	row := store.DB.QueryRow(createUserRoleQuery, userRole.UserID, userRole.RoleID)
+	err := row.Scan(&created.UserRoleID, &created.UserID, &created.RoleID)
 	if err != nil {
 		return nil, err
 	}
@@ -68,11 +68,11 @@ func CreateUserRole(userRole models.UserRole) (*models.UserRole, error) {
 	return &created, nil
 }
 
-func UpdateUserRole(userRoleId int64, userRole models.UserRole) (*models.UserRole, error) {
+func UpdateUserRole(userRoleID int64, userRole models.UserRole) (*models.UserRole, error) {
 	var updated models.UserRole
 
-	row := store.DB.QueryRow(updateUserRoleQuery, userRole.UserId, userRole.RoleId, userRoleId)
-	err := row.Scan(&updated.UserRoleId, &updated.UserId, &updated.RoleId)
+	row := store.DB.QueryRow(updateUserRoleQuery, userRole.UserID, userRole.RoleID, userRoleID)
+	err := row.Scan(&updated.UserRoleID, &updated.UserID, &updated.RoleID)
 	if err != nil {
 		return nil, err
 	}
@@ -80,13 +80,13 @@ func UpdateUserRole(userRoleId int64, userRole models.UserRole) (*models.UserRol
 	return &updated, nil
 }
 
-func DeleteUserRole(userRoleId int64) error {
+func DeleteUserRole(userRoleID int64) error {
 	stmt, err := store.DB.Prepare(deleteUserRoleQuery)
 	if err != nil {
 		return err
 	}
 
-	_, err = stmt.Exec(userRoleId)
+	_, err = stmt.Exec(userRoleID)
 	if err != nil {
 		return err
 	}

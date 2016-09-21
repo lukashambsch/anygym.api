@@ -18,10 +18,10 @@ var _ = Describe("Address db interactions", func() {
 	})
 
 	AfterEach(func() {
-		datastore.DeleteAddress(one.AddressId)
-		datastore.DeleteAddress(two.AddressId)
-		datastore.DeleteAddress(three.AddressId)
-		datastore.DeleteAddress(four.AddressId)
+		datastore.DeleteAddress(one.AddressID)
+		datastore.DeleteAddress(two.AddressID)
+		datastore.DeleteAddress(three.AddressID)
+		datastore.DeleteAddress(four.AddressID)
 	})
 
 	Describe("GetAddressList", func() {
@@ -43,19 +43,19 @@ var _ = Describe("Address db interactions", func() {
 
 		Describe("Successful call", func() {
 			It("should return the correct address", func() {
-				address, _ = datastore.GetAddress(one.AddressId)
-				Expect(address.AddressId).To(Equal(one.AddressId))
+				address, _ = datastore.GetAddress(one.AddressID)
+				Expect(address.AddressID).To(Equal(one.AddressID))
 			})
 		})
 
 		Describe("Unsuccessful call", func() {
 			var (
-				nonExistentId int64 = 5
+				nonExistentID int64 = 5
 				err           error
 			)
 
 			BeforeEach(func() {
-				address, err = datastore.GetAddress(nonExistentId)
+				address, err = datastore.GetAddress(nonExistentID)
 			})
 
 			It("should return an error", func() {
@@ -96,7 +96,7 @@ var _ = Describe("Address db interactions", func() {
 			})
 
 			AfterEach(func() {
-				datastore.DeleteAddress(created.AddressId)
+				datastore.DeleteAddress(created.AddressID)
 			})
 
 			It("should return the created address", func() {
@@ -104,7 +104,7 @@ var _ = Describe("Address db interactions", func() {
 			})
 
 			It("should add a address to the db", func() {
-				newAddress, _ := datastore.GetAddress(created.AddressId)
+				newAddress, _ := datastore.GetAddress(created.AddressID)
 				Expect(newAddress.StreetAddress).To(Equal(streetAddress))
 			})
 		})
@@ -113,7 +113,7 @@ var _ = Describe("Address db interactions", func() {
 			var created *models.Address
 
 			AfterEach(func() {
-				datastore.DeleteAddress(created.AddressId)
+				datastore.DeleteAddress(created.AddressID)
 			})
 
 			It("should return an error object if address is not unique", func() {
@@ -139,11 +139,11 @@ var _ = Describe("Address db interactions", func() {
 			BeforeEach(func() {
 				address = models.Address{StreetAddress: streetAddress}
 				created, _ = datastore.CreateAddress(models.Address{StreetAddress: "456 Test Ave."})
-				updated, _ = datastore.UpdateAddress(created.AddressId, address)
+				updated, _ = datastore.UpdateAddress(created.AddressID, address)
 			})
 
 			AfterEach(func() {
-				datastore.DeleteAddress(updated.AddressId)
+				datastore.DeleteAddress(updated.AddressID)
 			})
 
 			It("should return the updated address", func() {
@@ -170,7 +170,7 @@ var _ = Describe("Address db interactions", func() {
 	Describe("DeleteAddress", func() {
 		Describe("Successful call", func() {
 			It("should return nil", func() {
-				err := datastore.DeleteAddress(one.AddressId)
+				err := datastore.DeleteAddress(one.AddressID)
 				Expect(err).To(BeNil())
 			})
 		})

@@ -14,8 +14,8 @@ import (
 	"github.com/lukashambsch/gym-all-over/store/datastore"
 )
 
-const MemberId = "member_id"
-const InvalidMemberId = "Invalid " + MemberId
+const MemberID = "member_id"
+const InvalidMemberID = "Invalid " + MemberID
 
 var memberFields map[string]string = map[string]string{
 	"member_id":  "int",
@@ -26,12 +26,12 @@ var memberFields map[string]string = map[string]string{
 }
 
 func GetMember(w http.ResponseWriter, r *http.Request) {
-	memberId, message := GetId(w, r, MemberId)
+	memberID, message := GetID(w, r, MemberID)
 	if message != nil {
 		return
 	}
 
-	member, err := datastore.GetMember(memberId)
+	member, err := datastore.GetMember(memberID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			WriteJSON(w, http.StatusNotFound, APIErrorMessage{Message: "Not Found"})
@@ -93,9 +93,9 @@ func PutMember(w http.ResponseWriter, r *http.Request) {
 	body, _ := ioutil.ReadAll(r.Body)
 	r.Body.Close()
 
-	memberId, err := strconv.ParseInt(mux.Vars(r)[MemberId], 10, 64)
+	memberID, err := strconv.ParseInt(mux.Vars(r)[MemberID], 10, 64)
 	if err != nil {
-		WriteJSON(w, http.StatusBadRequest, APIErrorMessage{Message: InvalidMemberId})
+		WriteJSON(w, http.StatusBadRequest, APIErrorMessage{Message: InvalidMemberID})
 		return
 	}
 
@@ -106,7 +106,7 @@ func PutMember(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	updated, err := datastore.UpdateMember(memberId, *member)
+	updated, err := datastore.UpdateMember(memberID, *member)
 	if err != nil {
 		WriteJSON(w, http.StatusInternalServerError, APIErrorMessage{Message: err.Error()})
 		return
@@ -116,13 +116,13 @@ func PutMember(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteMember(w http.ResponseWriter, r *http.Request) {
-	memberId, err := strconv.ParseInt(mux.Vars(r)[MemberId], 10, 64)
+	memberID, err := strconv.ParseInt(mux.Vars(r)[MemberID], 10, 64)
 	if err != nil {
-		WriteJSON(w, http.StatusBadRequest, APIErrorMessage{Message: InvalidMemberId})
+		WriteJSON(w, http.StatusBadRequest, APIErrorMessage{Message: InvalidMemberID})
 		return
 	}
 
-	err = datastore.DeleteMember(memberId)
+	err = datastore.DeleteMember(memberID)
 	if err != nil {
 		WriteJSON(w, http.StatusInternalServerError, APIErrorMessage{Message: err.Error()})
 		return

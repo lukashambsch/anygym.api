@@ -21,10 +21,10 @@ func GetBusinessHourList(where string) ([]models.BusinessHour, error) {
 
 	for rows.Next() {
 		err = rows.Scan(
-			&businessHour.BusinessHourId,
-			&businessHour.GymLocationId,
-			&businessHour.HolidayId,
-			&businessHour.DayId,
+			&businessHour.BusinessHourID,
+			&businessHour.GymLocationID,
+			&businessHour.HolidayID,
+			&businessHour.DayID,
 			&businessHour.OpenTime,
 			&businessHour.CloseTime,
 		)
@@ -52,15 +52,15 @@ func GetBusinessHourCount(where string) (*int, error) {
 	return &count, nil
 }
 
-func GetBusinessHour(businessHourId int64) (*models.BusinessHour, error) {
+func GetBusinessHour(businessHourID int64) (*models.BusinessHour, error) {
 	var businessHour models.BusinessHour
 
-	row := store.DB.QueryRow(getBusinessHourQuery, businessHourId)
+	row := store.DB.QueryRow(getBusinessHourQuery, businessHourID)
 	err := row.Scan(
-		&businessHour.BusinessHourId,
-		&businessHour.GymLocationId,
-		&businessHour.HolidayId,
-		&businessHour.DayId,
+		&businessHour.BusinessHourID,
+		&businessHour.GymLocationID,
+		&businessHour.HolidayID,
+		&businessHour.DayID,
 		&businessHour.OpenTime,
 		&businessHour.CloseTime,
 	)
@@ -77,17 +77,17 @@ func CreateBusinessHour(businessHour models.BusinessHour) (*models.BusinessHour,
 
 	row := store.DB.QueryRow(
 		createBusinessHourQuery,
-		businessHour.GymLocationId,
-		businessHour.HolidayId,
-		businessHour.DayId,
+		businessHour.GymLocationID,
+		businessHour.HolidayID,
+		businessHour.DayID,
 		businessHour.OpenTime.Format("15:00"),
 		businessHour.CloseTime.Format("15:00"),
 	)
 	err := row.Scan(
-		&created.BusinessHourId,
-		&created.GymLocationId,
-		&created.HolidayId,
-		&created.DayId,
+		&created.BusinessHourID,
+		&created.GymLocationID,
+		&created.HolidayID,
+		&created.DayID,
 		&created.OpenTime,
 		&created.CloseTime,
 	)
@@ -98,23 +98,23 @@ func CreateBusinessHour(businessHour models.BusinessHour) (*models.BusinessHour,
 	return &created, nil
 }
 
-func UpdateBusinessHour(businessHourId int64, businessHour models.BusinessHour) (*models.BusinessHour, error) {
+func UpdateBusinessHour(businessHourID int64, businessHour models.BusinessHour) (*models.BusinessHour, error) {
 	var updated models.BusinessHour
 
 	row := store.DB.QueryRow(
 		updateBusinessHourQuery,
-		businessHour.GymLocationId,
-		businessHour.HolidayId,
-		businessHour.DayId,
+		businessHour.GymLocationID,
+		businessHour.HolidayID,
+		businessHour.DayID,
 		businessHour.OpenTime.Format("15:00"),
 		businessHour.CloseTime.Format("15:00"),
-		businessHourId,
+		businessHourID,
 	)
 	err := row.Scan(
-		&updated.BusinessHourId,
-		&updated.GymLocationId,
-		&updated.HolidayId,
-		&updated.DayId,
+		&updated.BusinessHourID,
+		&updated.GymLocationID,
+		&updated.HolidayID,
+		&updated.DayID,
 		&updated.OpenTime,
 		&updated.CloseTime,
 	)
@@ -125,13 +125,13 @@ func UpdateBusinessHour(businessHourId int64, businessHour models.BusinessHour) 
 	return &updated, nil
 }
 
-func DeleteBusinessHour(businessHourId int64) error {
+func DeleteBusinessHour(businessHourID int64) error {
 	stmt, err := store.DB.Prepare(deleteBusinessHourQuery)
 	if err != nil {
 		return err
 	}
 
-	_, err = stmt.Exec(businessHourId)
+	_, err = stmt.Exec(businessHourID)
 	if err != nil {
 		return err
 	}

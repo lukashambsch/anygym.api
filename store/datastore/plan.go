@@ -20,7 +20,7 @@ func GetPlanList(where string) ([]models.Plan, error) {
 	}
 
 	for rows.Next() {
-		err = rows.Scan(&plan.PlanId, &plan.PlanName, &plan.Price)
+		err = rows.Scan(&plan.PlanID, &plan.PlanName, &plan.Price)
 		plans = append(plans, plan)
 		if err != nil {
 			return nil, err
@@ -44,11 +44,11 @@ func GetPlanCount(where string) (*int, error) {
 	return &count, nil
 }
 
-func GetPlan(planId int64) (*models.Plan, error) {
+func GetPlan(planID int64) (*models.Plan, error) {
 	var plan models.Plan
 
-	row := store.DB.QueryRow(getPlanQuery, planId)
-	err := row.Scan(&plan.PlanId, &plan.PlanName, &plan.Price)
+	row := store.DB.QueryRow(getPlanQuery, planID)
+	err := row.Scan(&plan.PlanID, &plan.PlanName, &plan.Price)
 	if err != nil {
 		return nil, err
 	}
@@ -60,7 +60,7 @@ func CreatePlan(plan models.Plan) (*models.Plan, error) {
 	var created models.Plan
 
 	row := store.DB.QueryRow(createPlanQuery, plan.PlanName, plan.Price)
-	err := row.Scan(&created.PlanId, &created.PlanName, &created.Price)
+	err := row.Scan(&created.PlanID, &created.PlanName, &created.Price)
 	if err != nil {
 		return nil, err
 	}
@@ -68,11 +68,11 @@ func CreatePlan(plan models.Plan) (*models.Plan, error) {
 	return &created, nil
 }
 
-func UpdatePlan(planId int64, plan models.Plan) (*models.Plan, error) {
+func UpdatePlan(planID int64, plan models.Plan) (*models.Plan, error) {
 	var updated models.Plan
 
-	row := store.DB.QueryRow(updatePlanQuery, plan.PlanName, plan.Price, planId)
-	err := row.Scan(&updated.PlanId, &updated.PlanName, &updated.Price)
+	row := store.DB.QueryRow(updatePlanQuery, plan.PlanName, plan.Price, planID)
+	err := row.Scan(&updated.PlanID, &updated.PlanName, &updated.Price)
 	if err != nil {
 		return nil, err
 	}
@@ -80,13 +80,13 @@ func UpdatePlan(planId int64, plan models.Plan) (*models.Plan, error) {
 	return &updated, nil
 }
 
-func DeletePlan(planId int64) error {
+func DeletePlan(planID int64) error {
 	stmt, err := store.DB.Prepare(deletePlanQuery)
 	if err != nil {
 		return err
 	}
 
-	_, err = stmt.Exec(planId)
+	_, err = stmt.Exec(planID)
 	if err != nil {
 		return err
 	}

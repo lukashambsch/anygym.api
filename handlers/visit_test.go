@@ -66,7 +66,7 @@ var _ = Describe("Visit API", func() {
 			})
 
 			It("should return a matching visit - visit_id", func() {
-				res, _ = http.Get(fmt.Sprintf("%s/?visit_id=1", visitURL))
+				res, _ = http.Get(fmt.Sprintf("%s?visit_id=1", visitURL))
 				data, _ = ioutil.ReadAll(res.Body)
 				json.Unmarshal(data, &visits)
 				Expect(res.StatusCode).To(Equal(http.StatusOK))
@@ -162,7 +162,7 @@ var _ = Describe("Visit API", func() {
 
 			Context("Invalid visit_id", func() {
 				It("should return visit code 400 with a message", func() {
-					res, _ = http.Get(fmt.Sprintf("%s/asdf/", visitURL))
+					res, _ = http.Get(fmt.Sprintf("%s/asdf", visitURL))
 					data, _ = ioutil.ReadAll(res.Body)
 					json.Unmarshal(data, &errRes)
 					Expect(res.StatusCode).To(Equal(http.StatusBadRequest))
@@ -172,7 +172,7 @@ var _ = Describe("Visit API", func() {
 
 			Context("Non existent visit_id", func() {
 				It("should return visit code 404 with a message", func() {
-					res, _ = http.Get(fmt.Sprintf("%s/10/", visitURL))
+					res, _ = http.Get(fmt.Sprintf("%s/10", visitURL))
 					data, _ = ioutil.ReadAll(res.Body)
 					json.Unmarshal(data, &errRes)
 					Expect(res.StatusCode).To(Equal(http.StatusNotFound))
@@ -191,7 +191,7 @@ var _ = Describe("Visit API", func() {
 
 		Describe("Successful POST", func() {
 			BeforeEach(func() {
-				res, _ = http.Post(fmt.Sprintf("%s/", visitURL), contentType, bytes.NewBuffer(payload))
+				res, _ = http.Post(visitURL, contentType, bytes.NewBuffer(payload))
 				data, _ = ioutil.ReadAll(res.Body)
 				json.Unmarshal(data, &visit)
 			})
@@ -219,7 +219,7 @@ var _ = Describe("Visit API", func() {
 			Describe("Bad Request", func() {
 				It("should return visit code 400 with a message", func() {
 					res, _ = http.Post(
-						fmt.Sprintf("%s/", visitURL),
+						visitURL,
 						contentType,
 						bytes.NewBuffer(badPayload),
 					)
@@ -233,7 +233,7 @@ var _ = Describe("Visit API", func() {
 			Describe("Internal Server Error", func() {
 				It("should return visit code 500 with a message", func() {
 					payload = []byte(`{"member_id": 1}`)
-					res, _ = http.Post(fmt.Sprintf("%s/", visitURL), contentType, bytes.NewBuffer(payload))
+					res, _ = http.Post(visitURL, contentType, bytes.NewBuffer(payload))
 					data, _ = ioutil.ReadAll(res.Body)
 					json.Unmarshal(data, &errRes)
 					Expect(res.StatusCode).To(Equal(http.StatusInternalServerError))
@@ -254,7 +254,7 @@ var _ = Describe("Visit API", func() {
 			BeforeEach(func() {
 				req, _ := http.NewRequest(
 					"PUT",
-					fmt.Sprintf("%s/%d/", visitURL, visitId),
+					fmt.Sprintf("%s/%d", visitURL, visitId),
 					bytes.NewBuffer(payload),
 				)
 				req.Header.Set("Content-Type", contentType)
@@ -288,7 +288,7 @@ var _ = Describe("Visit API", func() {
 			It("should return visit code 400 with a message", func() {
 				req, _ := http.NewRequest(
 					"PUT",
-					fmt.Sprintf("%s/%d/", visitURL, visitId),
+					fmt.Sprintf("%s/%d", visitURL, visitId),
 					bytes.NewBuffer(badPayload),
 				)
 				req.Header.Set("Content-Type", contentType)
@@ -303,7 +303,7 @@ var _ = Describe("Visit API", func() {
 			It("should return visit code 400 with a message", func() {
 				req, _ := http.NewRequest(
 					"PUT",
-					fmt.Sprintf("%s/a/", visitURL),
+					fmt.Sprintf("%s/a", visitURL),
 					bytes.NewBuffer(payload),
 				)
 				req.Header.Set("Content-Type", contentType)
@@ -318,7 +318,7 @@ var _ = Describe("Visit API", func() {
 			It("should return visit code 500 with a message", func() {
 				req, _ := http.NewRequest(
 					"PUT",
-					fmt.Sprintf("%s/5000/", visitURL),
+					fmt.Sprintf("%s/5000", visitURL),
 					bytes.NewBuffer(payload),
 				)
 				req.Header.Set("Content-Type", contentType)
@@ -339,7 +339,7 @@ var _ = Describe("Visit API", func() {
 			BeforeEach(func() {
 				req, _ := http.NewRequest(
 					"DELETE",
-					fmt.Sprintf("%s/%d/", visitURL, visitId),
+					fmt.Sprintf("%s/%d", visitURL, visitId),
 					bytes.NewBuffer([]byte(``)),
 				)
 				req.Header.Set("Content-Type", contentType)
@@ -373,7 +373,7 @@ var _ = Describe("Visit API", func() {
 			It("should return visit code 400 with a message", func() {
 				req, _ := http.NewRequest(
 					"DELETE",
-					fmt.Sprintf("%s/a/", visitURL),
+					fmt.Sprintf("%s/a", visitURL),
 					bytes.NewBuffer([]byte(``)),
 				)
 				req.Header.Set("Content-Type", contentType)

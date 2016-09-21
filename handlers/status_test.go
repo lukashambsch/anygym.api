@@ -200,7 +200,7 @@ var _ = Describe("Status API", func() {
 
 		Describe("Successful POST", func() {
 			BeforeEach(func() {
-				res, _ = http.Post(fmt.Sprintf("%s/", statusURL), contentType, bytes.NewBuffer(payload))
+				res, _ = http.Post(statusURL, contentType, bytes.NewBuffer(payload))
 				data, _ = ioutil.ReadAll(res.Body)
 				json.Unmarshal(data, &status)
 			})
@@ -228,7 +228,7 @@ var _ = Describe("Status API", func() {
 			Describe("Bad Request", func() {
 				It("should return status code 400 with a message", func() {
 					res, _ = http.Post(
-						fmt.Sprintf("%s/", statusURL),
+						statusURL,
 						contentType,
 						bytes.NewBuffer(badPayload),
 					)
@@ -242,7 +242,7 @@ var _ = Describe("Status API", func() {
 			Describe("Internal Server Error", func() {
 				It("should return status code 500 with a message", func() {
 					payload = []byte(`{"status_name": "Pending"}`)
-					res, _ = http.Post(fmt.Sprintf("%s/", statusURL), contentType, bytes.NewBuffer(payload))
+					res, _ = http.Post(statusURL, contentType, bytes.NewBuffer(payload))
 					data, _ = ioutil.ReadAll(res.Body)
 					json.Unmarshal(data, &errRes)
 					Expect(res.StatusCode).To(Equal(http.StatusInternalServerError))
@@ -263,7 +263,7 @@ var _ = Describe("Status API", func() {
 			BeforeEach(func() {
 				req, _ := http.NewRequest(
 					"PUT",
-					fmt.Sprintf("%s/%d/", statusURL, statusId),
+					fmt.Sprintf("%s/%d", statusURL, statusId),
 					bytes.NewBuffer(payload),
 				)
 				req.Header.Set("Content-Type", contentType)
@@ -297,7 +297,7 @@ var _ = Describe("Status API", func() {
 			It("should return status code 400 with a message", func() {
 				req, _ := http.NewRequest(
 					"PUT",
-					fmt.Sprintf("%s/%d/", statusURL, statusId),
+					fmt.Sprintf("%s/%d", statusURL, statusId),
 					bytes.NewBuffer(badPayload),
 				)
 				req.Header.Set("Content-Type", contentType)
@@ -312,7 +312,7 @@ var _ = Describe("Status API", func() {
 			It("should return status code 400 with a message", func() {
 				req, _ := http.NewRequest(
 					"PUT",
-					fmt.Sprintf("%s/a/", statusURL),
+					fmt.Sprintf("%s/a", statusURL),
 					bytes.NewBuffer(payload),
 				)
 				req.Header.Set("Content-Type", contentType)
@@ -327,7 +327,7 @@ var _ = Describe("Status API", func() {
 			It("should return status code 500 with a message", func() {
 				req, _ := http.NewRequest(
 					"PUT",
-					fmt.Sprintf("%s/5/", statusURL),
+					fmt.Sprintf("%s/5", statusURL),
 					bytes.NewBuffer(payload),
 				)
 				req.Header.Set("Content-Type", contentType)
@@ -348,7 +348,7 @@ var _ = Describe("Status API", func() {
 			BeforeEach(func() {
 				req, _ := http.NewRequest(
 					"DELETE",
-					fmt.Sprintf("%s/%d/", statusURL, statusId),
+					fmt.Sprintf("%s/%d", statusURL, statusId),
 					bytes.NewBuffer([]byte(``)),
 				)
 				req.Header.Set("Content-Type", contentType)
@@ -380,7 +380,7 @@ var _ = Describe("Status API", func() {
 			It("should return status code 400 with a message", func() {
 				req, _ := http.NewRequest(
 					"DELETE",
-					fmt.Sprintf("%s/a/", statusURL),
+					fmt.Sprintf("%s/a", statusURL),
 					bytes.NewBuffer([]byte(``)),
 				)
 				req.Header.Set("Content-Type", contentType)

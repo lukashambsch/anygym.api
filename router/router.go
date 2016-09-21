@@ -18,59 +18,59 @@ func Load() http.Handler {
 	r := mux.NewRouter().StrictSlash(true)
 
 	// Status endpoints
-	s := r.PathPrefix(fmt.Sprintf("%s%s", V1URLBase, "/statuses")).Subrouter()
+	statuses := fmt.Sprintf("%s/statuses", V1URLBase)
 
-	s.HandleFunc("/", handlers.GetStatuses).
+	r.HandleFunc(statuses, handlers.GetStatuses).
 		Methods("GET")
-	s.HandleFunc("/{status_id}/", handlers.GetStatus).
+	r.HandleFunc(fmt.Sprintf("%s/{status_id}", statuses), handlers.GetStatus).
 		Methods("GET")
-	s.HandleFunc("/", handlers.PostStatus).
+	r.HandleFunc(statuses, handlers.PostStatus).
 		Methods("POST")
-	s.HandleFunc("/{status_id}/", handlers.PutStatus).
+	r.HandleFunc(fmt.Sprintf("%s/{status_id}", statuses), handlers.PutStatus).
 		Methods("PUT")
-	s.HandleFunc("/{status_id}/", handlers.DeleteStatus).
+	r.HandleFunc(fmt.Sprintf("%s/{status_id}", statuses), handlers.DeleteStatus).
 		Methods("DELETE")
 
 	// Visit endpoints
-	v := r.PathPrefix(fmt.Sprintf("%s%s", V1URLBase, "/visits")).Subrouter()
+	visits := fmt.Sprintf("%s/visits", V1URLBase)
 
-	v.HandleFunc("/", handlers.GetVisits).
+	r.HandleFunc(visits, handlers.GetVisits).
 		Methods("GET")
-	v.HandleFunc("/{visit_id}/", handlers.GetVisit).
+	r.HandleFunc(fmt.Sprintf("%s/{visit_id}", visits), handlers.GetVisit).
 		Methods("GET")
-	v.HandleFunc("/", handlers.PostVisit).
+	r.HandleFunc(visits, handlers.PostVisit).
 		Methods("POST")
-	v.HandleFunc("/{visit_id}/", handlers.PutVisit).
+	r.HandleFunc(fmt.Sprintf("%s/{visit_id}", visits), handlers.PutVisit).
 		Methods("PUT")
-	v.HandleFunc("/{visit_id}/", handlers.DeleteVisit).
+	r.HandleFunc(fmt.Sprintf("%s/{visit_id}", visits), handlers.DeleteVisit).
 		Methods("DELETE")
 
 	// Member endpoints
-	m := r.PathPrefix(fmt.Sprintf("%s%s", V1URLBase, "/members")).Subrouter()
+	members := fmt.Sprintf("%s/members", V1URLBase)
 
-	m.HandleFunc("/", handlers.GetMembers).
+	r.HandleFunc(members, handlers.GetMembers).
 		Methods("GET")
-	m.HandleFunc("/{member_id}/", handlers.GetMember).
+	r.HandleFunc(fmt.Sprintf("%s/{member_id}", members), handlers.GetMember).
 		Methods("GET")
-	m.HandleFunc("/", handlers.PostMember).
+	r.HandleFunc(members, handlers.PostMember).
 		Methods("POST")
-	m.HandleFunc("/{member_id}/", handlers.PutMember).
+	r.HandleFunc(fmt.Sprintf("%s/{member_id}", members), handlers.PutMember).
 		Methods("PUT")
-	m.HandleFunc("/{member_id}/", handlers.DeleteMember).
+	r.HandleFunc(fmt.Sprintf("%s/{member_id}", members), handlers.DeleteMember).
 		Methods("DELETE")
 
 	// GymLocation endpoints
-	gl := r.PathPrefix(fmt.Sprintf("%s%s", V1URLBase, "/gym_locations")).Subrouter()
+	gymLocations := fmt.Sprintf("%s/gym_locations", V1URLBase)
 
-	gl.HandleFunc("/", handlers.GetGymLocations).
+	r.HandleFunc(gymLocations, handlers.GetGymLocations).
 		Methods("GET")
-	gl.HandleFunc("/{gym_location_id}/", handlers.GetGymLocation).
+	r.HandleFunc(fmt.Sprintf("%s/{gym_location_id}", gymLocations), handlers.GetGymLocation).
 		Methods("GET")
-	gl.HandleFunc("/", handlers.PostGymLocation).
+	r.HandleFunc(gymLocations, handlers.PostGymLocation).
 		Methods("POST")
-	gl.HandleFunc("/{gym_location_id}/", handlers.PutGymLocation).
+	r.HandleFunc(fmt.Sprintf("%s/{gym_location_id}", gymLocations), handlers.PutGymLocation).
 		Methods("PUT")
-	gl.HandleFunc("/{gym_location_id}/", handlers.DeleteGymLocation).
+	r.HandleFunc(fmt.Sprintf("%s/{gym_location_id}", gymLocations), handlers.DeleteGymLocation).
 		Methods("DELETE")
 
 	router := ghandlers.LoggingHandler(os.Stdout, r)

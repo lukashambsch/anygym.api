@@ -105,6 +105,13 @@ func GetNotFoundError(w http.ResponseWriter, encoder *json.Encoder, err error) {
 }
 
 func WriteJSON(w http.ResponseWriter, statusCode int, response interface{}) {
+	// check that json can be encoded
+	_, err := json.Marshal(response)
+	if err != nil {
+		statusCode = http.StatusInternalServerError
+		response = APIErrorMessage{Message: err.Error()}
+	}
+
 	encoder := json.NewEncoder(w)
 	w.WriteHeader(statusCode)
 	encoder.Encode(response)

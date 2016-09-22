@@ -8,5 +8,5 @@ go get github.com/onsi/gomega
 go get github.com/mattes/migrate
 psql -c "CREATE USER $POSTGRES_USER WITH PASSWORD '$POSTGRES_PASSWORD';"
 migrate -url $DATABASE_CONFIG -path ./store/migrations up
-go test ./... -cover
+go test ./... -cover -v
 migrate -url $DATABASE_CONFIG -path ./store/migrations down

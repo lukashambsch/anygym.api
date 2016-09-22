@@ -1,7 +1,6 @@
 package datastore_test
 
 import (
-	"fmt"
 	"github.com/lukashambsch/gym-all-over/models"
 	"github.com/lukashambsch/gym-all-over/store/datastore"
 	. "github.com/onsi/ginkgo"
@@ -17,13 +16,12 @@ var _ = Describe("Member db interactions", func() {
 
 	BeforeEach(func() {
 		user, _ = datastore.CreateUser(models.User{Email: "testemail@gmail.com"})
-		member, _ = datastore.CreateMember(models.Member{FirstName: "Test First", UserID: &user.UserID})
+		member, _ = datastore.CreateMember(models.Member{FirstName: "Test First", UserID: user.UserID})
 	})
 
 	AfterEach(func() {
 		datastore.DeleteMember(member.MemberID)
-		err := datastore.DeleteUser(user.UserID)
-		fmt.Printf("%#v", err)
+		datastore.DeleteUser(user.UserID)
 	})
 
 	Describe("GetMemberList", func() {
@@ -93,7 +91,7 @@ var _ = Describe("Member db interactions", func() {
 		Describe("Successful call", func() {
 			BeforeEach(func() {
 				usr, _ = datastore.CreateUser(models.User{Email: "Another Test"})
-				mbr := models.Member{UserID: &usr.UserID, FirstName: firstName}
+				mbr := models.Member{UserID: usr.UserID, FirstName: firstName}
 				created, _ = datastore.CreateMember(mbr)
 			})
 
@@ -134,7 +132,7 @@ var _ = Describe("Member db interactions", func() {
 		Describe("Successful call", func() {
 			BeforeEach(func() {
 				usr, _ = datastore.CreateUser(models.User{Email: "Email"})
-				created, _ = datastore.CreateMember(models.Member{FirstName: "First Name", UserID: &usr.UserID})
+				created, _ = datastore.CreateMember(models.Member{FirstName: "First Name", UserID: usr.UserID})
 				created.FirstName = firstName
 				updated, err = datastore.UpdateMember(created.MemberID, *created)
 			})

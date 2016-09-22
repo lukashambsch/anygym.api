@@ -44,7 +44,7 @@ CREATE TABLE plans (
 
 CREATE TABLE members (
  member_id  SERIAL       PRIMARY KEY
-,user_id    INTEGER      NOT NULL UNIQUE REFERENCES users
+,user_id    INTEGER      NOT NULL UNIQUE REFERENCES users ON DELETE CASCADE
 ,address_id INTEGER      UNIQUE REFERENCES addresses
 ,first_name VARCHAR(35)  NOT NULL
 ,last_name  VARCHAR(35)  NOT NULL
@@ -53,8 +53,8 @@ CREATE TABLE members (
 
 CREATE TABLE memberships (
  membership_id SERIAL    PRIMARY KEY
-,plan_id       INTEGER   NOT NULL REFERENCES plans
-,member_id     INTEGER   NOT NULL REFERENCES members
+,plan_id       INTEGER   NOT NULL REFERENCES plans ON DELETE CASCADE
+,member_id     INTEGER   NOT NULL REFERENCES members ON DELETE CASCADE
 ,start_date    TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 ,renew_date    TIMESTAMP
 ,end_date      TIMESTAMP
@@ -63,7 +63,7 @@ CREATE TABLE memberships (
 
 CREATE TABLE devices (
  device_id    SERIAL      PRIMARY KEY
-,user_id      INTEGER     NOT NULL REFERENCES users
+,user_id      INTEGER     NOT NULL REFERENCES users ON DELETE CASCADE
 ,device_token VARCHAR(64) NOT NULL
 );
 
@@ -88,8 +88,8 @@ CREATE TABLE features (
 
 CREATE TABLE gym_features (
  gym_feature_id SERIAL  PRIMARY KEY
-,gym_id         INTEGER NOT NULL REFERENCES gyms
-,feature_id     INTEGER NOT NULL REFERENCES features
+,gym_id         INTEGER NOT NULL REFERENCES gyms ON DELETE CASCADE
+,feature_id     INTEGER NOT NULL REFERENCES features ON DELETE CASCADE
 ,UNIQUE(gym_id, feature_id)
 );
 
@@ -106,9 +106,9 @@ CREATE TABLE gym_locations (
 
 CREATE TABLE images (
  image_id        SERIAL       PRIMARY KEY
-,gym_id          INTEGER      REFERENCES gyms
-,gym_location_id INTEGER      REFERENCES gym_locations
-,user_id         INTEGER      UNIQUE REFERENCES users
+,gym_id          INTEGER      REFERENCES gyms ON DELETE CASCADE
+,gym_location_id INTEGER      REFERENCES gym_locations ON DELETE CASCADE
+,user_id         INTEGER      UNIQUE REFERENCES users ON DELETE CASCADE
 ,image_path      VARCHAR(255)
 ,UNIQUE(gym_location_id, image_path)
 ,UNIQUE(gym_id, image_path)
@@ -126,9 +126,9 @@ CREATE TABLE days (
 
 CREATE TABLE business_hours (
  business_hour_id    SERIAL  PRIMARY KEY
-,gym_location_id     INTEGER NOT NULL REFERENCES gym_locations
-,holiday_id          INTEGER REFERENCES holidays
-,day_id              INTEGER REFERENCES days
+,gym_location_id     INTEGER NOT NULL REFERENCES gym_locations ON DELETE CASCADE
+,holiday_id          INTEGER REFERENCES holidays ON DELETE CASCADE
+,day_id              INTEGER REFERENCES days ON DELETE CASCADE
 ,open_time           TIME    NOT NULL
 ,close_time          TIME    NOT NULL
 ,UNIQUE(gym_location_id, day_id)
@@ -154,9 +154,9 @@ CREATE TABLE visits (
 -- Additional necessary fields will be added later.
 CREATE TABLE outside_memberships (
  outside_membership_id SERIAL  PRIMARY KEY
-,member_id             INTEGER NOT NULL REFERENCES members
-,gym_location_id       INTEGER REFERENCES gym_locations
-,gym_id                INTEGER REFERENCES gyms
+,member_id             INTEGER NOT NULL REFERENCES members ON DELETE CASCADE
+,gym_location_id       INTEGER REFERENCES gym_locations ON DELETE CASCADE
+,gym_id                INTEGER REFERENCES gyms ON DELETE CASCADE
 ,CONSTRAINT gym_location_or_gym CHECK(
   (gym_location_id IS NOT NULL OR gym_id IS NOT NULL) AND (gym_location_id IS NULL OR gym_id IS NULL)
 )
@@ -169,7 +169,7 @@ CREATE TABLE support_sources (
 
 CREATE TABLE support_requests (
  support_request_id SERIAL    PRIMARY KEY
-,user_id            INTEGER   REFERENCES users
+,user_id            INTEGER   REFERENCES users ON DELETE CASCADE
 ,support_source_id  INTEGER   REFERENCES support_sources
 ,content            TEXT      NOT NULL
 ,notes              TEXT

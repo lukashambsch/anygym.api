@@ -11,11 +11,14 @@ import (
 	"github.com/lukashambsch/gym-all-over/handlers"
 )
 
-var V1URLBase string = "/api/v1"
+const V1URLBase string = "/api/v1"
 
 func Load() http.Handler {
 
 	r := mux.NewRouter().StrictSlash(true)
+
+    r.HandleFunc(fmt.Sprintf("%s%s", V1URLBase, "/authenticate"), handlers.SetToken).Methods("GET")
+    r.HandleFunc(fmt.Sprintf("%s%s", V1URLBase, "/logout"), handlers.Logout)
 
 	// Status endpoints
 	statuses := fmt.Sprintf("%s/statuses", V1URLBase)
@@ -75,6 +78,7 @@ func Load() http.Handler {
 
 	router := ghandlers.LoggingHandler(os.Stdout, r)
 	router = handlers.CORS(router)
+    router = handlers.VerifyToken(router)
 
 	return router
 }

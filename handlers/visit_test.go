@@ -1,10 +1,8 @@
 package handlers_test
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 
@@ -23,13 +21,13 @@ var _ = Describe("Visit API", func() {
 		visitURL    string
 		res         *http.Response
 		data        []byte
-		contentType string       = "application/json"
-		client      *http.Client = &http.Client{}
 		badPayload  []byte       = []byte(`{"member_id", 1}`)
+        token       string
 	)
 
 	BeforeEach(func() {
 		server = httptest.NewServer(router.Load())
+        token, _ = RequestToken(server.URL)
 		visitURL = fmt.Sprintf("%s%s/visits", server.URL, router.V1URLBase)
 	})
 
@@ -42,8 +40,7 @@ var _ = Describe("Visit API", func() {
 
 		Describe("Successful GET w/o query params", func() {
 			BeforeEach(func() {
-				res, _ = http.Get(visitURL)
-				data, _ = ioutil.ReadAll(res.Body)
+                res, data, _ = Request("GET", visitURL, token, nil)
 				json.Unmarshal(data, &visits)
 			})
 
@@ -58,32 +55,28 @@ var _ = Describe("Visit API", func() {
 
 		Describe("Successful GET w/ query params", func() {
 			It("should return a list of matching visits - member_id", func() {
-				res, _ = http.Get(fmt.Sprintf("%s?member_id=1", visitURL))
-				data, _ = ioutil.ReadAll(res.Body)
+				res, data, _ = Request("GET", fmt.Sprintf("%s?member_id=1", visitURL), token, nil)
 				json.Unmarshal(data, &visits)
 				Expect(res.StatusCode).To(Equal(http.StatusOK))
 				Expect(len(visits)).To(Equal(3))
 			})
 
 			It("should return a matching visit - visit_id", func() {
-				res, _ = http.Get(fmt.Sprintf("%s?visit_id=1", visitURL))
-				data, _ = ioutil.ReadAll(res.Body)
+				res, data, _ = Request("GET", fmt.Sprintf("%s?visit_id=1", visitURL), token, nil)
 				json.Unmarshal(data, &visits)
 				Expect(res.StatusCode).To(Equal(http.StatusOK))
 				Expect(len(visits)).To(Equal(1))
 			})
 
 			It("should return no visits with a valid field but no matches", func() {
-				res, _ = http.Get(fmt.Sprintf("%s?member_id=10", visitURL))
-				data, _ = ioutil.ReadAll(res.Body)
+				res, data, _ = Request("GET", fmt.Sprintf("%s?member_id=10", visitURL), token, nil)
 				json.Unmarshal(data, &visits)
 				Expect(res.StatusCode).To(Equal(http.StatusOK))
 				Expect(len(visits)).To(Equal(0))
 			})
 
 			It("should sort visits by the correct field ascending", func() {
-				res, _ = http.Get(fmt.Sprintf("%s?sort_order=asc&order_by=member_id", visitURL))
-				data, _ = ioutil.ReadAll(res.Body)
+				res, data, _ = Request("GET", fmt.Sprintf("%s?sort_order=asc&order_by=member_id", visitURL), token, nil)
 				json.Unmarshal(data, &visits)
 				Expect(res.StatusCode).To(Equal(http.StatusOK))
 				Expect(visits[0].MemberID).To(Equal(int64(1)))
@@ -94,8 +87,7 @@ var _ = Describe("Visit API", func() {
 			})
 
 			It("should sort visits by the correct field descending", func() {
-				res, _ = http.Get(fmt.Sprintf("%s?sort_order=desc&order_by=visit_id", visitURL))
-				data, _ = ioutil.ReadAll(res.Body)
+				res, data, _ = Request("GET", fmt.Sprintf("%s?sort_order=desc&order_by=visit_id", visitURL), token, nil)
 				json.Unmarshal(data, &visits)
 				Expect(res.StatusCode).To(Equal(http.StatusOK))
 				Expect(visits[0].VisitID).To(Equal(int64(5)))
@@ -110,24 +102,21 @@ var _ = Describe("Visit API", func() {
 			var errRes handlers.APIErrorMessage
 
 			It("should return an error with an invalid field as query param", func() {
-				res, _ = http.Get(fmt.Sprintf("%s?invalid=test", visitURL))
-				data, _ = ioutil.ReadAll(res.Body)
+				res, data, _ = Request("GET", fmt.Sprintf("%s?invalid=test", visitURL), token, nil)
 				json.Unmarshal(data, &errRes)
 				Expect(res.StatusCode).To(Equal(http.StatusNotFound))
 				Expect(errRes.Message).To(Equal("Invalid field in query params."))
 			})
 
 			It("should return an error with an invalid field in order_by", func() {
-				res, _ = http.Get(fmt.Sprintf("%s?order_by=invalid", visitURL))
-				data, _ = ioutil.ReadAll(res.Body)
+				res, data, _ = Request("GET", fmt.Sprintf("%s?order_by=invalid", visitURL), token, nil)
 				json.Unmarshal(data, &errRes)
 				Expect(res.StatusCode).To(Equal(http.StatusNotFound))
 				Expect(errRes.Message).To(Equal("Invalid order_by field."))
 			})
 
 			It("should return an error with an invalid value for sort_order", func() {
-				res, _ = http.Get(fmt.Sprintf("%s?order_by=member_id&sort_order=random", visitURL))
-				data, _ = ioutil.ReadAll(res.Body)
+				res, data, _ = Request("GET", fmt.Sprintf("%s?order_by=member_id&sort_order=random", visitURL), token, nil)
 				json.Unmarshal(data, &errRes)
 				Expect(res.StatusCode).To(Equal(http.StatusNotFound))
 				Expect(errRes.Message).To(Equal("sort_order must be either 'asc', 'desc', or ''"))
@@ -143,8 +132,7 @@ var _ = Describe("Visit API", func() {
 
 		Describe("Successful GET", func() {
 			BeforeEach(func() {
-				res, _ = http.Get(fmt.Sprintf("%s/%d", visitURL, visitID))
-				data, _ = ioutil.ReadAll(res.Body)
+				res, data, _ = Request("GET", fmt.Sprintf("%s/%d", visitURL, visitID), token, nil)
 				json.Unmarshal(data, &visit)
 			})
 
@@ -162,8 +150,7 @@ var _ = Describe("Visit API", func() {
 
 			Context("Invalid visit_id", func() {
 				It("should return visit code 400 with a message", func() {
-					res, _ = http.Get(fmt.Sprintf("%s/asdf", visitURL))
-					data, _ = ioutil.ReadAll(res.Body)
+					res, data, _ = Request("GET", fmt.Sprintf("%s/asdf", visitURL), token, nil)
 					json.Unmarshal(data, &errRes)
 					Expect(res.StatusCode).To(Equal(http.StatusBadRequest))
 					Expect(errRes.Message).To(Equal(handlers.InvalidVisitID))
@@ -172,8 +159,7 @@ var _ = Describe("Visit API", func() {
 
 			Context("Non existent visit_id", func() {
 				It("should return visit code 404 with a message", func() {
-					res, _ = http.Get(fmt.Sprintf("%s/10", visitURL))
-					data, _ = ioutil.ReadAll(res.Body)
+					res, data, _ = Request("GET", fmt.Sprintf("%s/10", visitURL), token, nil)
 					json.Unmarshal(data, &errRes)
 					Expect(res.StatusCode).To(Equal(http.StatusNotFound))
 					Expect(errRes.Message).ToNot(BeEmpty())
@@ -191,8 +177,7 @@ var _ = Describe("Visit API", func() {
 
 		Describe("Successful POST", func() {
 			BeforeEach(func() {
-				res, _ = http.Post(visitURL, contentType, bytes.NewBuffer(payload))
-				data, _ = ioutil.ReadAll(res.Body)
+                res, data, _ = Request("POST", visitURL, token, payload)
 				json.Unmarshal(data, &visit)
 			})
 
@@ -218,12 +203,7 @@ var _ = Describe("Visit API", func() {
 
 			Describe("Bad Request", func() {
 				It("should return visit code 400 with a message", func() {
-					res, _ = http.Post(
-						visitURL,
-						contentType,
-						bytes.NewBuffer(badPayload),
-					)
-					data, _ = ioutil.ReadAll(res.Body)
+                    res, data, _ = Request("POST", visitURL, token, badPayload)
 					json.Unmarshal(data, &errRes)
 					Expect(res.StatusCode).To(Equal(http.StatusBadRequest))
 					Expect(errRes.Message).ToNot(BeEmpty())
@@ -233,8 +213,7 @@ var _ = Describe("Visit API", func() {
 			Describe("Internal Server Error", func() {
 				It("should return visit code 500 with a message", func() {
 					payload = []byte(`{"member_id": 1}`)
-					res, _ = http.Post(visitURL, contentType, bytes.NewBuffer(payload))
-					data, _ = ioutil.ReadAll(res.Body)
+                    res, data, _ = Request("POST", visitURL, token, payload)
 					json.Unmarshal(data, &errRes)
 					Expect(res.StatusCode).To(Equal(http.StatusInternalServerError))
 					Expect(errRes.Message).ToNot(BeEmpty())
@@ -252,15 +231,7 @@ var _ = Describe("Visit API", func() {
 
 		Describe("Successful PUT", func() {
 			BeforeEach(func() {
-				req, _ := http.NewRequest(
-					"PUT",
-					fmt.Sprintf("%s/%d", visitURL, visitID),
-					bytes.NewBuffer(payload),
-				)
-				req.Header.Set("Content-Type", contentType)
-
-				res, _ = client.Do(req)
-				data, _ = ioutil.ReadAll(res.Body)
+                res, data, _ = Request("PUT", fmt.Sprintf("%s/%d", visitURL, visitID), token, payload)
 				json.Unmarshal(data, &visit)
 			})
 
@@ -286,45 +257,21 @@ var _ = Describe("Visit API", func() {
 			var errRes handlers.APIErrorMessage
 
 			It("should return visit code 400 with a message", func() {
-				req, _ := http.NewRequest(
-					"PUT",
-					fmt.Sprintf("%s/%d", visitURL, visitID),
-					bytes.NewBuffer(badPayload),
-				)
-				req.Header.Set("Content-Type", contentType)
-
-				res, _ = client.Do(req)
-				data, _ = ioutil.ReadAll(res.Body)
+                res, data, _ = Request("PUT", fmt.Sprintf("%s/%d", visitURL, visitID), token, badPayload)
 				json.Unmarshal(data, &errRes)
 				Expect(res.StatusCode).To(Equal(http.StatusBadRequest))
 				Expect(errRes.Message).ToNot(BeEmpty())
 			})
 
 			It("should return visit code 400 with a message", func() {
-				req, _ := http.NewRequest(
-					"PUT",
-					fmt.Sprintf("%s/a", visitURL),
-					bytes.NewBuffer(payload),
-				)
-				req.Header.Set("Content-Type", contentType)
-
-				res, _ = client.Do(req)
-				data, _ = ioutil.ReadAll(res.Body)
+                res, data, _ = Request("PUT", fmt.Sprintf("%s/a", visitURL), token, payload)
 				json.Unmarshal(data, &errRes)
 				Expect(res.StatusCode).To(Equal(http.StatusBadRequest))
 				Expect(errRes.Message).To(Equal(handlers.InvalidVisitID))
 			})
 
 			It("should return visit code 500 with a message", func() {
-				req, _ := http.NewRequest(
-					"PUT",
-					fmt.Sprintf("%s/5000", visitURL),
-					bytes.NewBuffer(payload),
-				)
-				req.Header.Set("Content-Type", contentType)
-
-				res, _ = client.Do(req)
-				data, _ = ioutil.ReadAll(res.Body)
+                res, data, _ = Request("PUT", fmt.Sprintf("%s/5000", visitURL), token, payload)
 				json.Unmarshal(data, &errRes)
 				Expect(res.StatusCode).To(Equal(http.StatusInternalServerError))
 				Expect(errRes.Message).ToNot(BeEmpty())
@@ -337,14 +284,7 @@ var _ = Describe("Visit API", func() {
 
 		Describe("Successful DELETE", func() {
 			BeforeEach(func() {
-				req, _ := http.NewRequest(
-					"DELETE",
-					fmt.Sprintf("%s/%d", visitURL, visitID),
-					bytes.NewBuffer([]byte(``)),
-				)
-				req.Header.Set("Content-Type", contentType)
-
-				res, _ = client.Do(req)
+                res, _, _ = Request("DELETE", fmt.Sprintf("%s/%d", visitURL, visitID), token, nil)
 			})
 
 			AfterEach(func() {
@@ -371,15 +311,7 @@ var _ = Describe("Visit API", func() {
 			var errRes handlers.APIErrorMessage
 
 			It("should return visit code 400 with a message", func() {
-				req, _ := http.NewRequest(
-					"DELETE",
-					fmt.Sprintf("%s/a", visitURL),
-					bytes.NewBuffer([]byte(``)),
-				)
-				req.Header.Set("Content-Type", contentType)
-
-				res, _ = client.Do(req)
-				data, _ = ioutil.ReadAll(res.Body)
+                res, data, _ = Request("DELETE", fmt.Sprintf("%s/a", visitURL), token, nil)
 				json.Unmarshal(data, &errRes)
 				Expect(res.StatusCode).To(Equal(http.StatusBadRequest))
 				Expect(errRes.Message).To(Equal(handlers.InvalidVisitID))

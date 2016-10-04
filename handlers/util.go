@@ -11,7 +11,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-const invalidField = "Invalid field in query params."
+const InvalidField = "Invalid field in query params."
 
 // fields represents {field: type} mappings for db fields
 func BuildWhere(fields map[string]string, params url.Values) (string, error) {
@@ -37,7 +37,7 @@ func BuildWhere(fields map[string]string, params url.Values) (string, error) {
 				where += " AND"
 			}
 		} else if k != "order_by" && k != "sort_order" {
-			return "", fmt.Errorf(invalidField)
+			return "", fmt.Errorf(InvalidField)
 		}
 		i += 1
 	}

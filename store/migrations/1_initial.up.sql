@@ -2,8 +2,6 @@ CREATE TABLE users (
  user_id       SERIAL       PRIMARY KEY
 ,email         VARCHAR(200) NOT NULL UNIQUE
 ,token         VARCHAR(128) NOT NULL DEFAULT ''
-,secret        VARCHAR(128) NOT NULL DEFAULT ''
-,password_salt VARCHAR(128) NOT NULL DEFAULT ''
 ,password_hash VARCHAR(128) NOT NULL DEFAULT ''
 ,created_on    TIMESTAMP    DEFAULT CURRENT_TIMESTAMP
 ,CONSTRAINT valid_name CHECK(email <> '')

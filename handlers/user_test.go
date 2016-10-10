@@ -17,17 +17,17 @@ import (
 
 var _ = Describe("User API", func() {
 	var (
-		server      *httptest.Server
-		userURL   string
-		res         *http.Response
-		data        []byte
-		badPayload  []byte       = []byte(`{"user_id", 1}`)
-        token       string
+		server     *httptest.Server
+		userURL    string
+		res        *http.Response
+		data       []byte
+		badPayload []byte = []byte(`{"user_id", 1}`)
+		token      string
 	)
 
 	BeforeEach(func() {
 		server = httptest.NewServer(router.Load())
-        token, _ = RequestToken(server.URL)
+		token, _ = RequestToken(server.URL)
 		userURL = fmt.Sprintf("%s%s/users", server.URL, router.V1URLBase)
 	})
 
@@ -62,7 +62,7 @@ var _ = Describe("User API", func() {
 			})
 
 			It("should return a matching user - user_id", func() {
-                res, data, _ = Request("GET", fmt.Sprintf("%s?user_id=2", userURL), token, nil)
+				res, data, _ = Request("GET", fmt.Sprintf("%s?user_id=2", userURL), token, nil)
 				json.Unmarshal(data, &users)
 				Expect(res.StatusCode).To(Equal(http.StatusOK))
 				Expect(len(users)).To(Equal(1))
@@ -165,14 +165,14 @@ var _ = Describe("User API", func() {
 
 	Describe("PostUser endpoint", func() {
 		var (
-			user  *models.User
+			user    *models.User
 			payload []byte
 		)
 
 		Describe("Successful POST", func() {
 			BeforeEach(func() {
-                payload = []byte(fmt.Sprintf(`{"email": "new@email.com"}`))
-                res, data, _ = Request("POST", userURL, token, payload)
+				payload = []byte(fmt.Sprintf(`{"email": "new@email.com"}`))
+				res, data, _ = Request("POST", userURL, token, payload)
 				json.Unmarshal(data, &user)
 			})
 
@@ -198,7 +198,7 @@ var _ = Describe("User API", func() {
 
 			Describe("Bad Request", func() {
 				It("should return status code 400 with a message", func() {
-                    res, data, _ = Request("POST", userURL, token, badPayload)
+					res, data, _ = Request("POST", userURL, token, badPayload)
 					json.Unmarshal(data, &errRes)
 					Expect(res.StatusCode).To(Equal(http.StatusBadRequest))
 					Expect(errRes.Message).ToNot(BeEmpty())
@@ -208,7 +208,7 @@ var _ = Describe("User API", func() {
 			Describe("Internal Server Error", func() {
 				It("should return status code 500 with a message", func() {
 					payload = []byte(`{"user_id": 1}`)
-                    res, data, _ = Request("POST", userURL, token, payload)
+					res, data, _ = Request("POST", userURL, token, payload)
 					json.Unmarshal(data, &errRes)
 					Expect(res.StatusCode).To(Equal(http.StatusInternalServerError))
 					Expect(errRes.Message).ToNot(BeEmpty())
@@ -219,19 +219,19 @@ var _ = Describe("User API", func() {
 
 	Describe("PutUser endpoint", func() {
 		var (
-			user   models.User
-            payload  []byte = []byte(`{"user_id": 2, "email": "updated@email.com"}`)
-			userID int64  = 2
+			user    models.User
+			payload []byte = []byte(`{"user_id": 2, "email": "updated@email.com"}`)
+			userID  int64  = 2
 		)
 
 		Describe("Successful PUT", func() {
 			BeforeEach(func() {
-                res, data, _ = Request("PUT", fmt.Sprintf("%s/%d", userURL, userID), token, payload)
+				res, data, _ = Request("PUT", fmt.Sprintf("%s/%d", userURL, userID), token, payload)
 				json.Unmarshal(data, &user)
 			})
 
 			AfterEach(func() {
-                datastore.UpdateUser(userID, models.User{Email: "bugentry@hotmail.com.com"})
+				datastore.UpdateUser(userID, models.User{Email: "bugentry@hotmail.com.com"})
 			})
 
 			It("should return status code 200", func() {
@@ -248,21 +248,21 @@ var _ = Describe("User API", func() {
 			var errRes handlers.APIErrorMessage
 
 			It("should return status code 400 with a message", func() {
-                res, data, _ = Request("PUT", fmt.Sprintf("%s/%d", userURL, userID), token, badPayload)
+				res, data, _ = Request("PUT", fmt.Sprintf("%s/%d", userURL, userID), token, badPayload)
 				json.Unmarshal(data, &errRes)
 				Expect(res.StatusCode).To(Equal(http.StatusBadRequest))
 				Expect(errRes.Message).ToNot(BeEmpty())
 			})
 
 			It("should return status code 400 with a message", func() {
-                res, data, _ = Request("PUT", fmt.Sprintf("%s/a", userURL), token, payload)
+				res, data, _ = Request("PUT", fmt.Sprintf("%s/a", userURL), token, payload)
 				json.Unmarshal(data, &errRes)
 				Expect(res.StatusCode).To(Equal(http.StatusBadRequest))
 				Expect(errRes.Message).To(Equal(handlers.InvalidUserID))
 			})
 
 			It("should return status code 500 with a message", func() {
-                res, data, _ = Request("PUT", fmt.Sprintf("%s/5000", userURL), token, payload)
+				res, data, _ = Request("PUT", fmt.Sprintf("%s/5000", userURL), token, payload)
 				json.Unmarshal(data, &errRes)
 				Expect(res.StatusCode).To(Equal(http.StatusInternalServerError))
 				Expect(errRes.Message).ToNot(BeEmpty())
@@ -281,7 +281,7 @@ var _ = Describe("User API", func() {
 					"lukas.hambsch@gmail.com",
 				)
 
-                res, _, _ = Request("DELETE", fmt.Sprintf("%s/%d", userURL, userID), token, nil)
+				res, _, _ = Request("DELETE", fmt.Sprintf("%s/%d", userURL, userID), token, nil)
 			})
 
 			AfterEach(func() {
@@ -302,7 +302,7 @@ var _ = Describe("User API", func() {
 			var errRes handlers.APIErrorMessage
 
 			It("should return status code 400 with a message", func() {
-                res, data, _ = Request("DELETE", fmt.Sprintf("%s/a", userURL), token, nil)
+				res, data, _ = Request("DELETE", fmt.Sprintf("%s/a", userURL), token, nil)
 				json.Unmarshal(data, &errRes)
 				Expect(res.StatusCode).To(Equal(http.StatusBadRequest))
 				Expect(errRes.Message).To(Equal(handlers.InvalidUserID))

@@ -18,8 +18,8 @@ const UserID = "user_id"
 const InvalidUserID = "Invalid " + UserID
 
 var userFields map[string]string = map[string]string{
-	"user_id":  "int",
-	"email":    "string",
+	"user_id":    "int",
+	"email":      "string",
 	"created_on": "datetime",
 }
 

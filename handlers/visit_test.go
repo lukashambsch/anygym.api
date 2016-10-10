@@ -17,17 +17,17 @@ import (
 
 var _ = Describe("Visit API", func() {
 	var (
-		server      *httptest.Server
-		visitURL    string
-		res         *http.Response
-		data        []byte
-		badPayload  []byte       = []byte(`{"member_id", 1}`)
-        token       string
+		server     *httptest.Server
+		visitURL   string
+		res        *http.Response
+		data       []byte
+		badPayload []byte = []byte(`{"member_id", 1}`)
+		token      string
 	)
 
 	BeforeEach(func() {
 		server = httptest.NewServer(router.Load())
-        token, _ = RequestToken(server.URL)
+		token, _ = RequestToken(server.URL)
 		visitURL = fmt.Sprintf("%s%s/visits", server.URL, router.V1URLBase)
 	})
 
@@ -40,7 +40,7 @@ var _ = Describe("Visit API", func() {
 
 		Describe("Successful GET w/o query params", func() {
 			BeforeEach(func() {
-                res, data, _ = Request("GET", visitURL, token, nil)
+				res, data, _ = Request("GET", visitURL, token, nil)
 				json.Unmarshal(data, &visits)
 			})
 
@@ -177,7 +177,7 @@ var _ = Describe("Visit API", func() {
 
 		Describe("Successful POST", func() {
 			BeforeEach(func() {
-                res, data, _ = Request("POST", visitURL, token, payload)
+				res, data, _ = Request("POST", visitURL, token, payload)
 				json.Unmarshal(data, &visit)
 			})
 
@@ -203,7 +203,7 @@ var _ = Describe("Visit API", func() {
 
 			Describe("Bad Request", func() {
 				It("should return visit code 400 with a message", func() {
-                    res, data, _ = Request("POST", visitURL, token, badPayload)
+					res, data, _ = Request("POST", visitURL, token, badPayload)
 					json.Unmarshal(data, &errRes)
 					Expect(res.StatusCode).To(Equal(http.StatusBadRequest))
 					Expect(errRes.Message).ToNot(BeEmpty())
@@ -213,7 +213,7 @@ var _ = Describe("Visit API", func() {
 			Describe("Internal Server Error", func() {
 				It("should return visit code 500 with a message", func() {
 					payload = []byte(`{"member_id": 1}`)
-                    res, data, _ = Request("POST", visitURL, token, payload)
+					res, data, _ = Request("POST", visitURL, token, payload)
 					json.Unmarshal(data, &errRes)
 					Expect(res.StatusCode).To(Equal(http.StatusInternalServerError))
 					Expect(errRes.Message).ToNot(BeEmpty())
@@ -231,7 +231,7 @@ var _ = Describe("Visit API", func() {
 
 		Describe("Successful PUT", func() {
 			BeforeEach(func() {
-                res, data, _ = Request("PUT", fmt.Sprintf("%s/%d", visitURL, visitID), token, payload)
+				res, data, _ = Request("PUT", fmt.Sprintf("%s/%d", visitURL, visitID), token, payload)
 				json.Unmarshal(data, &visit)
 			})
 
@@ -257,21 +257,21 @@ var _ = Describe("Visit API", func() {
 			var errRes handlers.APIErrorMessage
 
 			It("should return visit code 400 with a message", func() {
-                res, data, _ = Request("PUT", fmt.Sprintf("%s/%d", visitURL, visitID), token, badPayload)
+				res, data, _ = Request("PUT", fmt.Sprintf("%s/%d", visitURL, visitID), token, badPayload)
 				json.Unmarshal(data, &errRes)
 				Expect(res.StatusCode).To(Equal(http.StatusBadRequest))
 				Expect(errRes.Message).ToNot(BeEmpty())
 			})
 
 			It("should return visit code 400 with a message", func() {
-                res, data, _ = Request("PUT", fmt.Sprintf("%s/a", visitURL), token, payload)
+				res, data, _ = Request("PUT", fmt.Sprintf("%s/a", visitURL), token, payload)
 				json.Unmarshal(data, &errRes)
 				Expect(res.StatusCode).To(Equal(http.StatusBadRequest))
 				Expect(errRes.Message).To(Equal(handlers.InvalidVisitID))
 			})
 
 			It("should return visit code 500 with a message", func() {
-                res, data, _ = Request("PUT", fmt.Sprintf("%s/5000", visitURL), token, payload)
+				res, data, _ = Request("PUT", fmt.Sprintf("%s/5000", visitURL), token, payload)
 				json.Unmarshal(data, &errRes)
 				Expect(res.StatusCode).To(Equal(http.StatusInternalServerError))
 				Expect(errRes.Message).ToNot(BeEmpty())
@@ -284,7 +284,7 @@ var _ = Describe("Visit API", func() {
 
 		Describe("Successful DELETE", func() {
 			BeforeEach(func() {
-                res, _, _ = Request("DELETE", fmt.Sprintf("%s/%d", visitURL, visitID), token, nil)
+				res, _, _ = Request("DELETE", fmt.Sprintf("%s/%d", visitURL, visitID), token, nil)
 			})
 
 			AfterEach(func() {
@@ -311,7 +311,7 @@ var _ = Describe("Visit API", func() {
 			var errRes handlers.APIErrorMessage
 
 			It("should return visit code 400 with a message", func() {
-                res, data, _ = Request("DELETE", fmt.Sprintf("%s/a", visitURL), token, nil)
+				res, data, _ = Request("DELETE", fmt.Sprintf("%s/a", visitURL), token, nil)
 				json.Unmarshal(data, &errRes)
 				Expect(res.StatusCode).To(Equal(http.StatusBadRequest))
 				Expect(errRes.Message).To(Equal(handlers.InvalidVisitID))

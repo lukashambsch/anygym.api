@@ -17,17 +17,17 @@ import (
 
 var _ = Describe("Member API", func() {
 	var (
-		server      *httptest.Server
-		memberURL   string
-		res         *http.Response
-		data        []byte
-		badPayload  []byte       = []byte(`{"member_id", 1}`)
-        token       string
+		server     *httptest.Server
+		memberURL  string
+		res        *http.Response
+		data       []byte
+		badPayload []byte = []byte(`{"member_id", 1}`)
+		token      string
 	)
 
 	BeforeEach(func() {
 		server = httptest.NewServer(router.Load())
-        token, _ = RequestToken(server.URL)
+		token, _ = RequestToken(server.URL)
 		memberURL = fmt.Sprintf("%s%s/members", server.URL, router.V1URLBase)
 	})
 
@@ -62,7 +62,7 @@ var _ = Describe("Member API", func() {
 			})
 
 			It("should return a matching member - user_id", func() {
-                res, data, _ = Request("GET", fmt.Sprintf("%s?user_id=2", memberURL), token, nil)
+				res, data, _ = Request("GET", fmt.Sprintf("%s?user_id=2", memberURL), token, nil)
 				json.Unmarshal(data, &members)
 				Expect(res.StatusCode).To(Equal(http.StatusOK))
 				Expect(len(members)).To(Equal(1))
@@ -174,7 +174,7 @@ var _ = Describe("Member API", func() {
 			BeforeEach(func() {
 				user, _ = datastore.CreateUser(models.User{Email: "test@email.com"})
 				payload = []byte(fmt.Sprintf(`{"user_id": %d, "first_name": "Testing", "last_name": "Post"}`, user.UserID))
-                res, data, _ = Request("POST", memberURL, token, payload)
+				res, data, _ = Request("POST", memberURL, token, payload)
 				json.Unmarshal(data, &member)
 			})
 
@@ -201,7 +201,7 @@ var _ = Describe("Member API", func() {
 
 			Describe("Bad Request", func() {
 				It("should return status code 400 with a message", func() {
-                    res, data, _ = Request("POST", memberURL, token, badPayload)
+					res, data, _ = Request("POST", memberURL, token, badPayload)
 					json.Unmarshal(data, &errRes)
 					Expect(res.StatusCode).To(Equal(http.StatusBadRequest))
 					Expect(errRes.Message).ToNot(BeEmpty())
@@ -211,7 +211,7 @@ var _ = Describe("Member API", func() {
 			Describe("Internal Server Error", func() {
 				It("should return status code 500 with a message", func() {
 					payload = []byte(`{"user_id": 1}`)
-                    res, data, _ = Request("POST", memberURL, token, payload)
+					res, data, _ = Request("POST", memberURL, token, payload)
 					json.Unmarshal(data, &errRes)
 					Expect(res.StatusCode).To(Equal(http.StatusInternalServerError))
 					Expect(errRes.Message).ToNot(BeEmpty())
@@ -229,7 +229,7 @@ var _ = Describe("Member API", func() {
 
 		Describe("Successful PUT", func() {
 			BeforeEach(func() {
-                res, data, _ = Request("PUT", fmt.Sprintf("%s/%d", memberURL, memberID), token, payload)
+				res, data, _ = Request("PUT", fmt.Sprintf("%s/%d", memberURL, memberID), token, payload)
 				json.Unmarshal(data, &member)
 			})
 
@@ -255,21 +255,21 @@ var _ = Describe("Member API", func() {
 			var errRes handlers.APIErrorMessage
 
 			It("should return status code 400 with a message", func() {
-                res, data, _ = Request("PUT", fmt.Sprintf("%s/%d", memberURL, memberID), token, badPayload)
+				res, data, _ = Request("PUT", fmt.Sprintf("%s/%d", memberURL, memberID), token, badPayload)
 				json.Unmarshal(data, &errRes)
 				Expect(res.StatusCode).To(Equal(http.StatusBadRequest))
 				Expect(errRes.Message).ToNot(BeEmpty())
 			})
 
 			It("should return status code 400 with a message", func() {
-                res, data, _ = Request("PUT", fmt.Sprintf("%s/a", memberURL), token, payload)
+				res, data, _ = Request("PUT", fmt.Sprintf("%s/a", memberURL), token, payload)
 				json.Unmarshal(data, &errRes)
 				Expect(res.StatusCode).To(Equal(http.StatusBadRequest))
 				Expect(errRes.Message).To(Equal(handlers.InvalidMemberID))
 			})
 
 			It("should return status code 500 with a message", func() {
-                res, data, _ = Request("PUT", fmt.Sprintf("%s/5000", memberURL), token, payload)
+				res, data, _ = Request("PUT", fmt.Sprintf("%s/5000", memberURL), token, payload)
 				json.Unmarshal(data, &errRes)
 				Expect(res.StatusCode).To(Equal(http.StatusInternalServerError))
 				Expect(errRes.Message).ToNot(BeEmpty())
@@ -292,7 +292,7 @@ var _ = Describe("Member API", func() {
 					"Hambsch",
 				)
 
-                res, _, _ = Request("DELETE", fmt.Sprintf("%s/%d", memberURL, memberID), token, nil)
+				res, _, _ = Request("DELETE", fmt.Sprintf("%s/%d", memberURL, memberID), token, nil)
 			})
 
 			AfterEach(func() {
@@ -313,7 +313,7 @@ var _ = Describe("Member API", func() {
 			var errRes handlers.APIErrorMessage
 
 			It("should return status code 400 with a message", func() {
-                res, data, _ = Request("DELETE", fmt.Sprintf("%s/a", memberURL), token, nil)
+				res, data, _ = Request("DELETE", fmt.Sprintf("%s/a", memberURL), token, nil)
 				json.Unmarshal(data, &errRes)
 				Expect(res.StatusCode).To(Equal(http.StatusBadRequest))
 				Expect(errRes.Message).To(Equal(handlers.InvalidMemberID))

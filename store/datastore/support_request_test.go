@@ -83,7 +83,7 @@ var _ = Describe("SupportRequest db interactions", func() {
 			content        string = "New SupportRequest"
 			supportRequest models.SupportRequest
 			created        *models.SupportRequest
-            err            error
+			err            error
 		)
 
 		Describe("Successful call", func() {
@@ -107,18 +107,18 @@ var _ = Describe("SupportRequest db interactions", func() {
 		})
 
 		Describe("Unsuccessful call", func() {
-            BeforeEach(func() {
-                supportRequest = models.SupportRequest{}
-                _, err = datastore.CreateSupportRequest(supportRequest)
-            })
+			BeforeEach(func() {
+				supportRequest = models.SupportRequest{}
+				_, err = datastore.CreateSupportRequest(supportRequest)
+			})
 
-            AfterEach(func() {
-                datastore.DeleteSupportRequest(created.SupportRequestID)
-            })
+			AfterEach(func() {
+				datastore.DeleteSupportRequest(created.SupportRequestID)
+			})
 
-            It("should return an error object", func() {
-                Expect(err).ToNot(BeNil())
-            })
+			It("should return an error object", func() {
+				Expect(err).ToNot(BeNil())
+			})
 		})
 	})
 

@@ -76,6 +76,20 @@ func Load() http.Handler {
 	r.HandleFunc(fmt.Sprintf("%s/{gym_location_id}", gymLocations), handlers.DeleteGymLocation).
 		Methods("DELETE")
 
+	// User endpoints
+	users := fmt.Sprintf("%s/users", V1URLBase)
+
+	r.HandleFunc(users, handlers.GetUsers).
+		Methods("GET")
+	r.HandleFunc(fmt.Sprintf("%s/{user_id}", users), handlers.GetUser).
+		Methods("GET")
+	r.HandleFunc(users, handlers.PostUser).
+		Methods("POST")
+	r.HandleFunc(fmt.Sprintf("%s/{user_id}", users), handlers.PutUser).
+		Methods("PUT")
+	r.HandleFunc(fmt.Sprintf("%s/{user_id}", users), handlers.DeleteUser).
+		Methods("DELETE")
+
 	router := ghandlers.LoggingHandler(os.Stdout, r)
 	router = handlers.CORS(router)
     router = handlers.VerifyToken(router)

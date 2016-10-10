@@ -64,6 +64,10 @@ func VerifyToken(h http.Handler) http.Handler {
     })
 }
 
-func Logout(w http.ResponseWriter, req *http.Request) {
+func Logout(w http.ResponseWriter, r *http.Request) {
+    return
+}
+
+func Login(w http.ResponseWriter, r *http.Request) {
     return
 }

@@ -17,7 +17,7 @@ func Load() http.Handler {
 
 	r := mux.NewRouter().StrictSlash(true)
 
-	r.HandleFunc(fmt.Sprintf("%s%s", V1URLBase, "/authenticate"), handlers.SetToken).Methods("POST")
+	r.HandleFunc(fmt.Sprintf("%s%s", V1URLBase, "/authenticate"), handlers.Login).Methods("POST")
 	r.HandleFunc(fmt.Sprintf("%s%s", V1URLBase, "/logout"), handlers.Logout)
 
 	// Status endpoints

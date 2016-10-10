@@ -11,3 +11,8 @@ type User struct {
 	PasswordHash []byte    `json:"-"`
 	CreatedOn    time.Time `json:"created_on"`
 }
+
+type UserLogin struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}

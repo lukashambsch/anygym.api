@@ -47,7 +47,12 @@ func Request(method string, url string, token string, payload []byte) (*http.Res
 }
 
 func RequestToken(serverURL string) (string, error) {
-	_, data, _ := Request("GET", fmt.Sprintf("%s%s/authenticate", serverURL, router.V1URLBase), "", nil)
+	_, data, _ := Request(
+		"POST",
+		fmt.Sprintf("%s%s/authenticate", serverURL, router.V1URLBase),
+		"",
+		[]byte(`{"email": "lukas.hambsch@gmail.com", "password": "testpass"}`),
+	)
 	return string(data), nil
 }
 

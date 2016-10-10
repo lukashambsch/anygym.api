@@ -90,7 +90,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	body, _ := ioutil.ReadAll(r.Body)
 	r.Body.Close()
 
-	user := models.UserLogin{}
+	user := models.User{}
 	err := json.Unmarshal(body, &user)
 	if err != nil {
 		WriteJSON(w, http.StatusBadRequest, APIErrorMessage{Message: err.Error()})

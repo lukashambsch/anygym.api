@@ -52,10 +52,10 @@ VALUES
   ('Locker Rooms', 'Locker rooms are provided.'),
   ('Group Cycling (Spin)', 'Group cycling or spin classes are provided.');
 
-INSERT INTO users (email)
+INSERT INTO users (email, password_hash)
 VALUES
-  ('lukas.hambsch@gmail.com'),
-  ('bugentry@hotmail.com');
+  ('lukas.hambsch@gmail.com', crypt('testpass', gen_salt('bf', 10))),
+  ('bugentry@hotmail.com', crypt('testpass', gen_salt('bf', 10)));
 
 INSERT INTO roles (role_name)
 VALUES

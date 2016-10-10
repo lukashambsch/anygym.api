@@ -3,6 +3,8 @@ package datastore
 import (
 	"fmt"
 
+	"golang.org/x/crypto/bcrypt"
+
 	"github.com/lukashambsch/gym-all-over/models"
 	"github.com/lukashambsch/gym-all-over/store"
 )
@@ -24,8 +26,6 @@ func GetUserList(where string) ([]models.User, error) {
 			&user.UserID,
 			&user.Email,
 			&user.Token,
-			&user.Secret,
-			&user.PasswordSalt,
 			&user.PasswordHash,
 			&user.CreatedOn,
 		)
@@ -61,8 +61,6 @@ func GetUser(userID int64) (*models.User, error) {
 		&user.UserID,
 		&user.Email,
 		&user.Token,
-		&user.Secret,
-		&user.PasswordSalt,
 		&user.PasswordHash,
 		&user.CreatedOn,
 	)
@@ -76,21 +74,23 @@ func GetUser(userID int64) (*models.User, error) {
 
 func CreateUser(user models.User) (*models.User, error) {
 	var created models.User
+	var err error
+
+	user.PasswordHash, err = bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return nil, err
+	}
 
 	row := store.DB.QueryRow(
 		createUserQuery,
 		user.Email,
 		user.Token,
-		user.Secret,
-		user.PasswordSalt,
 		user.PasswordHash,
 	)
-	err := row.Scan(
+	err = row.Scan(
 		&created.UserID,
 		&created.Email,
 		&created.Token,
-		&created.Secret,
-		&created.PasswordSalt,
 		&created.PasswordHash,
 		&created.CreatedOn,
 	)
@@ -108,8 +108,6 @@ func UpdateUser(userID int64, user models.User) (*models.User, error) {
 		updateUserQuery,
 		user.Email,
 		user.Token,
-		user.Secret,
-		user.PasswordSalt,
 		user.PasswordHash,
 		userID,
 	)
@@ -117,8 +115,6 @@ func UpdateUser(userID int64, user models.User) (*models.User, error) {
 		&updated.UserID,
 		&updated.Email,
 		&updated.Token,
-		&updated.Secret,
-		&updated.PasswordSalt,
 		&updated.PasswordHash,
 		&updated.CreatedOn,
 	)
@@ -155,16 +151,16 @@ WHERE user_id = $1
 `
 
 const createUserQuery = `
-INSERT INTO users (email, token, secret, password_salt, password_hash)
-VALUES ($1, $2, $3, $4, $5)
-RETURNING user_id, email, token, secret, password_salt, password_hash, created_on
+INSERT INTO users (email, token, password_hash)
+VALUES ($1, $2, $3)
+RETURNING user_id, email, token, password_hash, created_on
 `
 
 const updateUserQuery = `
 UPDATE users
-SET email = $1, token = $2, secret = $3, password_salt = $4, password_hash = $5
-WHERE user_id = $6
-RETURNING user_id, email, token, secret, password_salt, password_hash, created_on
+SET email = $1, token = $2, password_hash = $3
+WHERE user_id = $4
+RETURNING user_id, email, token, password_hash, created_on
 `
 
 const deleteUserQuery = `

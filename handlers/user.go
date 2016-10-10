@@ -78,6 +78,10 @@ func PostUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if user.Password == "" {
+		WriteJSON(w, http.StatusBadRequest, APIErrorMessage{Message: "Invalid Password"})
+	}
+
 	created, err := datastore.CreateUser(*user)
 	if err != nil {
 		WriteJSON(w, http.StatusInternalServerError, APIErrorMessage{Message: err.Error()})

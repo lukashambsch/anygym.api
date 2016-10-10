@@ -7,10 +7,6 @@ type User struct {
 	Email        string    `json:"email"`
 	Token        string    `json:"-"`
 	PasswordHash []byte    `json:"-"`
+	Password     string    `json:"password"`
 	CreatedOn    time.Time `json:"created_on"`
-}
-
-type UserLogin struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
 }

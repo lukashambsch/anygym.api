@@ -171,7 +171,7 @@ var _ = Describe("User API", func() {
 
 		Describe("Successful POST", func() {
 			BeforeEach(func() {
-				payload = []byte(fmt.Sprintf(`{"email": "new@email.com"}`))
+				payload = []byte(fmt.Sprintf(`{"email": "new@email.com", "password": "testing"}`))
 				res, data, _ = Request("POST", userURL, token, payload)
 				json.Unmarshal(data, &user)
 			})
@@ -207,7 +207,7 @@ var _ = Describe("User API", func() {
 
 			Describe("Internal Server Error", func() {
 				It("should return status code 500 with a message", func() {
-					payload = []byte(`{"user_id": 1}`)
+					payload = []byte(`{"email": "lukas.hambsch@gmail.com", "password": "testing"}`)
 					res, data, _ = Request("POST", userURL, token, payload)
 					json.Unmarshal(data, &errRes)
 					Expect(res.StatusCode).To(Equal(http.StatusInternalServerError))

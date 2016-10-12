@@ -63,8 +63,14 @@ func VerifyToken(h http.Handler) http.Handler {
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
-		tokenString := strings.Split(authHeader, "Bearer ")[1]
 
+		splitHeader := strings.Split(authHeader, "Bearer ")
+		if len(splitHeader) != 2 {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+
+		tokenString := splitHeader[1]
 		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 			return []byte("secret"), nil
 		})

@@ -20,6 +20,16 @@ type Claims struct {
 	jwt.StandardClaims
 }
 
+type Route struct {
+	Path   string
+	Method string
+}
+
+var noAuthRoutes []Route = []Route{
+	Route{Path: "api/v1/users", Method: "POST"},
+	Route{Path: "api/v1/authenticate", Method: "POST"},
+	Route{Path: "", Method: "OPTIONS"},
+}
 var mySigningKey = []byte("secret")
 
 func SetToken(email string, password string) (string, error) {
@@ -54,7 +64,7 @@ func SetToken(email string, password string) (string, error) {
 
 func VerifyToken(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if strings.Contains(r.URL.Path, "authenticate") || r.Method == "OPTIONS" {
+		if isNoAuth(r) {
 			h.ServeHTTP(w, r)
 			return
 		}
@@ -86,6 +96,16 @@ func VerifyToken(h http.Handler) http.Handler {
 		}
 		h.ServeHTTP(w, r)
 	})
+}
+
+func isNoAuth(r *http.Request) bool {
+	for _, route := range noAuthRoutes {
+		if strings.Contains(r.URL.Path, route.Path) && r.Method == route.Method {
+			return true
+		}
+	}
+
+	return false
 }
 
 func Logout(w http.ResponseWriter, r *http.Request) {

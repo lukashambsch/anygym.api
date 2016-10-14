@@ -1,10 +1,16 @@
+postgres:
+  image: postgres:latest
+  ports:
+    - "5432"
+  environment:
+    - POSTGRES_USER=root
+    - POSTGRES_PASSWORD=pa55word
+    - POSTGRES_PORT=5432
+
 api:
   build: .
   dockerfile: Dockerfile
-  links:
-    - database
+  #links:
+    #- postgres
   ports:
-    - "80:80"
-
-database:
-  image: postgres
+    - "8080:8080"

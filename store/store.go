@@ -2,6 +2,7 @@ package store
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"os"
 
@@ -20,7 +21,15 @@ func init() {
 }
 
 func Open() (*sql.DB, error) {
-	db, err := sql.Open("postgres", os.Getenv("DATABASE_CONFIG"))
+	connectionInfo := fmt.Sprintf(
+		"user=%s dbname=%s password=%s host=%s port=%s sslmode=disable",
+		os.Getenv("POSTGRES_USER"),
+		"postgres",
+		os.Getenv("POSTGRES_PASSWORD"),
+		os.Getenv("POSTGRES_HOST"),
+		os.Getenv("POSTGRES_PORT"),
+	)
+	db, err := sql.Open("postgres", connectionInfo)
 
 	if err != nil {
 		return db, err

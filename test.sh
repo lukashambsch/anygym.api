@@ -1,5 +1,7 @@
 export POSTGRES_USER=root
 export POSTGRES_PASSWORD=pa55word
+export POSTGRES_HOST=localhost
+export POSTGRES_PORT=5432
 export DATABASE_DRIVER="postgres"
 export DATABASE_CONFIG="postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@localhost:5432/postgres?sslmode=disable"
 go get -t

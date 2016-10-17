@@ -23,11 +23,11 @@ func init() {
 func Open() (*sql.DB, error) {
 	connectionInfo := fmt.Sprintf(
 		"user=%s dbname=%s password=%s host=%s port=%s sslmode=disable",
-		os.Getenv("POSTGRES_USER"),
+		os.Getenv("POSTGRES_ENV_POSTGRES_USER"),
 		"postgres",
-		os.Getenv("POSTGRES_PASSWORD"),
-		os.Getenv("POSTGRES_HOST"),
-		os.Getenv("POSTGRES_PORT"),
+		os.Getenv("POSTGRES_ENV_POSTGRES_PASSWORD"),
+		os.Getenv("POSTGRES_PORT_5432_TCP_ADDR"),
+		os.Getenv("POSTGRES_PORT_5432_TCP_PORT"),
 	)
 	db, err := sql.Open("postgres", connectionInfo)
 

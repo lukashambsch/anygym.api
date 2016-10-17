@@ -14,9 +14,9 @@ RUN go get -t
 RUN go get github.com/onsi/ginkgo
 RUN go get github.com/onsi/gomega
 RUN go get github.com/mattes/migrate
-#RUN psql -c "CREATE USER $POSTGRES_USER WITH PASSWORD '$POSTGRES_PASSWORD';"
+#RUN psql -c "CREATE USER $POSTGRES_ENV_POSTGRES_USER WITH PASSWORD '$POSTGRES_ENV_POSTGRES_PASSWORD';"
 #RUN echo "CREATE EXTENSION IF NOT EXISTS pgcrypto" | psql -d postgres
-#RUN migrate $DATABASE_CONFIG -path ./store/migrations up
+#RUN migrate postgres://$POSTGRES_ENV_POSTGRES_USER:$POSTGRES_ENV_POSTGRES_PASSWORD@POSTGRES_PORT_5432_TCP_ADDR:POSTGRES_PORT_5432_TCP_PORT/postgres?sslmode=disable -path ./store/migrations up
 
 EXPOSE 8080
 

@@ -1,8 +1,16 @@
+store:
+  image: postgres:latest
+  volumes:
+    - /var/lib/postgresql/data
+  command: "true"
+
 postgres:
   build: .
   dockerfile: Dockerfile.postgres
   ports:
     - "5432"
+  volumes_from:
+    - store
   environment:
     - POSTGRES_USER=root
     - POSTGRES_PASSWORD=pa55word

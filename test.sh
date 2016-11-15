@@ -1,3 +1,4 @@
+# shell script to set up env and run tests
 export POSTGRES_ENV_POSTGRES_USER=root
 export POSTGRES_ENV_POSTGRES_PASSWORD=pa55word
 export POSTGRES_PORT_5432_TCP_ADDR=localhost

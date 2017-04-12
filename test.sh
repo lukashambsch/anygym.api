@@ -9,7 +9,7 @@ export DATABASE_CONFIG="postgres://$POSTGRES_ENV_POSTGRES_USER:$POSTGRES_ENV_POS
 go get -t
 go get github.com/onsi/ginkgo
 go get github.com/onsi/gomega
-go get github.com/mattes/migrate
+#go get github.com/mattes/migrate
 psql -c "CREATE USER $POSTGRES_ENV_POSTGRES_USER WITH PASSWORD '$POSTGRES_ENV_POSTGRES_PASSWORD';"
 echo "CREATE EXTENSION IF NOT EXISTS pgcrypto" | psql -d postgres
 migrate -url $DATABASE_CONFIG -path ./store/migrations up

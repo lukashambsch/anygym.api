@@ -1,0 +1,14 @@
+{
+  "host": {
+    "address": "localhost",
+    "port": 8080
+  },
+  "datastore": {
+    "user": "root",
+    "password": "pa55word",
+    "host": "localhost",
+    "port": "5432",
+    "database": "postgres",
+    "sslmode": "disable"
+  }
+}

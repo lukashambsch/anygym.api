@@ -1,5 +1,5 @@
 # shell script to set up env and run tests
-export GO_ENV=test
+export GOENV=test
 export POSTGRES_ENV_POSTGRES_USER=root
 export POSTGRES_ENV_POSTGRES_PASSWORD=pa55word
 export POSTGRES_PORT_5432_TCP_ADDR=localhost
@@ -15,4 +15,4 @@ echo "CREATE EXTENSION IF NOT EXISTS pgcrypto" | psql -d postgres
 migrate -url $DATABASE_CONFIG -path ./store/migrations up
 go test ./... -cover -v
 migrate -url $DATABASE_CONFIG -path ./store/migrations down
-export GO_ENV=local
+export GOENV=local

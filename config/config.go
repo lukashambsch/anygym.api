@@ -12,7 +12,10 @@ import (
 var C *viper.Viper
 
 func init() {
-    env := os.Getenv("GO_ENV")
+    env := os.Getenv("GOENV")
+    if env == "" {
+        env = "local"
+    }
 
     _, filename, _, _ := runtime.Caller(0)
     dir := path.Dir(filename)
@@ -23,6 +26,6 @@ func init() {
 
     err := C.ReadInConfig()
     if err != nil {
-        fmt.Printf("%#v", err)
+        fmt.Printf("%#v", "test")
     }
 }

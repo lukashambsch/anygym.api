@@ -1,23 +1,19 @@
-FROM golang
+FROM golang:1.8
 
-WORKDIR /go/src/github.com/lukashambsch/gym-all-over
+ENV GOENV test
 
-ENV GOPATH=/go
-ENV GOBIN=$GOPATH/bin
-ENV POSTGRES_USER root
-ENV POSTGRES_PASSWORD pa55word
-ENV DATABASE_DRIVER postgres
-ENV DATABASE_CONFIG "postgres://$POSTGRES_ENV_POSTGRES_USER:$POSTGRES_ENV_POSTGRES_PASSWORD@$POSTGRES_PORT_5432_TCP_ADDR:$POSTGRES_PORT_5432_TCP_PORT/postgres?sslmode=disable"
+RUN ls $GOPATH/src
 
-ADD . /go/src/github.com/lukashambsch/gym-all-over
-RUN go get -t
-RUN go get github.com/onsi/ginkgo
-RUN go get github.com/onsi/gomega
-RUN go get github.com/mattes/migrate
-#RUN psql -c "CREATE USER $POSTGRES_ENV_POSTGRES_USER WITH PASSWORD '$POSTGRES_ENV_POSTGRES_PASSWORD';"
-#RUN echo "CREATE EXTENSION IF NOT EXISTS pgcrypto" | psql -d postgres
-#RUN migrate -url $DATABASE_CONFIG -path ./store/migrations up
+ADD . /go/src/app/
+
+WORKDIR /go/src/app
+
+RUN go env
+
+RUN go get -u github.com/golang/dep/...
+# RUN dep ensure -v
+RUN go build
 
 EXPOSE 8080
 
-CMD ["go", "run", "./main.go"]
+ENTRYPOINT /go/src/app/gym-all-over

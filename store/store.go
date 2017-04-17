@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+    "os"
+    "time"
 
 	_ "github.com/lib/pq"
 
@@ -22,6 +24,9 @@ func init() {
 }
 
 func Open() (*sql.DB, error) {
+    var err error
+    var db *sql.DB
+
 	connectionInfo := fmt.Sprintf(
 		"user=%s dbname=%s password=%s host=%s port=%s sslmode=disable",
 		config.C.Get("datastore.user"),
@@ -30,7 +35,12 @@ func Open() (*sql.DB, error) {
 		config.C.Get("datastore.host"),
 		config.C.Get("datastore.port"),
 	)
-	db, err := sql.Open("postgres", connectionInfo)
+
+    for i := 0; i < 15; i++ {
+        fmt.Println(connectionInfo)
+        db, err = sql.Open("postgres", connectionInfo)
+        time.Sleep(1 * time.Second)
+    }
 
 	if err != nil {
 		return db, err

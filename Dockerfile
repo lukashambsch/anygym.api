@@ -2,13 +2,9 @@ FROM golang:1.8
 
 ENV GOENV test
 
-RUN ls $GOPATH/src
+ADD . /go/src/github.com/lukashambsch/gym-all-over/
 
-ADD . /go/src/app/
-
-WORKDIR /go/src/app
-
-RUN go env
+WORKDIR /go/src/github.com/lukashambsch/gym-all-over
 
 RUN go get -u github.com/golang/dep/...
 # RUN dep ensure -v
@@ -16,4 +12,4 @@ RUN go build
 
 EXPOSE 8080
 
-ENTRYPOINT /go/src/app/gym-all-over
+CMD ["./gym-all-over"]

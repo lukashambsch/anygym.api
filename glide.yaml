@@ -1,4 +1,4 @@
-package: github.com/lukashambsch/gym-all-over
+package: github.com/lukashambsch/anygym.api
 import:
 - package: github.com/dgrijalva/jwt-go
 - package: github.com/gorilla/handlers

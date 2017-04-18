@@ -6,11 +6,11 @@ import (
 	"net/http"
 	"net/http/httptest"
 
-	"github.com/lukashambsch/gym-all-over/handlers"
-	"github.com/lukashambsch/gym-all-over/models"
-	"github.com/lukashambsch/gym-all-over/router"
-	"github.com/lukashambsch/gym-all-over/store"
-	"github.com/lukashambsch/gym-all-over/store/datastore"
+	"github.com/lukashambsch/anygym.api/handlers"
+	"github.com/lukashambsch/anygym.api/models"
+	"github.com/lukashambsch/anygym.api/router"
+	"github.com/lukashambsch/anygym.api/store"
+	"github.com/lukashambsch/anygym.api/store/datastore"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )

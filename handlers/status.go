@@ -10,8 +10,8 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"github.com/lukashambsch/gym-all-over/models"
-	"github.com/lukashambsch/gym-all-over/store/datastore"
+	"github.com/lukashambsch/anygym.api/models"
+	"github.com/lukashambsch/anygym.api/store/datastore"
 )
 
 const StatusID = "status_id"

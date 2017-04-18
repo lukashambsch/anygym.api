@@ -8,7 +8,7 @@ import (
     _ "github.com/mattes/migrate/driver/postgres"
     "github.com/mattes/migrate/migrate"
 
-    "github.com/lukashambsch/gym-all-over/config"
+    "github.com/lukashambsch/anygym.api/config"
 )
 
 func main() {

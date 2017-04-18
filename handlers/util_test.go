@@ -3,7 +3,7 @@ package handlers_test
 import (
 	"net/url"
 
-	"github.com/lukashambsch/gym-all-over/handlers"
+	"github.com/lukashambsch/anygym.api/handlers"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"

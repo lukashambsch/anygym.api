@@ -5,8 +5,8 @@ import (
 
 	"golang.org/x/crypto/bcrypt"
 
-	"github.com/lukashambsch/gym-all-over/models"
-	"github.com/lukashambsch/gym-all-over/store"
+	"github.com/lukashambsch/anygym.api/models"
+	"github.com/lukashambsch/anygym.api/store"
 )
 
 func GetUserList(where string) ([]models.User, error) {

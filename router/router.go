@@ -8,7 +8,7 @@ import (
 	ghandlers "github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 
-	"github.com/lukashambsch/gym-all-over/handlers"
+	"github.com/lukashambsch/anygym.api/handlers"
 )
 
 const V1URLBase string = "/api/v1"

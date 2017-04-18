@@ -1,9 +1,9 @@
 package datastore_test
 
 import (
-	"github.com/lukashambsch/gym-all-over/models"
-	"github.com/lukashambsch/gym-all-over/store"
-	"github.com/lukashambsch/gym-all-over/store/datastore"
+	"github.com/lukashambsch/anygym.api/models"
+	"github.com/lukashambsch/anygym.api/store"
+	"github.com/lukashambsch/anygym.api/store/datastore"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )

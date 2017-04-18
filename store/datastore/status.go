@@ -3,8 +3,8 @@ package datastore
 import (
 	"fmt"
 
-	"github.com/lukashambsch/gym-all-over/models"
-	"github.com/lukashambsch/gym-all-over/store"
+	"github.com/lukashambsch/anygym.api/models"
+	"github.com/lukashambsch/anygym.api/store"
 )
 
 func GetStatusList(where string) ([]models.Status, error) {

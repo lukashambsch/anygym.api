@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	"github.com/lukashambsch/gym-all-over/router"
+	"github.com/lukashambsch/anygym.api/router"
 )
 
 func main() {

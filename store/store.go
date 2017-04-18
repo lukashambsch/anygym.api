@@ -7,7 +7,7 @@ import (
 
 	_ "github.com/lib/pq"
 
-    "github.com/lukashambsch/gym-all-over/config"
+    "github.com/lukashambsch/anygym.api/config"
 )
 
 var DB *sql.DB

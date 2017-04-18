@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-    "time"
 
 	_ "github.com/lib/pq"
 
@@ -35,12 +34,7 @@ func Open() (*sql.DB, error) {
 		config.C.Get("datastore.port"),
 	)
 
-    for i := 0; i < 15; i++ {
-        fmt.Println(connectionInfo)
-        db, err = sql.Open("postgres", connectionInfo)
-        time.Sleep(1 * time.Second)
-    }
-
+    db, err = sql.Open("postgres", connectionInfo)
 	if err != nil {
 		return db, err
 	}

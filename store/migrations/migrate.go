@@ -31,7 +31,7 @@ func main() {
             fmt.Printf("%#v", err)
         }
     } else {
-        fmt.Println("Migrations run succuessfully")
+        fmt.Println("Migrations run successfully")
     }
 }
 

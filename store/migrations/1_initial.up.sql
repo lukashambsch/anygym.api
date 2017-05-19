@@ -42,9 +42,38 @@ CREATE TABLE plans (
 ,UNIQUE(plan_name, price)
 );
 
+CREATE TABLE gyms (
+ gym_id             SERIAL       PRIMARY KEY
+,user_id            INTEGER      REFERENCES users
+,gym_name           VARCHAR(50)  NOT NULL
+,monthly_member_fee FLOAT
+);
+
+CREATE TABLE gym_locations (
+ gym_location_id    SERIAL       PRIMARY KEY
+,gym_id             INTEGER      NOT NULL REFERENCES gyms
+,address_id         INTEGER      NOT NULL UNIQUE REFERENCES addresses
+,location_name      VARCHAR(50)  NOT NULL
+,phone_number       VARCHAR(15)  NOT NULL DEFAULT ''
+,website_url        VARCHAR(255) NOT NULL DEFAULT ''
+,in_network         BOOLEAN      NOT NULL DEFAULT False
+,monthly_member_fee FLOAT
+);
+
+CREATE TABLE images (
+ image_id        SERIAL       PRIMARY KEY
+,gym_id          INTEGER      REFERENCES gyms ON DELETE CASCADE
+,gym_location_id INTEGER      REFERENCES gym_locations ON DELETE CASCADE
+,user_id         INTEGER      UNIQUE REFERENCES users ON DELETE CASCADE
+,image_path      VARCHAR(255)
+,UNIQUE(gym_location_id, image_path)
+,UNIQUE(gym_id, image_path)
+);
+
 CREATE TABLE members (
  member_id  SERIAL       PRIMARY KEY
 ,user_id    INTEGER      NOT NULL UNIQUE REFERENCES users ON DELETE CASCADE
+,image_id   INTEGER      UNIQUE REFERENCES images
 ,address_id INTEGER      UNIQUE REFERENCES addresses
 ,first_name VARCHAR(35)  NOT NULL
 ,last_name  VARCHAR(35)  NOT NULL
@@ -67,13 +96,6 @@ CREATE TABLE devices (
 ,device_token VARCHAR(64) NOT NULL
 );
 
-CREATE TABLE gyms (
- gym_id             SERIAL       PRIMARY KEY
-,user_id            INTEGER      REFERENCES users
-,gym_name           VARCHAR(50)  NOT NULL
-,monthly_member_fee FLOAT
-);
-
 CREATE TABLE holidays (
  holiday_id   SERIAL      PRIMARY KEY
 ,holiday_name VARCHAR(50) NOT NULL UNIQUE
@@ -91,32 +113,6 @@ CREATE TABLE gym_features (
 ,gym_id         INTEGER NOT NULL REFERENCES gyms ON DELETE CASCADE
 ,feature_id     INTEGER NOT NULL REFERENCES features ON DELETE CASCADE
 ,UNIQUE(gym_id, feature_id)
-);
-
-CREATE TABLE gym_locations (
- gym_location_id    SERIAL       PRIMARY KEY
-,gym_id             INTEGER      NOT NULL REFERENCES gyms
-,address_id         INTEGER      NOT NULL UNIQUE REFERENCES addresses
-,location_name      VARCHAR(50)  NOT NULL
-,phone_number       VARCHAR(15)  NOT NULL DEFAULT ''
-,website_url        VARCHAR(255) NOT NULL DEFAULT ''
-,in_network         BOOLEAN      NOT NULL DEFAULT False
-,monthly_member_fee FLOAT
-);
-
-CREATE TABLE images (
- image_id        SERIAL       PRIMARY KEY
-,gym_id          INTEGER      REFERENCES gyms ON DELETE CASCADE
-,gym_location_id INTEGER      REFERENCES gym_locations ON DELETE CASCADE
-,user_id         INTEGER      UNIQUE REFERENCES users ON DELETE CASCADE
-,image_path      VARCHAR(255)
-,UNIQUE(gym_location_id, image_path)
-,UNIQUE(gym_id, image_path)
-,CONSTRAINT user_or_gym_location CHECK(
-  (gym_location_id IS NOT NULL OR user_id IS NOT NULL OR gym_id IS NOT NULL)
-  AND
-  (gym_location_id IS NULL OR user_id IS NULL OR gym_id IS NULL)
-)
 );
 
 CREATE TABLE days (

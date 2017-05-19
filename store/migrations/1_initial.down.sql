@@ -1,8 +1,8 @@
 DROP TABLE visits;
-DROP TABLE images;
 DROP TABLE outside_memberships;
 DROP TABLE memberships;
 DROP TABLE members;
+DROP TABLE images;
 DROP TABLE plans;
 DROP TABLE gym_features;
 DROP TABLE features;

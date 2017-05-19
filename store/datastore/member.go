@@ -23,6 +23,7 @@ func GetMemberList(where string) ([]models.Member, error) {
 		err = rows.Scan(
 			&member.MemberID,
 			&member.UserID,
+			&member.ImageID,
 			&member.AddressID,
 			&member.FirstName,
 			&member.LastName,
@@ -58,6 +59,7 @@ func GetMember(memberID int64) (*models.Member, error) {
 	err := row.Scan(
 		&member.MemberID,
 		&member.UserID,
+		&member.ImageID,
 		&member.AddressID,
 		&member.FirstName,
 		&member.LastName,
@@ -76,6 +78,7 @@ func CreateMember(member models.Member) (*models.Member, error) {
 	row := store.DB.QueryRow(
 		createMemberQuery,
 		member.UserID,
+		member.ImageID,
 		member.AddressID,
 		member.FirstName,
 		member.LastName,
@@ -83,6 +86,7 @@ func CreateMember(member models.Member) (*models.Member, error) {
 	err := row.Scan(
 		&created.MemberID,
 		&created.UserID,
+		&created.ImageID,
 		&created.AddressID,
 		&created.FirstName,
 		&created.LastName,
@@ -100,6 +104,7 @@ func UpdateMember(memberID int64, member models.Member) (*models.Member, error) 
 	row := store.DB.QueryRow(
 		updateMemberQuery,
 		member.UserID,
+		member.ImageID,
 		member.AddressID,
 		member.FirstName,
 		member.LastName,
@@ -108,6 +113,7 @@ func UpdateMember(memberID int64, member models.Member) (*models.Member, error) 
 	err := row.Scan(
 		&updated.MemberID,
 		&updated.UserID,
+		&updated.ImageID,
 		&updated.AddressID,
 		&updated.FirstName,
 		&updated.LastName,
@@ -145,16 +151,16 @@ WHERE member_id = $1
 `
 
 const createMemberQuery = `
-INSERT INTO members (user_id, address_id, first_name, last_name)
-VALUES ($1, $2, $3, $4)
-RETURNING member_id, user_id, address_id, first_name, last_name
+INSERT INTO members (user_id, image_id, address_id, first_name, last_name)
+VALUES ($1, $2, $3, $4, $5)
+RETURNING member_id, user_id, image_id, address_id, first_name, last_name
 `
 
 const updateMemberQuery = `
 UPDATE members
-SET user_id = $1, address_id = $2, first_name = $3, last_name = $4
-WHERE member_id = $5
-RETURNING member_id, user_id, address_id, first_name, last_name
+SET user_id = $1, image_id = $2, address_id = $3, first_name = $4, last_name = $5
+WHERE member_id = $6
+RETURNING member_id, user_id, image_id, address_id, first_name, last_name
 `
 
 const deleteMemberQuery = `

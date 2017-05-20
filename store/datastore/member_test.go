@@ -44,6 +44,11 @@ var _ = Describe("Member db interactions", func() {
 				mbr, _ := datastore.GetMember(memberID)
 				Expect(mbr.MemberID).To(Equal(memberID))
 			})
+
+            It("should return the correct user", func() {
+                mbr, _ := datastore.GetMember(memberID)
+                Expect(mbr.User.UserID).To(Equal(mbr.UserID))
+            })
 		})
 
 		Describe("Unsuccessful call", func() {

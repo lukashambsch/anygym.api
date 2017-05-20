@@ -69,6 +69,12 @@ func GetMember(memberID int64) (*models.Member, error) {
 		return nil, err
 	}
 
+    member.User, err = GetUser(member.UserID)
+
+    if err != nil {
+        return nil, err
+    }
+
 	return &member, nil
 }
 

@@ -7,4 +7,6 @@ type Member struct {
 	AddressID *int64 `json:"address_id"`
 	FirstName string `json:"first_name"`
 	LastName  string `json:"last_name"`
+
+    User      *User   `json:"user"`
 }

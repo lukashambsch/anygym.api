@@ -76,6 +76,11 @@ VALUES
     (SELECT role_id FROM roles WHERE role_name = 'employee')
   );
 
+INSERT INTO images (image_path)
+VALUES
+  ('lukas-hambsch-profile.jpg'),
+  ('mckenzie-hambsch-profile.jpg');
+
 INSERT INTO support_sources (support_source_name)
 VALUES
   ('website'),
@@ -85,17 +90,19 @@ VALUES
   ('web app - gyms'),
   ('email');
 
-INSERT INTO members (user_id, first_name, last_name)
+INSERT INTO members (user_id, first_name, last_name, image_id)
 VALUES
   (
     (SELECT user_id FROM users WHERE email = 'lukas.hambsch@gmail.com'),
     'Lukas',
-    'Hambsch'
+    'Hambsch',
+    (SELECT image_id FROM images WHERE image_path = 'lukas-hambsch-profile.jpg')
   ),
   (
     (SELECT user_id FROM users WHERE email = 'bugentry@hotmail.com'),
     'McKenzie',
-    'Hambsch'
+    'Hambsch',
+    (SELECT image_id FROM images WHERE image_path = 'mckenzie-hambsch-profile.jpg')
   );
 
 INSERT INTO memberships (plan_id, member_id, active)

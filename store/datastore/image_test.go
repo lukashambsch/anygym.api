@@ -36,7 +36,7 @@ var _ = Describe("Image db interactions", func() {
 			})
 
 			It("should return a list of images", func() {
-				Expect(len(images)).To(Equal(4))
+				Expect(len(images)).To(Equal(6))
 			})
 		})
 	})
@@ -80,7 +80,7 @@ var _ = Describe("Image db interactions", func() {
 			})
 
 			It("should return the correct count", func() {
-				Expect(*count).To(Equal(4))
+				Expect(*count).To(Equal(6))
 			})
 		})
 	})

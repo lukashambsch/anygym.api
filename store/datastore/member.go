@@ -28,10 +28,16 @@ func GetMemberList(where string) ([]models.Member, error) {
 			&member.FirstName,
 			&member.LastName,
 		)
-		members = append(members, member)
 		if err != nil {
 			return nil, err
 		}
+
+        member.User, err = GetUser(member.UserID)
+		if err != nil {
+			return nil, err
+		}
+
+		members = append(members, member)
 	}
 	defer rows.Close()
 

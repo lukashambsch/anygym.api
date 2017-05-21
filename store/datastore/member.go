@@ -32,7 +32,7 @@ func GetMemberList(where string) ([]models.Member, error) {
 			return nil, err
 		}
 
-        member.User, err = GetUser(member.UserID)
+		member.User, err = GetUser(member.UserID)
 		if err != nil {
 			return nil, err
 		}
@@ -75,11 +75,11 @@ func GetMember(memberID int64) (*models.Member, error) {
 		return nil, err
 	}
 
-    member.User, err = GetUser(member.UserID)
+	member.User, err = GetUser(member.UserID)
 
-    if err != nil {
-        return nil, err
-    }
+	if err != nil {
+		return nil, err
+	}
 
 	return &member, nil
 }

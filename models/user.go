@@ -9,4 +9,5 @@ type User struct {
 	PasswordHash []byte    `json:"-"`
 	Password     string    `json:"password"`
 	CreatedOn    time.Time `json:"created_on"`
+	Roles        []*Role   `json:"roles"`
 }

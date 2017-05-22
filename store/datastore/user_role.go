@@ -21,10 +21,18 @@ func GetUserRoleList(where string) ([]models.UserRole, error) {
 
 	for rows.Next() {
 		err = rows.Scan(&userRole.UserRoleID, &userRole.UserID, &userRole.RoleID)
-		userRoles = append(userRoles, userRole)
+
 		if err != nil {
 			return nil, err
 		}
+
+		userRole.Role, err = GetRole(userRole.RoleID)
+
+		if err != nil {
+			return nil, err
+		}
+
+		userRoles = append(userRoles, userRole)
 	}
 	defer rows.Close()
 
@@ -49,6 +57,11 @@ func GetUserRole(userRoleID int64) (*models.UserRole, error) {
 
 	row := store.DB.QueryRow(getUserRoleQuery, userRoleID)
 	err := row.Scan(&userRole.UserRoleID, &userRole.UserID, &userRole.RoleID)
+	if err != nil {
+		return nil, err
+	}
+
+	userRole.Role, err = GetRole(userRole.RoleID)
 	if err != nil {
 		return nil, err
 	}

@@ -54,6 +54,18 @@ var _ = Describe("User db interactions", func() {
 		})
 	})
 
+	Describe("GetUserRoles", func() {
+		var user *models.User
+
+		Describe("Successful call", func() {
+			It("should return the list of the user's roles", func() {
+				user, _ = datastore.GetUser(userID)
+				roles, _ := datastore.GetUserRoles(user.UserID)
+				Expect(len(roles)).To(Equal(1))
+			})
+		})
+	})
+
 	Describe("GetUserCount", func() {
 		var count *int
 

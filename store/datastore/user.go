@@ -29,10 +29,16 @@ func GetUserList(where string) ([]models.User, error) {
 			&user.PasswordHash,
 			&user.CreatedOn,
 		)
-		users = append(users, user)
 		if err != nil {
 			return nil, err
 		}
+
+		user.Roles, err = GetUserRoles(user.UserID)
+		if err != nil {
+			return nil, err
+		}
+
+		users = append(users, user)
 	}
 	defer rows.Close()
 
@@ -64,12 +70,32 @@ func GetUser(userID int64) (*models.User, error) {
 		&user.PasswordHash,
 		&user.CreatedOn,
 	)
+	if err != nil {
+		return nil, err
+	}
 
+	user.Roles, err = GetUserRoles(user.UserID)
 	if err != nil {
 		return nil, err
 	}
 
 	return &user, nil
+}
+
+func GetUserRoles(userID int64) ([]*models.Role, error) {
+	var roles []*models.Role
+
+	userRoles, err := GetUserRoleList(fmt.Sprintf("WHERE user_id = %v", userID))
+	if err != nil {
+		return nil, err
+	}
+
+	for _, userRole := range userRoles {
+		roles = append(roles, userRole.Role)
+	}
+
+	fmt.Print(roles)
+	return roles, nil
 }
 
 func CreateUser(user models.User) (*models.User, error) {

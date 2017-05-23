@@ -9,4 +9,5 @@ type GymLocation struct {
 	WebsiteUrl       string   `json:"website_url"`
 	InNetwork        bool     `json:"in_network"`
 	MonthlyMemberFee *float64 `json:"monthly_member_fee"`
+	Address          Address  `json:"address"`
 }

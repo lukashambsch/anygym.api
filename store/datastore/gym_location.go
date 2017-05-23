@@ -29,6 +29,14 @@ func GetGymLocationList(where string) ([]models.GymLocation, error) {
 			&gymLocation.WebsiteUrl,
 			&gymLocation.InNetwork,
 			&gymLocation.MonthlyMemberFee,
+			&gymLocation.Address.AddressID,
+			&gymLocation.Address.Country,
+			&gymLocation.Address.StateRegion,
+			&gymLocation.Address.City,
+			&gymLocation.Address.PostalArea,
+			&gymLocation.Address.StreetAddress,
+			&gymLocation.Address.Latitude,
+			&gymLocation.Address.Longitude,
 		)
 		gymLocations = append(gymLocations, gymLocation)
 		if err != nil {
@@ -152,8 +160,26 @@ func DeleteGymLocation(addressID int64) error {
 }
 
 const getGymLocationListQuery = `
-SELECT *
-FROM gym_locations
+SELECT
+    gl.gym_location_id,
+    gl.gym_id,
+    gl.address_id,
+    gl.location_name,
+    gl.phone_number,
+    gl.website_url,
+    gl.in_network,
+    gl.monthly_member_fee,
+    a.address_id,
+    a.country,
+    a.state_region,
+    a.city,
+    a.postal_area,
+    a.street_address,
+    a.latitude,
+    a.longitude
+FROM gym_locations AS gl
+JOIN addresses AS a
+ON gl.address_id = a.address_id
 `
 
 const getGymLocationQuery = `

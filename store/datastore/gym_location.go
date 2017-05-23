@@ -38,10 +38,21 @@ func GetGymLocationList(where string) ([]models.GymLocation, error) {
 			&gymLocation.Address.Latitude,
 			&gymLocation.Address.Longitude,
 		)
-		gymLocations = append(gymLocations, gymLocation)
+
 		if err != nil {
 			return nil, err
 		}
+
+		gymLocation.BusinessHours, err = GetBusinessHourList(fmt.Sprintf(
+			"WHERE gym_location_id = %v",
+			gymLocation.GymLocationID,
+		))
+
+		if err != nil {
+			return nil, err
+		}
+
+		gymLocations = append(gymLocations, gymLocation)
 	}
 	defer rows.Close()
 

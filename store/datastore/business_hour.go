@@ -28,10 +28,12 @@ func GetBusinessHourList(where string) ([]models.BusinessHour, error) {
 			&businessHour.OpenTime,
 			&businessHour.CloseTime,
 		)
-		businessHours = append(businessHours, businessHour)
+
 		if err != nil {
 			return nil, err
 		}
+
+		businessHours = append(businessHours, businessHour)
 	}
 	defer rows.Close()
 

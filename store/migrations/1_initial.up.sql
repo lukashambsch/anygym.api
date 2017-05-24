@@ -125,8 +125,8 @@ CREATE TABLE business_hours (
 ,gym_location_id     INTEGER NOT NULL REFERENCES gym_locations ON DELETE CASCADE
 ,holiday_id          INTEGER REFERENCES holidays ON DELETE CASCADE
 ,day_id              INTEGER REFERENCES days ON DELETE CASCADE
-,open_time           TIME    NOT NULL
-,close_time          TIME    NOT NULL
+,open_time           TIME    WITH TIME ZONE NOT NULL
+,close_time          TIME    WITH TIME ZONE NOT NULL
 ,UNIQUE(gym_location_id, day_id)
 ,UNIQUE(gym_location_id, holiday_id)
 ,CONSTRAINT holiday_or_day CHECK((holiday_id IS NOT NULL or day_id IS NOT NULL) AND (holiday_id IS NULL or day_id IS NULL))

@@ -118,15 +118,15 @@ VALUES
     true
   );
 
-INSERT INTO days (day_name)
+INSERT INTO days (day_id, day_name)
 VALUES
-  ('Monday'),
-  ('Tuesday'),
-  ('Wednesday'),
-  ('Thursday'),
-  ('Friday'),
-  ('Saturday'),
-  ('Sunday');
+  (1, 'Sunday'),
+  (2, 'Monday'),
+  (3, 'Tuesday'),
+  (4, 'Wednesday'),
+  (5, 'Thursday'),
+  (6, 'Friday'),
+  (7, 'Saturday');
 
 INSERT INTO gyms (gym_name)
 VALUES
@@ -153,6 +153,93 @@ VALUES
     (SELECT address_id from addresses WHERE postal_area = '92111'),
     'Balboa',
     false
+  );
+
+INSERT INTO business_hours (gym_location_id, day_id, open_time, close_time)
+VALUES
+  (
+    (SELECT gym_location_id FROM gym_locations WHERE location_name = 'Westfield UTC'),
+    1,
+    '08:00 AM',
+    '08:00 PM'
+  ),
+  (
+    (SELECT gym_location_id FROM gym_locations WHERE location_name = 'Westfield UTC'),
+    2,
+    '06:00 AM',
+    '10:00 PM'
+  ),
+  (
+    (SELECT gym_location_id FROM gym_locations WHERE location_name = 'Westfield UTC'),
+    3,
+    '06:00 AM',
+    '10:00 PM'
+  ),
+  (
+    (SELECT gym_location_id FROM gym_locations WHERE location_name = 'Westfield UTC'),
+    4,
+    '06:00 AM',
+    '10:00 PM'
+  ),
+  (
+    (SELECT gym_location_id FROM gym_locations WHERE location_name = 'Westfield UTC'),
+    5,
+    '06:00 AM',
+    '10:00 PM'
+  ),
+  (
+    (SELECT gym_location_id FROM gym_locations WHERE location_name = 'Westfield UTC'),
+    6,
+    '06:00 AM',
+    '10:00 PM'
+  ),
+  (
+    (SELECT gym_location_id FROM gym_locations WHERE location_name = 'Westfield UTC'),
+    7,
+    '06:00 AM',
+    '08:00 PM'
+  ),
+  (
+    (SELECT gym_location_id FROM gym_locations WHERE location_name = 'Balboa'),
+    1,
+    '08:00 AM',
+    '08:00 PM'
+  ),
+  (
+    (SELECT gym_location_id FROM gym_locations WHERE location_name = 'Balboa'),
+    2,
+    '06:00 AM',
+    '10:00 PM'
+  ),
+  (
+    (SELECT gym_location_id FROM gym_locations WHERE location_name = 'Balboa'),
+    3,
+    '06:00 AM',
+    '10:00 PM'
+  ),
+  (
+    (SELECT gym_location_id FROM gym_locations WHERE location_name = 'Balboa'),
+    4,
+    '06:00 AM',
+    '10:00 PM'
+  ),
+  (
+    (SELECT gym_location_id FROM gym_locations WHERE location_name = 'Balboa'),
+    5,
+    '06:00 AM',
+    '10:00 PM'
+  ),
+  (
+    (SELECT gym_location_id FROM gym_locations WHERE location_name = 'Balboa'),
+    6,
+    '06:00 AM',
+    '10:00 PM'
+  ),
+  (
+    (SELECT gym_location_id FROM gym_locations WHERE location_name = 'Balboa'),
+    7,
+    '06:00 AM',
+    '08:00 PM'
   );
 
 INSERT INTO visits (member_id, gym_location_id, status_id)

@@ -12,3 +12,5 @@ DELETE FROM support_sources;
 DELETE FROM gym_locations;
 DELETE FROM addresses;
 DELETE FROM gyms;
+DELETE FROM days;
+DELETE FROM business_hours;

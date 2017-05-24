@@ -142,8 +142,8 @@ CREATE TABLE visits (
 ,member_id       INTEGER   NOT NULL REFERENCES members
 ,gym_location_id INTEGER   NOT NULL REFERENCES gym_locations
 ,status_id       INTEGER   NOT NULL REFERENCES statuses
-,created_on      TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-,modified_on     TIMESTAMP
+,created_on      TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+,modified_on     TIMESTAMP WITH TIME ZONE
 );
 
 -- Table to hold required info for outside memberships.

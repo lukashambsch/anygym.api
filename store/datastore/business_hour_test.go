@@ -48,7 +48,7 @@ var _ = Describe("BusinessHour db interactions", func() {
 			})
 
 			It("should return a list of businessHours", func() {
-				Expect(len(businessHours)).To(Equal(2))
+				Expect(len(businessHours)).To(Equal(16))
 			})
 		})
 	})
@@ -92,7 +92,7 @@ var _ = Describe("BusinessHour db interactions", func() {
 			})
 
 			It("should return the correct count", func() {
-				Expect(*count).To(Equal(2))
+				Expect(*count).To(Equal(16))
 			})
 		})
 	})

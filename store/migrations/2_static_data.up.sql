@@ -8,7 +8,9 @@ VALUES
   ('Pending'),
   ('Approved'),
   ('Denied - Identity'),
-  ('Denied - Banned');
+  ('Denied - Banned'),
+  ('Cancelled'),
+  ('Expired');
 
 INSERT INTO holidays (holiday_name)
 VALUES
@@ -118,15 +120,15 @@ VALUES
     true
   );
 
-INSERT INTO days (day_id, day_name)
+INSERT INTO days (day_name)
 VALUES
-  (1, 'Sunday'),
-  (2, 'Monday'),
-  (3, 'Tuesday'),
-  (4, 'Wednesday'),
-  (5, 'Thursday'),
-  (6, 'Friday'),
-  (7, 'Saturday');
+  ('Sunday'),
+  ('Monday'),
+  ('Tuesday'),
+  ('Wednesday'),
+  ('Thursday'),
+  ('Friday'),
+  ('Saturday');
 
 INSERT INTO gyms (gym_name)
 VALUES

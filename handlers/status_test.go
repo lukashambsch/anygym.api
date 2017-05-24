@@ -90,7 +90,7 @@ var _ = Describe("Status API", func() {
 			})
 
 			It("should contain the statuses", func() {
-				Expect(len(statuses)).To(Equal(4))
+				Expect(len(statuses)).To(Equal(6))
 			})
 		})
 
@@ -131,19 +131,23 @@ var _ = Describe("Status API", func() {
 				json.Unmarshal(data, &statuses)
 				Expect(res.StatusCode).To(Equal(http.StatusOK))
 				Expect(statuses[0].StatusName).To(Equal("Approved"))
-				Expect(statuses[1].StatusName).To(Equal("Denied - Banned"))
-				Expect(statuses[2].StatusName).To(Equal("Denied - Identity"))
-				Expect(statuses[3].StatusName).To(Equal("Pending"))
+				Expect(statuses[1].StatusName).To(Equal("Cancelled"))
+				Expect(statuses[2].StatusName).To(Equal("Denied - Banned"))
+				Expect(statuses[3].StatusName).To(Equal("Denied - Identity"))
+				Expect(statuses[4].StatusName).To(Equal("Expired"))
+				Expect(statuses[5].StatusName).To(Equal("Pending"))
 			})
 
-			It("should sort statuses by the correct fStatusNameStatusNameStatusNameield descending", func() {
+			It("should sort statuses by the correct field descending", func() {
 				res, data, _ = Request("GET", fmt.Sprintf("%s?sort_order=desc&order_by=status_id", statusURL), token, nil)
 				json.Unmarshal(data, &statuses)
 				Expect(res.StatusCode).To(Equal(http.StatusOK))
-				Expect(statuses[0].StatusID).To(Equal(int64(4)))
-				Expect(statuses[1].StatusID).To(Equal(int64(3)))
-				Expect(statuses[2].StatusID).To(Equal(int64(2)))
-				Expect(statuses[3].StatusID).To(Equal(int64(1)))
+				Expect(statuses[0].StatusID).To(Equal(int64(6)))
+				Expect(statuses[1].StatusID).To(Equal(int64(5)))
+				Expect(statuses[2].StatusID).To(Equal(int64(4)))
+				Expect(statuses[3].StatusID).To(Equal(int64(3)))
+				Expect(statuses[4].StatusID).To(Equal(int64(2)))
+				Expect(statuses[5].StatusID).To(Equal(int64(1)))
 			})
 		})
 
@@ -320,7 +324,7 @@ var _ = Describe("Status API", func() {
 			})
 
 			It("should return status code 500 with a message", func() {
-				res, data, _ = Request("PUT", fmt.Sprintf("%s/5", statusURL), token, payload)
+				res, data, _ = Request("PUT", fmt.Sprintf("%s/7", statusURL), token, payload)
 				json.Unmarshal(data, &errRes)
 				Expect(res.StatusCode).To(Equal(http.StatusInternalServerError))
 				Expect(errRes.Message).ToNot(BeEmpty())

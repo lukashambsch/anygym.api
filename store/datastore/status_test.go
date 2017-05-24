@@ -16,7 +16,7 @@ var _ = Describe("Status db interactions", func() {
 		Describe("Successful calls", func() {
 			It("should return a list of all statuses", func() {
 				statuses, _ = datastore.GetStatusList("")
-				Expect(len(statuses)).To(Equal(4))
+				Expect(len(statuses)).To(Equal(6))
 			})
 
 			It("should return a list of one partially matching status", func() {
@@ -55,7 +55,7 @@ var _ = Describe("Status db interactions", func() {
 
 		Describe("Unsuccessful call", func() {
 			var (
-				nonExistentID int64 = 5
+				nonExistentID int64 = 7
 				err           error
 			)
 
@@ -82,7 +82,7 @@ var _ = Describe("Status db interactions", func() {
 			})
 
 			It("should return the correct count", func() {
-				Expect(*count).To(Equal(4))
+				Expect(*count).To(Equal(6))
 			})
 		})
 	})

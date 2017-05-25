@@ -47,26 +47,35 @@ func GetMember(w http.ResponseWriter, r *http.Request) {
 func GetMembers(w http.ResponseWriter, r *http.Request) {
 	var statement string
 	query := r.URL.Query()
-	where, err := BuildWhere(memberFields, query)
-	if err != nil {
-		WriteJSON(w, http.StatusNotFound, APIErrorMessage{Message: err.Error()})
-		return
-	}
+	if _, ok := query["email"]; ok {
+		members, err := datastore.GetMemberByEmail(query["email"][0])
+		if err != nil {
+			WriteJSON(w, http.StatusInternalServerError, APIErrorMessage{Message: "Error getting member."})
+			return
+		}
+		WriteJSON(w, http.StatusOK, members)
+	} else {
+		where, err := BuildWhere(memberFields, query)
+		if err != nil {
+			WriteJSON(w, http.StatusNotFound, APIErrorMessage{Message: err.Error()})
+			return
+		}
 
-	sort, err := BuildSort(memberFields, query)
-	if err != nil {
-		WriteJSON(w, http.StatusNotFound, APIErrorMessage{Message: err.Error()})
-		return
-	}
+		sort, err := BuildSort(memberFields, query)
+		if err != nil {
+			WriteJSON(w, http.StatusNotFound, APIErrorMessage{Message: err.Error()})
+			return
+		}
 
-	statement = fmt.Sprintf("%s %s", where, sort)
-	statuses, err := datastore.GetMemberList(statement)
-	if err != nil {
-		WriteJSON(w, http.StatusInternalServerError, APIErrorMessage{Message: "Error getting member list."})
-		return
-	}
+		statement = fmt.Sprintf("%s %s", where, sort)
+		members, err := datastore.GetMemberList(statement)
+		if err != nil {
+			WriteJSON(w, http.StatusInternalServerError, APIErrorMessage{Message: "Error getting member list."})
+			return
+		}
 
-	WriteJSON(w, http.StatusOK, statuses)
+		WriteJSON(w, http.StatusOK, members)
+	}
 }
 
 func PostMember(w http.ResponseWriter, r *http.Request) {

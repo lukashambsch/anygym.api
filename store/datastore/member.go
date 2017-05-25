@@ -1,6 +1,7 @@
 package datastore
 
 import (
+	"database/sql"
 	"fmt"
 
 	"github.com/lukashambsch/anygym.api/models"
@@ -59,17 +60,8 @@ func GetMemberCount(where string) (*int, error) {
 }
 
 func GetMember(memberID int64) (*models.Member, error) {
-	var member models.Member
-
 	row := store.DB.QueryRow(getMemberQuery, memberID)
-	err := row.Scan(
-		&member.MemberID,
-		&member.UserID,
-		&member.ImageID,
-		&member.AddressID,
-		&member.FirstName,
-		&member.LastName,
-	)
+	member, err := ScanMember(row)
 
 	if err != nil {
 		return nil, err
@@ -82,6 +74,38 @@ func GetMember(memberID int64) (*models.Member, error) {
 	}
 
 	return &member, nil
+}
+
+func GetMemberByEmail(email string) (*models.Member, error) {
+	row := store.DB.QueryRow(getMemberByEmailQuery, email)
+	member, err := ScanMember(row)
+
+	if err != nil {
+		return nil, err
+	}
+
+	member.User, err = GetUser(member.UserID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &member, nil
+}
+
+func ScanMember(row *sql.Row) (models.Member, error) {
+	var member models.Member
+
+	err := row.Scan(
+		&member.MemberID,
+		&member.UserID,
+		&member.ImageID,
+		&member.AddressID,
+		&member.FirstName,
+		&member.LastName,
+	)
+
+	return member, err
 }
 
 func CreateMember(member models.Member) (*models.Member, error) {
@@ -154,6 +178,14 @@ func DeleteMember(memberID int64) error {
 const getMemberListQuery = `
 SELECT *
 FROM members
+`
+
+const getMemberByEmailQuery = `
+SELECT m.*
+FROM members m
+JOIN users u
+ON m.user_id = u.user_id
+WHERE u.email = $1
 `
 
 const getMemberQuery = `

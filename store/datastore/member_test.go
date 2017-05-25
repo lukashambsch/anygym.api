@@ -45,10 +45,10 @@ var _ = Describe("Member db interactions", func() {
 				Expect(mbr.MemberID).To(Equal(memberID))
 			})
 
-            It("should return the correct user", func() {
-                mbr, _ := datastore.GetMember(memberID)
-                Expect(mbr.User.UserID).To(Equal(mbr.UserID))
-            })
+			It("should return the correct user", func() {
+				mbr, _ := datastore.GetMember(memberID)
+				Expect(mbr.User.UserID).To(Equal(mbr.UserID))
+			})
 		})
 
 		Describe("Unsuccessful call", func() {
@@ -60,6 +60,35 @@ var _ = Describe("Member db interactions", func() {
 
 			BeforeEach(func() {
 				mbr, err = datastore.GetMember(nonExistentID)
+			})
+
+			It("should return an error", func() {
+				Expect(err).ToNot(BeNil())
+			})
+
+			It("should return a nil member", func() {
+				Expect(mbr).To(BeNil())
+			})
+		})
+	})
+
+	Describe("GetMemberByEmail", func() {
+		Describe("Successful call", func() {
+			It("should return the correct member", func() {
+				mbr, _ := datastore.GetMemberByEmail(user.Email)
+				Expect(mbr.MemberID).To(Equal(member.MemberID))
+			})
+		})
+
+		Describe("Unsuccessful call", func() {
+			var (
+				nonExistentEmail string = "email@email.com"
+				err              error
+				mbr              *models.Member
+			)
+
+			BeforeEach(func() {
+				mbr, err = datastore.GetMemberByEmail(nonExistentEmail)
 			})
 
 			It("should return an error", func() {

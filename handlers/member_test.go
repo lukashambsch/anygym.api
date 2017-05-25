@@ -68,6 +68,14 @@ var _ = Describe("Member API", func() {
 				Expect(len(members)).To(Equal(1))
 			})
 
+			It("should return a matching member - email", func() {
+				var member models.Member
+				res, data, _ = Request("GET", fmt.Sprintf("%s?email=lukas.hambsch@gmail.com", memberURL), token, nil)
+				json.Unmarshal(data, &member)
+				Expect(res.StatusCode).To(Equal(http.StatusOK))
+				Expect(member.MemberID).To(Equal(int64(1)))
+			})
+
 			It("should return no members with a valid field but no matches", func() {
 				res, data, _ = Request("GET", fmt.Sprintf("%s?member_id=10", memberURL), token, nil)
 				json.Unmarshal(data, &members)

@@ -48,7 +48,7 @@ func SetToken(email string, password string) (string, error) {
 		return "", fmt.Errorf("Invalid Password")
 	}
 
-	expireToken := time.Now().Add(time.Hour * 1).Unix()
+	expireToken := time.Now().Add(time.Hour * 12).Unix()
 
 	claims := jwt.StandardClaims{
 		ExpiresAt: expireToken,
@@ -70,13 +70,13 @@ func VerifyToken(h http.Handler) http.Handler {
 		}
 		authHeader := r.Header.Get("Authorization")
 		if authHeader == "" {
-			w.WriteHeader(http.StatusUnauthorized)
+			WriteJSON(w, http.StatusUnauthorized, "Unauthorized")
 			return
 		}
 
 		splitHeader := strings.Split(authHeader, "Bearer ")
 		if len(splitHeader) != 2 {
-			w.WriteHeader(http.StatusUnauthorized)
+			WriteJSON(w, http.StatusUnauthorized, "Unauthorized")
 			return
 		}
 
@@ -86,12 +86,12 @@ func VerifyToken(h http.Handler) http.Handler {
 		})
 
 		if err != nil {
-			w.WriteHeader(http.StatusUnauthorized)
+			WriteJSON(w, http.StatusUnauthorized, "Unauthorized")
 			return
 		}
 
 		if !token.Valid {
-			w.WriteHeader(http.StatusUnauthorized)
+			WriteJSON(w, http.StatusUnauthorized, "Unauthorized")
 			return
 		}
 		h.ServeHTTP(w, r)

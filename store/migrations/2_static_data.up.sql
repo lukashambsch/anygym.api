@@ -142,19 +142,21 @@ VALUES
   ('USA', 'CA', 'San Diego', '92122', '4425 La Jolla Village Dr'),
   ('USA', 'CA', 'San Diego', '92111', '7715 Balboa Ave');
 
-INSERT INTO gym_locations (gym_id, address_id, location_name, in_network)
+INSERT INTO gym_locations (gym_id, address_id, location_name, in_network, website_url)
 VALUES
   (
     (SELECT gym_id FROM gyms WHERE gym_name = '24 Hour Fitness'),
     (SELECT address_id from addresses WHERE postal_area = '92122'),
     'Westfield UTC',
-    false
+    false,
+    'https://www.24hourfitness.com/Website/Club/00888'
   ),
   (
     (SELECT gym_id FROM gyms WHERE gym_name = '24 Hour Fitness'),
     (SELECT address_id from addresses WHERE postal_area = '92111'),
     'Balboa',
-    false
+    false,
+    'https://www.24hourfitness.com/Website/Club/00892'
   );
 
 INSERT INTO business_hours (gym_location_id, day_id, open_time, close_time)
